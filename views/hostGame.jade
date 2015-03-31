@@ -12,7 +12,7 @@ block content
       label(for="stakes") Stakes
       input#stakes(type="text", placeholder="e.g. $1/$2, $20 buy in")
       label(for="seats") Number of Seats
-      input#seats(type="number", placeholder="2 or more")
+      input#seats(type="number", placeholder="2 or more", min=2)
       label(for="gameFormat") Game Format
       select#gameFormat
         option(value="Cash Game") Cash Game
