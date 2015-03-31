@@ -11,11 +11,11 @@ module.exports = function(app, passport) {
     // LOGIN ===============================
     // =====================================
     // show the login form
-    app.get('/login', function(req, res) {
+    //app.get('/login', function(req, res) {
 
         // render the page and pass in any flash data if it exists
-        res.render('login', { message: req.flash('loginMessage') }); 
-    });
+    //    res.render('login', { message: req.flash('loginMessage') }); 
+    //});
 
     // process the login form
     // app.post('/login', do all our passport stuff here);
@@ -24,11 +24,11 @@ module.exports = function(app, passport) {
     // SIGNUP ==============================
     // =====================================
     // show the signup form
-    app.get('/signup', function(req, res) {
+    //app.get('/signup', function(req, res) {
 
         // render the page and pass in any flash data if it exists
-        res.render('signup', { message: req.flash('signupMessage') });
-    });
+    //   res.render('signup', { message: req.flash('signupMessage') });
+    //});
 
     // process the signup form
     // app.post('/signup', do all our passport stuff here);
@@ -44,6 +44,16 @@ module.exports = function(app, passport) {
         });
     });
 
+	
+	//FB AUTH
+	
+	app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email'}));
+	
+	app.get('/auth/facebook/callback', passport.authenticate('facebook', {
+		successRedirect: '/profile',
+		failureRedirect: '/'
+	}));
+	
     // =====================================
     // LOGOUT ==============================
     // =====================================

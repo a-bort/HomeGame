@@ -17,6 +17,8 @@ var express = require('express')
 
 var db = mongoose.createConnection('localhost', 'homegame');
 
+require('./config/passport')(passport); // pass passport for configuration
+
 // all environments
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser());
@@ -25,7 +27,11 @@ app.set('view engine', 'jade');
 app.set('views', __dirname + '/views');
 
 //passport setup
-app.use(session({ secret: 'tensfullofsevens' }));
+app.use(session({ 
+	secret: 'tensfullofsevens',
+	resave: false,
+	saveUninitialized: false
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
