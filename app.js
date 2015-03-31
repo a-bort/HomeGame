@@ -4,35 +4,35 @@
  */
 
 var express = require('express')
-  , routes = require('./routes')
-  , user = require('./routes/user')
-  , http = require('http')
-  , path = require('path');
+  , app = express()
+  , port = process.env.PORT || 3000
+  , path = require('path')
+  , mongoose = require('mongoose')
+  , passport = require('passport')
+  , flash = require('connect-flash')
+  
+  , cookieParser = require('cookie-parser')
+  , bodyParser = require('body-parser')
+  , session = require('express-session');
 
-var app = express();
-
-var Mongoose = require('mongoose');
-var db = Mongoose.createConnection('localhost', 'mytestapp');
+var db = mongoose.createConnection('localhost', 'homegame');
 
 // all environments
-app.set('port', process.env.PORT || 3000);
-app.set('views', __dirname + '/views');
+app.use(cookieParser()); // read cookies (needed for auth)
+app.use(bodyParser());
+
 app.set('view engine', 'jade');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(app.router);
+app.set('views', __dirname + '/views');
+
+//passport setup
+app.use(session({ secret: 'tensfullofsevens' }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
+//routes
+require('./routes.js')(app, passport);
 app.use(express.static(path.join(__dirname, 'public')));
 
-// development only
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
-}
-
-app.get('/', routes.index);
-app.get('/users', user.list);
-
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
-});
+app.listen(port);
+console.log("Listening on " + port);
