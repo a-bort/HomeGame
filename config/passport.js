@@ -1,6 +1,6 @@
 var FacebookStrategy = require('passport-facebook').Strategy;
 
-var User       = require('../models/user');
+var User = require('../models/user');
 
 var configAuth = require('./auth');
 
@@ -16,7 +16,6 @@ module.exports = function(passport){
     passport.deserializeUser(function(id, done) {
 	    console.log('deserialize');
         User.findOne({id: id}, function(err, user) {
-			//console.log('deserialize - found');
             done(err, user);
         });
     });

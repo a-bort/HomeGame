@@ -4,7 +4,11 @@ module.exports = function(app, passport) {
     // HOME PAGE (with login links) ========
     // =====================================
     app.get('/', function(req, res) {
-        res.render('index', {title: "Home Game", message: req.flash('message')}); // load the index.ejs file
+		if (req.isAuthenticated()){
+		  res.redirect('/profile');
+		} else{
+		  res.render('index', {title: "Home Game", message: req.flash('message')});
+		}
     });
 
     // =====================================
@@ -40,6 +44,7 @@ module.exports = function(app, passport) {
     // we will use route middleware to verify this (the isLoggedIn function)
     app.get('/profile', isLoggedIn, function(req, res) {
         res.render('profile', {
+			title: "Home Game - " + req.user.name,
             user : req.user // get the user out of session and pass to template
         });
     });

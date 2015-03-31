@@ -13,8 +13,13 @@ var express = require('express')
   
   , cookieParser = require('cookie-parser')
   , bodyParser = require('body-parser')
-  , session = require('express-session');
+  , session = require('express-session')
+  
+  , favicon = require('serve-favicon');
 
+ //view stuff
+app.use(favicon(path.join(__dirname,'public','images','favicon.ico')));
+  
 var db = mongoose.connect('localhost', 'homegame');
 
 require('./config/passport')(passport); // pass passport for configuration
