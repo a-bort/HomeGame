@@ -2,6 +2,17 @@ doctype html
 html
   head
     title= title
+    link(rel='stylesheet', href='http://yui.yahooapis.com/pure/0.6.0/pure-min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
+    meta(name='viewport' content='width=device-width, initial-scale=1')
   body
-    block content
+    .header
+      .home-menu.pure-menu.pure-menu-horizontal.pure-menu-fixed
+        a.pure-menu-heading(href="/") Home Game
+        ul.pure-menu-list
+          li.pure-menu-item
+            a.pure-menu-link(href="/profile") Profile
+          li.pure-menu-item
+            a.pure-menu-link(href="/profile") Join Games
+    .content
+      block content
