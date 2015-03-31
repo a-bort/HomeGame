@@ -177,6 +177,7 @@ a.pure-button-primary {
  * -- CONTENT STYLES --
  * This represents the content area (everything below the blue section)
  */
+
  
 .content-wrapper {
     /* These styles are required for the "scroll-over" effect */
@@ -235,7 +236,6 @@ a.pure-button-primary {
     /* We want to give the content area some more padding */
     .content {
         padding: 1em;
-        padding-top: 25px;
     }
 
     /* We can align the menu header to the left, but float the
@@ -281,4 +281,9 @@ a.pure-button-primary {
     .splash-head {
         font-size: 300%;
     }
+    
+}
+
+ .content {
+    padding-top: 25px;
 }
