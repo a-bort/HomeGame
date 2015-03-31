@@ -15,7 +15,7 @@ var express = require('express')
   , bodyParser = require('body-parser')
   , session = require('express-session');
 
-var db = mongoose.createConnection('localhost', 'homegame');
+var db = mongoose.connect('localhost', 'homegame');
 
 require('./config/passport')(passport); // pass passport for configuration
 
