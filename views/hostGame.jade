@@ -3,27 +3,27 @@ extends layout
 block content
   script(type="text/javascript" src="/javascripts/controllers/hostGameController.js")
   div(ng-controller="HostGameController")
-    form.pure-form.pure-form-stacked.pure-u-3-5
+    form.pure-form.pure-form-stacked.pure-u-3-5(name="gameForm", ng-submit="save(gameForm.$valid)", novalidate)
       fieldset
         legend Enter Game Details
         label(for="gameType") Game Type
-        input#gameType(type="text", placeholder="e.g. Hold'em, Omaha, Mixed", ng-model="dataModel.game")
+        input#gameType(type="text", placeholder="e.g. Hold'em, Omaha, Mixed", ng-model="dataModel.game", required)
         label(for="location") Location
-        input#location(type="text", placeholder="Enter Address/Neighborhood/Transit Location", ng-model="dataModel.location")
+        input#location(type="text", placeholder="Enter Address/Neighborhood/Transit Location", ng-model="dataModel.location", required)
         label(for="stakes") Stakes
-        input#stakes(type="text", placeholder="e.g. $1/$2, $20 buy in", ng-model="dataModel.stakes")
+        input#stakes(type="text", placeholder="e.g. $1/$2, $20 buy in", ng-model="dataModel.stakes", required)
         label(for="seats") Number of Seats
-        input#seats(type="number", placeholder="2 or more", min=2, ng-model="dataModel.seats")
+        input#seats(type="number", placeholder="2 or more", min=2, ng-model="dataModel.seats", required)
         label(for="gameFormat") Game Format
-        select#gameFormat(ng-model="dataModel.gameFormat")
+        select#gameFormat(ng-model="dataModel.gameFormat", required)
           option(value="Cash Game") Cash Game
           option(value="Tournament") Tournament
           option(value="Other") Other
         label(for="date") Date
-        input#date(type="date", ng-model="dataModel.date")
+        input#date(type="date", ng-model="dataModel.date", required)
         label(for="time") Time
-        input#time(type="time" ng-model="dataModel.time")
+        input#time(type="time" ng-model="dataModel.time", required)
         label(for="notes") Notes
         textarea#notes.pure-u-1-1(ng-model="dataModel.notes", style="")
-    div
-      button.pure-button.pure-button-primary(ng-click="save()") Save
+        input.pure-button.pure-button-primary.pure-u-2-4(type="submit", value="Save")
+      

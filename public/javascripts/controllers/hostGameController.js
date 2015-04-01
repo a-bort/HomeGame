@@ -1,4 +1,4 @@
-homeGameApp.controller('HostGameController', function($scope, $http){
+homeGameApp.controller('HostGameController', function($scope, $http, $location){
 
   $scope.dataModel = {
     game: '',
@@ -11,9 +11,15 @@ homeGameApp.controller('HostGameController', function($scope, $http){
     notes: '',
   };
 
-  $scope.save = function(){
+  $scope.save = function(valid){
+    if(!valid){
+      util.alert('Please complete form');
+      return;
+    }
+    
     $http.post('/host/saveGame', $scope.dataModel).success(function(data){
       util.alert('Game created successfully');
+      window.location = '/profile';
     }).error(function(err){
       util.log(err);
       util.alert('Error saving game');
