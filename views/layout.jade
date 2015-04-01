@@ -2,10 +2,15 @@ doctype html
 html
   head
     title= title
+    script(type='text/javascript' src='/javascripts/vendor/jquery/dist/jquery.min.js')
+    script(type='text/javascript' src='/javascripts/vendor/angular/angular.js')
+    
+    script(type='text/javascript' src='/javascripts/shared/base.js')
+    
     link(rel='stylesheet', href='http://yui.yahooapis.com/pure/0.6.0/pure-min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
     meta(name='viewport' content='width=device-width, initial-scale=1')
-  body
+  body(ng-app="homeGameApp")
     .header
       .home-menu.pure-menu.pure-menu-horizontal.pure-menu-fixed
         a.pure-menu-heading(href="/") Home Game

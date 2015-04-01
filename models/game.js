@@ -1,14 +1,14 @@
 var mongoose = require('mongoose');
 
 var seatSchema = new mongoose.Schema({
-    ownerId: ObjectId,
-    userId: ObjectId,
+    ownerId: mongoose.Schema.Types.ObjectId,
+    userId: mongoose.Schema.Types.ObjectId,
     active: { type: Boolean, default: true }
 });
 
 var gameSchema = new mongoose.Schema({
-    gameTemplateId: ObjectId,
-    ownerId: ObjectId,
+    gameTemplateId: mongoose.Schema.Types.ObjectId,
+    ownerId: mongoose.Schema.Types.ObjectId,
 	  game: String,
     location: String,
     stakes: String,

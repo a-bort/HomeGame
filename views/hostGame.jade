@@ -1,24 +1,26 @@
 extends layout
 
 block content
-  h2.content-head Host a Game
-  form.pure-form.pure-form-stacked.pure-u-3-5
-    fieldset
-      legend Enter Game Details
-      label(for="gameType") Game Type
-      input#gameType(type="text", placeholder="e.g. Hold'em, Omaha, Mixed")
-      label(for="location") Location
-      input#location(type="text", placeholder="Enter Address/Neighborhood/Transit Location")
-      label(for="stakes") Stakes
-      input#stakes(type="text", placeholder="e.g. $1/$2, $20 buy in")
-      label(for="seats") Number of Seats
-      input#seats(type="number", placeholder="2 or more", min=2)
-      label(for="gameFormat") Game Format
-      select#gameFormat
-        option(value="Cash Game") Cash Game
-        option(value="Tournament") Tournament
-        option(value="Other") Other
-      label(for="date") Date
-      input#date(type="date")
-      label(for="time") Time
-      input#time(type="time")
+  script(type="text/javascript" src="/javascripts/controllers/hostGameController.js")
+  div(ng-controller="HostGameController")
+    h2.content-head Host a Game
+    form.pure-form.pure-form-stacked.pure-u-3-5
+      fieldset
+        legend Enter Game Details
+        label(for="gameType") Game Type
+        input#gameType(type="text", placeholder="e.g. Hold'em, Omaha, Mixed", ng-model="dataModel.game")
+        label(for="location") Location
+        input#location(type="text", placeholder="Enter Address/Neighborhood/Transit Location")
+        label(for="stakes") Stakes
+        input#stakes(type="text", placeholder="e.g. $1/$2, $20 buy in")
+        label(for="seats") Number of Seats
+        input#seats(type="number", placeholder="2 or more", min=2)
+        label(for="gameFormat") Game Format
+        select#gameFormat
+          option(value="Cash Game") Cash Game
+          option(value="Tournament") Tournament
+          option(value="Other") Other
+        label(for="date") Date
+        input#date(type="date")
+        label(for="time") Time
+        input#time(type="time")

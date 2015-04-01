@@ -1,5 +1,18 @@
 module.exports = function(app, passport) {
 
+  // Utility Classes
+  var gameRepo = require('./data/gameRepository');
+
+    // ============================
+    // FB AUTH
+    // ============================
+    
+    app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email'}));
+    
+    app.get('/auth/facebook/callback', passport.authenticate('facebook', {
+      successRedirect: '/profile',
+      failureRedirect: '/'
+    }));
     // =====================================
     // HOME PAGE (with login links) ========
     // =====================================
@@ -37,14 +50,19 @@ module.exports = function(app, passport) {
         });
     });
 	
-	//FB AUTH
-	
-	app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email'}));
-	
-	app.get('/auth/facebook/callback', passport.authenticate('facebook', {
-		successRedirect: '/profile',
-		failureRedirect: '/'
-	}));
+	  // =====================================
+    // HOST A GAME
+    // =====================================
+    
+    app.post('/saveGame', isLoggedIn, function(req, res){
+      gameRepo.saveGame(req.body, function(err){
+        if(err){
+          res.json({error: error});
+        } else{
+          res.json({success: true});
+        }
+      });
+    });
 	
     // =====================================
     // LOGOUT ==============================

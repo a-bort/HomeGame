@@ -1,4 +1,14 @@
-var gameModel = require('/models/game');
+var gameModel = require('../models/game');
+
+exports.saveGame = function(gameObject, callback){
+  var game = new gameModel(gameObject);
+  game.save(function(err){
+    if(err){
+      console.log(err);
+    }
+    callback(err);
+  });
+}
 
 exports.getGamesByOwner = function(ownerId, callback){
   return gameModel.find({ownerId: ownerId}, function(err, games){
