@@ -1,4 +1,4 @@
-var gameModel = require('../models/game');
+var gameModel = require('../models/game').game;
 
 exports.saveGame = function(gameObject, callback){
   var game = new gameModel(gameObject);

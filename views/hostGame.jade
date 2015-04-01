@@ -3,24 +3,27 @@ extends layout
 block content
   script(type="text/javascript" src="/javascripts/controllers/hostGameController.js")
   div(ng-controller="HostGameController")
-    h2.content-head Host a Game
     form.pure-form.pure-form-stacked.pure-u-3-5
       fieldset
         legend Enter Game Details
         label(for="gameType") Game Type
         input#gameType(type="text", placeholder="e.g. Hold'em, Omaha, Mixed", ng-model="dataModel.game")
         label(for="location") Location
-        input#location(type="text", placeholder="Enter Address/Neighborhood/Transit Location")
+        input#location(type="text", placeholder="Enter Address/Neighborhood/Transit Location", ng-model="dataModel.location")
         label(for="stakes") Stakes
-        input#stakes(type="text", placeholder="e.g. $1/$2, $20 buy in")
+        input#stakes(type="text", placeholder="e.g. $1/$2, $20 buy in", ng-model="dataModel.stakes")
         label(for="seats") Number of Seats
-        input#seats(type="number", placeholder="2 or more", min=2)
+        input#seats(type="number", placeholder="2 or more", min=2, ng-model="dataModel.seats")
         label(for="gameFormat") Game Format
-        select#gameFormat
+        select#gameFormat(ng-model="dataModel.gameFormat")
           option(value="Cash Game") Cash Game
           option(value="Tournament") Tournament
           option(value="Other") Other
         label(for="date") Date
-        input#date(type="date")
+        input#date(type="date", ng-model="dataModel.date")
         label(for="time") Time
-        input#time(type="time")
+        input#time(type="time" ng-model="dataModel.time")
+        label(for="notes") Notes
+        textarea#notes.pure-u-1-1(ng-model="dataModel.notes", style="")
+    div
+      button.pure-button.pure-button-primary(ng-click="save()") Save

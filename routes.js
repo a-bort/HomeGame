@@ -54,7 +54,7 @@ module.exports = function(app, passport) {
     // HOST A GAME
     // =====================================
     
-    app.post('/saveGame', isLoggedIn, function(req, res){
+    app.post('/host/saveGame', isLoggedIn, function(req, res){
       gameRepo.saveGame(req.body, function(err){
         if(err){
           res.json({error: error});
