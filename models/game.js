@@ -9,7 +9,7 @@ var seatSchema = new mongoose.Schema({
 var gameSchema = new mongoose.Schema({
     gameTemplateId: mongoose.Schema.Types.ObjectId,
     ownerId: mongoose.Schema.Types.ObjectId,
-	  game: String,
+	gameType: String,
     location: String,
     stakes: String,
     seats: Number,

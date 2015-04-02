@@ -49,13 +49,30 @@ module.exports = function(app, passport) {
             user : req.user // get the user out of session and pass to template
         });
     });
+    
+    app.get('/join/:gameId', isLoggedIn, function(req, res) {
+      gameRepo.getGameById(req.params.gameId, function(game){
+        res.render('joinGame', {
+			title: "Join a Game",
+            user : req.user, // get the user out of session and pass to template
+            game : game
+        });
+      });
+    });
+    
+    app.get('/join', isLoggedIn, function(req, res) {
+      res.render('joinGame', {
+          title: "Join a Game",
+          user : req.user // get the user out of session and pass to template
+      });
+    });
 	
 	  // =====================================
     // HOST A GAME
     // =====================================
     
     app.post('/host/saveGame', isLoggedIn, function(req, res){
-      gameRepo.saveGame(req.body, function(err){
+      gameRepo.saveGame(req.body, req.user, function(err){
         if(err){
           res.json({error: error});
         } else{
