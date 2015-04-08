@@ -1,8 +1,11 @@
 homeGameApp.controller('MyGamesController', function($scope, $http, $location){
 
+  $scope.ownedGames = [];
+  $scope.playerGames = [];
+  
   $scope.initWithGames = function(ownedGames, playerGames){
-    util.log(ownedGames);
-    util.log(playerGames);
+    $scope.ownedGames = ownedGames;
+    $scope.playerGames = playerGames;
   }
   /*$scope.dataModel = {
     game: '',

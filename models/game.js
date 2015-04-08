@@ -8,7 +8,7 @@ var seatSchema = new mongoose.Schema({
 var gameSchema = new mongoose.Schema({
     gameTemplateId: mongoose.Schema.Types.ObjectId,
     owner: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-	gameType: String,
+  	gameType: String,
     location: String,
     stakes: String,
     seats: Number,

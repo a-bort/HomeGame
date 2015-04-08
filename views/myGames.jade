@@ -3,7 +3,15 @@ extends layout
 block content
   script(type="text/javascript" src="/javascripts/controllers/myGamesController.js")
   div(ng-controller="MyGamesController", ng-init="initWithGames(#{JSON.stringify(ownedGames)}, #{JSON.stringify(playerGames)})")
-    h2.content-head Your Games
-    ul
-      li Game 1
-      li Game 2
+    div.pure-g
+      div.pure-u-3-5
+        h2.content-head Upcoming Games
+        ul
+          li(ng-repeat="game in playerGames")
+            span {{game.location}}
+      div.pure-u-2-5
+        h2.content-head Hosted Games
+        ul
+          li(ng-repeat="game in ownedGames")
+            span {{game.location}}
+      
