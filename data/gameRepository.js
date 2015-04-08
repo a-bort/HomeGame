@@ -21,11 +21,21 @@ exports.getGameById = function(gameId, callback){
 }
 
 exports.getGamesByOwner = function(ownerId, callback){
-  gameModel.find({ownerId: ownerId}, function(err, games){
+  gameModel.find({owner: ownerId}, function(err, games){
     if(err){
-      util.log(err);
+      console.log(err);
       return;
     }
     callback(games);
   });
+}
+
+exports.getGamesByPlayer = function(playerId, callback){
+  gameModel.find({'seatCollection.user': playerId}, function(err, games){
+    if(err){
+      console.log(err);
+      return;
+    }
+    callback(games);
+  })
 }

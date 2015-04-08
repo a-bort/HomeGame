@@ -1,7 +1,9 @@
 extends layout
 
 block content
-  h2.content-head Your Games
-  ul
-    li Game 1
-    li Game 2
+  script(type="text/javascript" src="/javascripts/controllers/myGamesController.js")
+  div(ng-controller="MyGamesController", ng-init="initWithGames(#{JSON.stringify(ownedGames)}, #{JSON.stringify(playerGames)})")
+    h2.content-head Your Games
+    ul
+      li Game 1
+      li Game 2

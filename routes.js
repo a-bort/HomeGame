@@ -32,39 +32,42 @@ module.exports = function(app, passport) {
     app.get('/profile', isLoggedIn, function(req, res) {
       res.render('profile', {
 			title: "Home Game - " + req.user.name,
-            user : req.user // get the user out of session and pass to template
+            user : req.user
         });
     });
 
     app.get('/mygames', isLoggedIn, function(req, res) {
-      res.render('myGames', {
-			title: "My Games",
-            user : req.user // get the user out of session and pass to template
+      gameRepo.getGamesByOwner(req.user._id, function(ownedGames){
+        gameRepo.getGamesByPlayer(req.user._id, function(playerGames){
+          res.render('myGames', {
+          title: "My Games",
+                user : req.user,
+                ownedGames: ownedGames,
+                playerGames: playerGames
+            });
         });
+      });
     });
     
     app.get('/host', isLoggedIn, function(req, res) {
       res.render('hostGame', {
 			title: "Host a Game",
-            user : req.user // get the user out of session and pass to template
+            user : req.user
         });
     });
     
     app.get('/join/:gameId', isLoggedIn, function(req, res) {
       gameRepo.getGameById(req.params.gameId, function(err, game){
         res.render('joinGame', {
-			title: "Join a Game",
-            user : req.user, // get the user out of session and pass to template
+            title: "Join a Game",
+            user : req.user,
             game : game
         });
       });
     });
     
     app.get('/join', isLoggedIn, function(req, res) {
-      res.render('joinGame', {
-          title: "Join a Game",
-          user : req.user // get the user out of session and pass to template
-      });
+      res.redirect('/profile');
     });
 	
 	  // =====================================
