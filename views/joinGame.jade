@@ -1,6 +1,9 @@
 extends layout
 
 block content
-
-    div
-        
+    script(type="text/javascript" src="/javascripts/controllers/joinGameController.js")
+    div(ng-controller="JoinGameController" ng-init="initWithGame(#{JSON.stringify(game)})")
+        div(ng-if="activeGame")
+            h2.content-head {{activeGame.owner.name}}'s {{activeGame.stakes}} {{activeGame.gameType}} {{activeGame.gameFormat}}
+            h2 {{activeGame.formattedDate}} at {{activeGame.formattedTime}}
+            

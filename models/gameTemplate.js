@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var gameTemplateSchema = new mongoose.Schema({
     userId: ObjectId,
-	  location: String,
+	location: String,
     stakes: String,
     seats: Number,
     gameType: String,

@@ -2,7 +2,7 @@ var gameModel = require('../models/game').game;
 var seatRepo = require('./seatRepository');
 
 exports.saveGame = function(gameObject, currentUser, callback){
-  gameObject.ownerId = currentUser._id;
+  gameObject.owner = currentUser._id;
   var game = new gameModel(gameObject);
   seatRepo.createSeatsForGame(game, currentUser);
   game.save(function(err){
@@ -15,12 +15,8 @@ exports.saveGame = function(gameObject, currentUser, callback){
 }
 
 exports.getGameById = function(gameId, callback){
-    gameModel.findOne({_id: gameId}, function(err, game){
-        if(err){
-            util.log(err);
-            return;
-        }
-        callback(game);
+    gameModel.findOne({_id: gameId}).populate('owner').populate('seatCollection.user').exec(function(err, game){
+        callback(err, game);
     });
 }
 
