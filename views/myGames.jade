@@ -11,7 +11,15 @@ block content
             span {{game.location}}
       div.pure-u-2-5
         h2.content-head Hosted Games
-        ul
-          li(ng-repeat="game in ownedGames")
-            span {{game.location}}
-      
+        div.game-grid(ng-repeat="game in ownedGames")
+          div.pure-g
+            div.pure-u-2-3 {{game.dateString}} @ {{game.timeString}}
+            div.pure-u-1-3 {{game.filledSeats}} / {{game.seats}} Seats Filled
+          div.pure-g
+            div.pure-u-1-3
+              a(href="{{game.joinGameUrl}}") View Game Page
+            div.pure-u-1-3
+              a(href="{{game.editGameUrl}}") Edit Game Info
+            div.pure-u-1-3
+              a(href="#" ng-click="$parent.copyUrl(game)") Copy Game URL
+          

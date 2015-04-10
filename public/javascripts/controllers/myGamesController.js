@@ -7,15 +7,9 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     $scope.ownedGames = ownedGames;
     $scope.playerGames = playerGames;
   }
-  /*$scope.dataModel = {
-    game: '',
-    location: '',
-    stakes: '',
-    seats: '',
-    gameFormat: '',
-    date: '',
-    time: '',
-    notes: '',
-  };*/
+  
+  $scope.copyUrl = function(game){
+    window.prompt("Copy to clipboard: Ctrl+C, Enter", util.urlBase() + game.joinGameUrl);
+  }
 
 });

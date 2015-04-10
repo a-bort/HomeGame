@@ -1,7 +1,8 @@
 homeGameApp.controller('HostGameController', function($scope, $http, $location){
 
   $scope.dataModel = {
-    game: '',
+    _id: '',
+    gameType: '',
     location: '',
     stakes: '',
     seats: '',
@@ -11,6 +12,15 @@ homeGameApp.controller('HostGameController', function($scope, $http, $location){
     notes: '',
   };
 
+  $scope.initWithGame = function(game){
+    if(game){
+      game.date = new Date(game.date);
+      game.time = new Date(game.time);
+    
+      util.mapSourceToTarget(game, $scope.dataModel);
+    }
+  }
+  
   $scope.save = function(valid){
     if(!valid){
       util.alert('Please complete form');
@@ -18,8 +28,13 @@ homeGameApp.controller('HostGameController', function($scope, $http, $location){
     }
     
     $http.post('/host/saveGame', $scope.dataModel).success(function(data){
+      if(data.error){
+        util.log(err);
+        util.alert('Error saving game');
+        return;
+      }
       util.alert('Game created successfully');
-      window.location = '/profile';
+      window.location = '/mygames';
     }).error(function(err){
       util.log(err);
       util.alert('Error saving game');

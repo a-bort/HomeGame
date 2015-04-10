@@ -5,5 +5,6 @@ block content
     div(ng-controller="JoinGameController" ng-init="initWithGame(#{JSON.stringify(game)})")
         div(ng-if="activeGame")
             h2.content-head {{activeGame.owner.name}}'s {{activeGame.stakes}} {{activeGame.gameType}} {{activeGame.gameFormat}}
-            h2 {{activeGame.formattedDate}} at {{activeGame.formattedTime}}
+            h3.content-subhead {{activeGame.dateString}} @ {{activeGame.timeString}}
+            button.pure-button.pure-button-primary Join!
             

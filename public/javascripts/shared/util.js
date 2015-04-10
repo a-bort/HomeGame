@@ -20,5 +20,17 @@ function util(){
     util.sc = function(controller){
         return angular.element("[ng-controller='" + controller + "Controller']").scope();
     }
+    
+    util.urlBase = function(){
+      return window.location.host;
+    }
+    
+    util.mapSourceToTarget = function(source, target){
+      for(var key in source){
+        if(target.hasOwnProperty(key)){
+          target[key] = source[key];
+        }
+      }
+    }
 }
 var util = new util();

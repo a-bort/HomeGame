@@ -2,12 +2,12 @@ extends layout
 
 block content
   script(type="text/javascript" src="/javascripts/controllers/hostGameController.js")
-  div(ng-controller="HostGameController")
+  div(ng-controller="HostGameController" ng-init="initWithGame(#{JSON.stringify(game)})")
     form.pure-form.pure-form-stacked.pure-u-3-5(name="gameForm", ng-submit="save(gameForm.$valid)", novalidate)
       fieldset
         legend Enter Game Details
         label(for="gameType") Game Type
-        input#gameType(type="text", placeholder="e.g. Hold'em, Omaha, Mixed", ng-model="dataModel.game", required)
+        input#gameType(type="text", placeholder="e.g. Hold'em, Omaha, Mixed", ng-model="dataModel.gameType", required)
         label(for="location") Location
         input#location(type="text", placeholder="Enter Address/Neighborhood/Transit Location", ng-model="dataModel.location", required)
         label(for="stakes") Stakes

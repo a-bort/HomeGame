@@ -3,15 +3,30 @@ var seatRepo = require('./seatRepository');
 
 exports.saveGame = function(gameObject, currentUser, callback){
   gameObject.owner = currentUser._id;
-  var game = new gameModel(gameObject);
-  seatRepo.createSeatsForGame(game, currentUser);
-  game.save(function(err){
-    if(err){
-      util.log(err);
-    }
-    
-    callback(err);
-  });
+  var id = gameObject._id;
+  delete gameObject._id;
+  if(!id){
+    var game = new gameModel(gameObject);
+    seatRepo.createSeatsForGame(game, currentUser);
+    game.save(function(err){
+      if(err){
+        console.log(err);
+      }
+      
+      callback(err);
+    });
+  }
+  else{
+    gameModel.update(
+      {_id: id}, gameObject, {upsert: true}, function(err){
+        if(err){
+          console.log(err);
+        }
+        
+        callback(err);
+      }
+    );
+  }
 }
 
 exports.getGameById = function(gameId, callback){
@@ -21,7 +36,7 @@ exports.getGameById = function(gameId, callback){
 }
 
 exports.getGamesByOwner = function(ownerId, callback){
-  gameModel.find({owner: ownerId}, function(err, games){
+  gameModel.find({owner: ownerId}, null, {sort: {date: 1}}, function(err, games){
     if(err){
       console.log(err);
       return;
@@ -31,7 +46,7 @@ exports.getGamesByOwner = function(ownerId, callback){
 }
 
 exports.getGamesByPlayer = function(playerId, callback){
-  gameModel.find({'seatCollection.user': playerId}, function(err, games){
+  gameModel.find({'seatCollection.user': playerId}, null, {sort: {date: 1}}, function(err, games){
     if(err){
       console.log(err);
       return;

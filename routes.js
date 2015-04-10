@@ -10,7 +10,7 @@ module.exports = function(app, passport) {
     app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email'}));
     
     app.get('/auth/facebook/callback', passport.authenticate('facebook', {
-      successRedirect: '/profile',
+      successRedirect: '/mygames',
       failureRedirect: '/'
     }));
     // =====================================
@@ -18,7 +18,7 @@ module.exports = function(app, passport) {
     // =====================================
     app.get('/', function(req, res) {
 		if (req.isAuthenticated()){
-		  res.redirect('/profile');
+		  defaultRedirect(res);
 		} else{
 		  res.render('index', {title: "Home Game", message: req.flash('message')});
 		}
@@ -56,6 +56,21 @@ module.exports = function(app, passport) {
         });
     });
     
+    app.get('/host/:gameId', isLoggedIn, function(req, res) {
+      gameRepo.getGameById(req.params.gameId, function(err, game){
+        if(game.owner._id .equals(req.user._id)){
+          res.render('hostGame', {
+            title: "Host a Game",
+            user : req.user,
+            game: game
+          });
+        } 
+        else{
+          defaultRedirect(res);
+        }
+      });
+    });
+    
     app.get('/join/:gameId', isLoggedIn, function(req, res) {
       gameRepo.getGameById(req.params.gameId, function(err, game){
         res.render('joinGame', {
@@ -67,9 +82,12 @@ module.exports = function(app, passport) {
     });
     
     app.get('/join', isLoggedIn, function(req, res) {
-      res.redirect('/profile');
+      defaultRedirect(res);
     });
 	
+    function defaultRedirect(res){
+      res.redirect('/mygames');
+    }
 	  // =====================================
     // HOST A GAME
     // =====================================
@@ -77,7 +95,7 @@ module.exports = function(app, passport) {
     app.post('/host/saveGame', isLoggedIn, function(req, res){
       gameRepo.saveGame(req.body, req.user, function(err){
         if(err){
-          res.json({error: error});
+          res.json({error: err});
         } else{
           res.json({success: true});
         }
