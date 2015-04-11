@@ -1,8 +1,17 @@
 homeGameApp.controller('JoinGameController', function($scope, $http, $location){
 
     $scope.activeGame = undefined;
-    $scope.initWithGame = function(game){
+    $scope.userAttending = false;
+    $scope.joinButtonText = function(){
+      return $scope.userAttending ? "You are Signed Up" : "Join!";
+    }
+    $scope.filledSeatFilter = function(seat){
+      return seat.user;
+    }
+    
+    $scope.initWithGame = function(game, userAttending){
         $scope.activeGame = game;
+        $scope.userAttending = userAttending;
     };
     
     $scope.join = function(valid){

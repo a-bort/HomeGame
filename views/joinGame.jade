@@ -2,9 +2,17 @@ extends layout
 
 block content
     script(type="text/javascript" src="/javascripts/controllers/joinGameController.js")
-    div(ng-controller="JoinGameController" ng-init="initWithGame(#{JSON.stringify(game)})")
+    div(ng-controller="JoinGameController" ng-init="initWithGame(#{JSON.stringify(game)}, #{JSON.stringify(userAttending)})")
         div(ng-if="activeGame")
+          div
             h2.content-head {{activeGame.owner.name}}'s {{activeGame.stakes}} {{activeGame.gameType}} {{activeGame.gameFormat}}
             h3.content-subhead {{activeGame.dateString}} @ {{activeGame.timeString}}
-            button.pure-button.pure-button-primary(ng-click="join()") Join!
-            
+            button.pure-button(ng-click="join()" ng-disabled="userAttending" ng-class="{'pure-button-primary' : !userAttending, 'button-success' : userAttending}") {{joinButtonText()}}
+          div
+            div.roster-panel.pure-u-3-5
+              h4.content-head Current Roster ({{activeGame.filledSeats}} / {{activeGame.seats}})
+              div.pure-g.roster-seat(ng-repeat="seat in activeGame.seatCollection | filter:filledSeatFilter")
+                div.pure-u-1-5
+                  b IMG
+                div.pure-u-4-5 {{seat.user.name}}
+              h4.content-head {{activeGame.emptySeats}} Seats Remaining

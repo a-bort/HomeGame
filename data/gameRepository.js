@@ -54,3 +54,13 @@ exports.getGamesByPlayer = function(playerId, callback){
     callback(games);
   })
 }
+
+exports.isUserPlayingInGame = function(userId, game){
+  for(var i = 0; i < game.seatCollection.length; i++){
+    var seat = game.seatCollection[i];
+    if(seat.user && seat.user._id && seat.user._id.equals(userId)){
+      return true;
+    }
+  }
+  return false;
+}

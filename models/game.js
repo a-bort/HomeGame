@@ -50,6 +50,17 @@ gameSchema.virtual('filledSeats').get(function(){
   return count;
 });
 
+gameSchema.virtual('emptySeats').get(function(){
+  var count = 0;
+  for(var i = 0; i < this.seatCollection.length; i++){
+    var seat = this.seatCollection[i];
+    if(!seat.user && seat.active){
+      count++;
+    }
+  }
+  return count;
+});
+
 gameSchema.virtual('joinGameUrl').get(function(){
   return "/join/" + this._id;
 });

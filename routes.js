@@ -71,7 +71,8 @@ module.exports = function(app, passport) {
         res.render('joinGame', {
             title: "Join a Game",
             user : req.user,
-            game : game
+            game : game,
+            userAttending : gameRepo.isUserPlayingInGame(req.user._id, game)
         });
       });
     });
