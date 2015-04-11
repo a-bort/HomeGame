@@ -2,6 +2,7 @@ module.exports = function(app, passport) {
 
   // Utility Classes
   var gameRepo = require('./data/gameRepository');
+  var seatRepo = require('./data/seatRepository');
 
     // ============================
     // FB AUTH
@@ -13,6 +14,15 @@ module.exports = function(app, passport) {
       successRedirect: '/mygames',
       failureRedirect: '/'
     }));
+    
+    // ================
+    // Default Redirect
+    // ================
+    
+    function defaultRedirect(res){
+      res.redirect('/mygames');
+    }
+    
     // =====================================
     // HOME PAGE (with login links) ========
     // =====================================
@@ -36,6 +46,9 @@ module.exports = function(app, passport) {
         });
     });
 
+    // ================
+    // VIEW GAMES
+    // =================
     app.get('/mygames', isLoggedIn, function(req, res) {
       gameRepo.getGamesByOwner(req.user._id, function(ownedGames){
         gameRepo.getGamesByPlayer(req.user._id, function(playerGames){
@@ -48,6 +61,39 @@ module.exports = function(app, passport) {
         });
       });
     });
+    
+    // ======================
+    // JOIN GAMES
+    // ======================
+    
+    app.get('/join/:gameId', isLoggedIn, function(req, res) {
+      gameRepo.getGameById(req.params.gameId, function(err, game){
+        res.render('joinGame', {
+            title: "Join a Game",
+            user : req.user,
+            game : game
+        });
+      });
+    });
+    
+    app.get('/join', isLoggedIn, function(req, res) {
+      defaultRedirect(res);
+    });
+    
+    app.post('/join', isLoggedIn, function(req, res){
+      var gameId = req.body.gameId;
+      seatRepo.seatUserInGame(gameId, req.user, function(err){
+          if(err){
+              res.json({error: err});
+          } else{
+              res.json({success: true});
+          }
+      });
+    }); 
+    
+	  // =====================================
+    // HOST A GAME
+    // =====================================
     
     app.get('/host', isLoggedIn, function(req, res) {
       res.render('hostGame', {
@@ -70,27 +116,6 @@ module.exports = function(app, passport) {
         }
       });
     });
-    
-    app.get('/join/:gameId', isLoggedIn, function(req, res) {
-      gameRepo.getGameById(req.params.gameId, function(err, game){
-        res.render('joinGame', {
-            title: "Join a Game",
-            user : req.user,
-            game : game
-        });
-      });
-    });
-    
-    app.get('/join', isLoggedIn, function(req, res) {
-      defaultRedirect(res);
-    });
-	
-    function defaultRedirect(res){
-      res.redirect('/mygames');
-    }
-	  // =====================================
-    // HOST A GAME
-    // =====================================
     
     app.post('/host/saveGame', isLoggedIn, function(req, res){
       gameRepo.saveGame(req.body, req.user, function(err){

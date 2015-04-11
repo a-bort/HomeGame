@@ -6,5 +6,5 @@ block content
         div(ng-if="activeGame")
             h2.content-head {{activeGame.owner.name}}'s {{activeGame.stakes}} {{activeGame.gameType}} {{activeGame.gameFormat}}
             h3.content-subhead {{activeGame.dateString}} @ {{activeGame.timeString}}
-            button.pure-button.pure-button-primary Join!
+            button.pure-button.pure-button-primary(ng-click="join()") Join!
             
