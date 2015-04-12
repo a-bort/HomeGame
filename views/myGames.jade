@@ -6,9 +6,17 @@ block content
     div.pure-g
       div.pure-u-3-5
         h2.content-head Upcoming Games
-        ul
-          li(ng-repeat="game in playerGames")
-            span {{game.location}}
+        div.game-grid(ng-repeat="game in playerGames")
+          div.pure-g
+            div.pure-u-16-24 {{game.owner.name}}'s {{game.stakes}} {{game.gameType}} {{game.gameFormat}}
+            div.pure-u-6-24 {{game.filledSeats}} / {{game.seats}} Seats Filled
+            div.pure-u-2-24 
+              a(href="{{game.joinGameUrl}}") View
+          div.pure-g
+            div.pure-u-16-24 {{game.dateString}} @ {{game.timeString}}
+            div.pure-u-6-24 {{game.notes}}
+            div.pure-u-2-24 
+              a(href="#") Cancel
       div.pure-u-2-5
         h2.content-head Hosted Games
         div.game-grid(ng-repeat="game in ownedGames")

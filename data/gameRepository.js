@@ -46,13 +46,13 @@ exports.getGamesByOwner = function(ownerId, callback){
 }
 
 exports.getGamesByPlayer = function(playerId, callback){
-  gameModel.find({'seatCollection.user': playerId}, null, {sort: {date: 1}}, function(err, games){
+  gameModel.find({'seatCollection.user': playerId}, null, {sort: {date: 1}}).populate('owner').exec(function(err, games){
     if(err){
       console.log(err);
       return;
     }
     callback(games);
-  })
+  });
 }
 
 exports.isUserPlayingInGame = function(userId, game){

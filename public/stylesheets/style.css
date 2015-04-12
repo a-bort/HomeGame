@@ -311,6 +311,7 @@ a.pure-button-primary {
 
 .game-grid{
   padding: 10px;
+  margin-right: 10px;
   margin-bottom: 5px;
   background-color: rgb(127, 140, 141);
   color: white;

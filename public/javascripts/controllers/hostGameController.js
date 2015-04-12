@@ -33,7 +33,7 @@ homeGameApp.controller('HostGameController', function($scope, $http, $location){
         util.alert('Error saving game');
         return;
       }
-      util.alert('Game created successfully');
+      util.alert('Game saved successfully');
       window.location = '/mygames';
     }).error(function(err){
       util.log(err);
