@@ -12,7 +12,8 @@ var schemaOptions = {
 
 var seatSchema = new mongoose.Schema({
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-    active: { type: Boolean, default: true }
+    active: { type: Boolean, default: true },
+    created: { type: Date, default: new Date()}
 });
 
 var gameSchema = new mongoose.Schema({
