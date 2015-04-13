@@ -1,14 +1,34 @@
 var gameModel = require('../models/game').game;
 var seatModel = require('../models/game').seat;
 
-exports.createSeatsForGame = function(game, currentUser){
+exports.createSeatsForGame = function(game, userId){
     for(var i = 0; i < game.seats; i++){
-        var seat = new seatModel({
-            ownerId: currentUser._id
-        });
-        
-        game.seatCollection.push(seat);
+        exports.addSeatToGame(game, userId);
     }
+}
+
+exports.addSeatToGame = function(game, userId){
+  var seat = new seatModel({
+    ownerId: userId
+  });
+  
+  game.seatCollection.push(seat);
+}
+
+exports.configureSeatsAfterCancellation = function(game, userId){
+  var count = 0;
+  var seats = game.seats;
+  for(var i = 0; i < game.seatCollection.length; i++){
+    if(game.seatCollection[i].active){
+      count++;
+    }
+  }
+  
+  if(count < seats){
+    for(var i = 0; i < seats-count; i++){
+      exports.addSeatToGame(game, userId);
+    }
+  }
 }
 
 exports.seatUserInGame = function(gameId, userId, callback){

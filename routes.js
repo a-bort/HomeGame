@@ -62,6 +62,18 @@ module.exports = function(app, passport) {
       });
     });
     
+    app.post('/mygames/leave', isLoggedIn, function(req, res) {
+      gameRepo.leaveGame(req.body.gameId, req.user._id, function(err){
+        if(err){
+          res.json({error: err});
+        } else{
+          gameRepo.getGamesByPlayer(req.user._id, function(playerGames){
+            res.json({success: true, games: playerGames});
+          });
+        }
+      });
+    });
+    
     // ======================
     // JOIN GAMES
     // ======================
@@ -119,7 +131,7 @@ module.exports = function(app, passport) {
     });
     
     app.post('/host/saveGame', isLoggedIn, function(req, res){
-      gameRepo.saveGame(req.body, req.user, function(err){
+      gameRepo.saveGame(req.body, req.user._id, function(err){
         if(err){
           res.json({error: err});
         } else{

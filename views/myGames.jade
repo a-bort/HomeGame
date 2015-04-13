@@ -16,7 +16,7 @@ block content
             div.pure-u-16-24 {{game.dateString}} @ {{game.timeString}}
             div.pure-u-6-24 {{game.notes}}
             div.pure-u-2-24 
-              a(href="#") Cancel
+              a(href="#" ng-click="$parent.leaveGame(game)") Cancel
       div.pure-u-2-5
         h2.content-head Hosted Games
         div.game-grid(ng-repeat="game in ownedGames")
