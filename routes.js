@@ -11,9 +11,11 @@ module.exports = function(app, passport) {
     app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email'}));
     
     app.get('/auth/facebook/callback', passport.authenticate('facebook', {
-      successRedirect: '/mygames',
       failureRedirect: '/'
-    }));
+    }), function(req, res){
+      var redirect = req.flash('redirect');
+      res.redirect(redirect ? decodeURIComponent(redirect) : '/mygames');
+    });
     
     // ================
     // Default Redirect
@@ -23,6 +25,10 @@ module.exports = function(app, passport) {
       res.redirect('/mygames');
     }
     
+    function redirectToUrlParam(url){
+      console.log(url);
+    }
+    
     // =====================================
     // HOME PAGE (with login links) ========
     // =====================================
@@ -30,6 +36,15 @@ module.exports = function(app, passport) {
 		if (req.isAuthenticated()){
 		  defaultRedirect(res);
 		} else{
+		  res.render('index', {title: "Home Game", message: req.flash('message')});
+		}
+    });
+    
+    app.get('/redirect/:redirectUrl', function(req, res) {
+		if (req.isAuthenticated()){
+		  redirectToUrlParam(req.params.redirectUrl);
+		} else{
+      req.flash('redirect', req.params.redirectUrl);
 		  res.render('index', {title: "Home Game", message: req.flash('message')});
 		}
     });
@@ -158,5 +173,5 @@ function isLoggedIn(req, res, next) {
         return next();
 
     // if they aren't redirect them to the home page
-    res.redirect('/');
+    res.redirect('/redirect/' + encodeURIComponent(req.url));
 }

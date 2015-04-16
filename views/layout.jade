@@ -8,6 +8,9 @@ html
     script(type='text/javascript' src='/javascripts/shared/base.js')
     script(type='text/javascript' src='/javascripts/shared/util.js')
     
+    script(type="text/javascript").
+      if (window.location.hash && (window.location.hash == '#/_=_' || window.location.hash == '#_=_')) {window.location.hash = '';}
+    
     link(rel='stylesheet', href='http://yui.yahooapis.com/pure/0.6.0/pure-min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
     meta(name='viewport' content='width=device-width, initial-scale=1')

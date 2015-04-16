@@ -26,7 +26,7 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
           return;
         }
         util.alert('Game joined successfully');
-        window.location('/mygames');
+        window.location = '/mygames';
       }).error(function(err){
         util.log(err);
         util.alert('Error saving game');
