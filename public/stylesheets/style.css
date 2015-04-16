@@ -321,3 +321,7 @@ a.pure-button-primary {
 .game-grid a{
   color: beige;
 }
+
+.roster-panel{
+  margin-top: 20px;
+}

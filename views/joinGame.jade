@@ -6,13 +6,12 @@ block content
         div(ng-if="activeGame")
           div
             h2.content-head {{activeGame.owner.name}}'s {{activeGame.stakes}} {{activeGame.gameType}} {{activeGame.gameFormat}}
-            h3.content-subhead {{activeGame.dateString}} @ {{activeGame.timeString}}
+            h4.content-subhead {{activeGame.dateString}} @ {{activeGame.timeString}}
             button.pure-button(ng-click="join()" ng-disabled="userAttending" ng-class="{'pure-button-primary' : !userAttending, 'button-success' : userAttending}") {{joinButtonText()}}
           div
             div.roster-panel.pure-u-3-5
-              h4.content-head Current Roster ({{activeGame.filledSeats}} / {{activeGame.seats}})
+              h4.content-head Current Roster ({{activeGame.emptySeats}} Seats Remaining)
               div.pure-g.roster-seat(ng-repeat="seat in activeGame.seatCollection | filter:filledSeatFilter")
                 div.pure-u-1-5
-                  b IMG
+                  b Imagine a Picture Here
                 div.pure-u-4-5 {{seat.user.name}}
-              h4.content-head {{activeGame.emptySeats}} Seats Remaining
