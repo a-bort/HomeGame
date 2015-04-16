@@ -14,7 +14,8 @@ module.exports = function(app, passport) {
       failureRedirect: '/'
     }), function(req, res){
       var redirect = req.flash('redirect');
-      res.redirect(redirect ? decodeURIComponent(redirect) : '/mygames');
+      var redirectUrl = (redirect && typeof redirect != "object") ? decodeURIComponent(redirect) : '/mygames'
+      res.redirect(redirectUrl);
     });
     
     // ================
