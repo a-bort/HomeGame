@@ -2,10 +2,12 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
 
   $scope.ownedGames = [];
   $scope.playerGames = [];
+  $scope.waitlistedGames = [];
   
-  $scope.initWithGames = function(ownedGames, playerGames){
+  $scope.initWithGames = function(ownedGames, playerGames, waitlistedGames){
     $scope.ownedGames = ownedGames;
     $scope.playerGames = playerGames;
+    $scope.waitlistedGames = waitlistedGames;
   }
   
   $scope.copyUrl = function(game){
@@ -26,7 +28,7 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
         util.alert('Error leaving the game');
         return;
       }
-      $scope.playerGames = data.games;
+      location.reload();
     }).error(function(err){
       util.log(err);
       util.alert('Error leaving the game');

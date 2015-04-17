@@ -68,12 +68,15 @@ module.exports = function(app, passport) {
     app.get('/mygames', isLoggedIn, function(req, res) {
       gameRepo.getGamesByOwner(req.user._id, function(ownedGames){
         gameRepo.getGamesByPlayer(req.user._id, function(playerGames){
-          res.render('myGames', {
-          title: "My Games",
-                user : req.user,
-                ownedGames: ownedGames,
-                playerGames: playerGames
-            });
+          gameRepo.getWaitlistedGames(req.user._id, function(waitlistedGames){
+            res.render('myGames', {
+            title: "My Games",
+                  user : req.user,
+                  ownedGames: ownedGames,
+                  playerGames: playerGames,
+                  waitlistedGames: waitlistedGames
+              });
+          });
         });
       });
     });
@@ -83,9 +86,7 @@ module.exports = function(app, passport) {
         if(err){
           res.json({error: err});
         } else{
-          gameRepo.getGamesByPlayer(req.user._id, function(playerGames){
-            res.json({success: true, games: playerGames});
-          });
+          res.json({success: true});
         }
       });
     });

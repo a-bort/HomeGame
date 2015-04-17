@@ -2,11 +2,23 @@ extends layout
 
 block content
   script(type="text/javascript" src="/javascripts/controllers/myGamesController.js")
-  div(ng-controller="MyGamesController", ng-init="initWithGames(#{JSON.stringify(ownedGames)}, #{JSON.stringify(playerGames)})")
+  div(ng-controller="MyGamesController", ng-init="initWithGames(#{JSON.stringify(ownedGames)}, #{JSON.stringify(playerGames)}, #{JSON.stringify(waitlistedGames)})")
     div.pure-g
       div.pure-u-3-5
         h2.content-head Upcoming Games
         div.game-grid(ng-repeat="game in playerGames")
+          div.pure-g
+            div.pure-u-16-24 {{game.owner.name}}'s {{game.stakes}} {{game.gameType}} {{game.gameFormat}}
+            div.pure-u-6-24 {{game.filledSeats}} / {{game.seats}} Seats Filled
+            div.pure-u-2-24 
+              a(href="{{game.joinGameUrl}}") View
+          div.pure-g
+            div.pure-u-16-24 {{game.dateString}} @ {{game.timeString}}
+            div.pure-u-6-24 {{game.notes}}
+            div.pure-u-2-24 
+              a(href="#" ng-click="$parent.leaveGame(game)") Cancel
+        h2.content-head Waitlisted Games
+        div.game-grid.waitlist-grid(ng-repeat="game in waitlistedGames")
           div.pure-g
             div.pure-u-16-24 {{game.owner.name}}'s {{game.stakes}} {{game.gameType}} {{game.gameFormat}}
             div.pure-u-6-24 {{game.filledSeats}} / {{game.seats}} Seats Filled

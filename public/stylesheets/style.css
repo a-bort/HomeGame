@@ -313,13 +313,17 @@ a.pure-button-primary {
   padding: 10px;
   margin-right: 10px;
   margin-bottom: 5px;
-  background-color: rgb(127, 140, 141);
+  background-color: #0764A3;
   color: white;
   font-weight: bold;
 }
 
 .game-grid a{
   color: beige;
+}
+
+.waitlist-grid{
+  background-color: #43A5E7
 }
 
 .roster-panel{

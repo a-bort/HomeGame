@@ -39,7 +39,6 @@ exports.getGamesByOwner = function(ownerId, callback){
   gameModel.find({owner: ownerId}, null, {sort: {date: 1}}, function(err, games){
     if(err){
       console.log(err);
-      return;
     }
     callback(games);
   });
@@ -49,7 +48,15 @@ exports.getGamesByPlayer = function(playerId, callback){
   gameModel.find({'seatCollection.user': playerId}, null, {sort: {date: 1}}).populate('owner').exec(function(err, games){
     if(err){
       console.log(err);
-      return;
+    }
+    callback(games);
+  });
+}
+
+exports.getWaitlistedGames = function(playerId, callback){
+  gameModel.find({'waitListCollection.user': playerId}, null, {sort: {date: 1}}).populate('owner').exec(function(err, games){
+    if(err){
+      console.log(err);
     }
     callback(games);
   });
@@ -73,20 +80,51 @@ exports.isUserRegisteredForGame = function(userId, game){
 
 exports.leaveGame = function(gameId, userId, callback){
   gameModel.findOne({_id: gameId}, function(err, game){
-    for(var i = 0; i < game.seatCollection.length; i++){
-      var seat = game.seatCollection[i];
-      if(seat.active && seat.user && seat.user.equals(userId)){
-        game.seatCollection.splice(i, 1);
-        seatRepo.configureSeatsAfterCancellation(game, userId);
-        game.save(function(err){
-          if(err){
-            console.log(err);
-          }
-          
-          callback(err);
-        });
-        break;
+    if(err || !game){
+      callback(err);
+    }
+    
+    if(!tryLeaveSeatCollection(game, userId, callback)){
+      if(!tryLeaveWaitListCollection(game, userId, callback)){
+        callback("Couldn't find this player's seat");
       }
     }
-  })
+  });
+}
+
+function tryLeaveSeatCollection(game, userId, callback){
+  for(var i = 0; i < game.seatCollection.length; i++){
+    var seat = game.seatCollection[i];
+    if(seat.active && seat.user && seat.user.equals(userId)){
+      game.seatCollection.splice(i, 1);
+      seatRepo.configureSeatsAfterCancellation(game, userId);
+      game.save(function(err){
+        if(err){
+          console.log(err);
+        }
+        
+        callback(err);
+      });
+      return true;
+    }
+  }
+  return false;
+}
+
+function tryLeaveWaitListCollection(game, userId, callback){
+  for(var i = 0; i < game.waitListCollection.length; i++){
+    var seat = game.waitListCollection[i];
+    if(seat.active && seat.user && seat.user.equals(userId)){
+      game.waitListCollection.splice(i, 1);
+      game.save(function(err){
+        if(err){
+          console.log(err);
+        }
+        
+        callback(err);
+      });
+      return true;
+    }
+  }
+  return false;
 }
