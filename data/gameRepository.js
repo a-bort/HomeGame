@@ -30,7 +30,7 @@ exports.saveGame = function(gameObject, userId, callback){
 }
 
 exports.getGameById = function(gameId, callback){
-    gameModel.findOne({_id: gameId}).populate('owner').populate('seatCollection.user').exec(function(err, game){
+    gameModel.findOne({_id: gameId}).populate('owner').populate('seatCollection.user').populate('waitListCollection.user').exec(function(err, game){
         callback(err, game);
     });
 }
@@ -55,9 +55,15 @@ exports.getGamesByPlayer = function(playerId, callback){
   });
 }
 
-exports.isUserPlayingInGame = function(userId, game){
+exports.isUserRegisteredForGame = function(userId, game){
   for(var i = 0; i < game.seatCollection.length; i++){
     var seat = game.seatCollection[i];
+    if(seat.active && seat.user && seat.user._id && seat.user._id.equals(userId)){
+      return true;
+    }
+  }
+  for(var i = 0; i < game.waitListCollection.length; i++){
+    var seat = game.waitListCollection[i];
     if(seat.active && seat.user && seat.user._id && seat.user._id.equals(userId)){
       return true;
     }

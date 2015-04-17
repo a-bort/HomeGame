@@ -100,7 +100,7 @@ module.exports = function(app, passport) {
             title: "Join a Game",
             user : req.user,
             game : game,
-            userAttending : gameRepo.isUserPlayingInGame(req.user._id, game)
+            userAttending : gameRepo.isUserRegisteredForGame(req.user._id, game)
         });
       });
     });

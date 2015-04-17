@@ -26,9 +26,20 @@ exports.configureSeatsAfterCancellation = function(game, userId){
   
   if(count < seats){
     for(var i = 0; i < seats-count; i++){
-      exports.addSeatToGame(game, userId);
+      if(game.waitListCollection.length > 0){
+        exports.seatPlayerFromWaitlist(game);
+      }
+      else{
+        exports.addSeatToGame(game, userId);
+      }
     }
   }
+}
+
+exports.seatPlayerFromWaitlist = function(game){
+  sortWaitListCollection(game);
+  game.seatCollection.push(game.waitListCollection[0]);
+  game.waitListCollection.splice(0, 1);
 }
 
 exports.seatUserInGame = function(gameId, userId, callback){
@@ -44,12 +55,10 @@ exports.seatUserInGame = function(gameId, userId, callback){
             return;
         }
         
-        for(var i = 0; i < game.seatCollection.length; i++){
-            var seat = game.seatCollection[i];
-            if(!seat.user){
-                seat.user = userId;
-                break;
-            }
+        if(game.emptySeats > 0){
+          addUserToSeatList(game, userId);
+        } else{
+          addUserToWaitList(game, userId);
         }
         
         game.save(function(err){
@@ -59,4 +68,28 @@ exports.seatUserInGame = function(gameId, userId, callback){
           callback(err);
         });
     });
+}
+
+function addUserToSeatList(game, userId){
+  for(var i = 0; i < game.seatCollection.length; i++){
+      var seat = game.seatCollection[i];
+      if(!seat.user){
+          seat.user = userId;
+          break;
+      }
+  }
+}
+
+function addUserToWaitList(game, userId){
+  var seat = new seatModel({
+    user: userId
+  });
+  
+  game.waitListCollection.push(seat);
+}
+
+function sortWaitList(game){
+  game.waitListCollection.sort(function(a, b){
+    return a.created.getTime() - b.created.getTime();
+  });
 }
