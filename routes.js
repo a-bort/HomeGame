@@ -3,7 +3,8 @@ module.exports = function(app, passport) {
   // Utility Classes
   var gameRepo = require('./data/gameRepository');
   var seatRepo = require('./data/seatRepository');
-
+  var redirector = require('./data/redirector');
+  
     // ============================
     // FB AUTH
     // ============================
@@ -13,8 +14,7 @@ module.exports = function(app, passport) {
     app.get('/auth/facebook/callback', passport.authenticate('facebook', {
       failureRedirect: '/'
     }), function(req, res){
-      var redirect = req.flash('redirect');
-      var redirectUrl = (redirect && typeof redirect != "object") ? decodeURIComponent(redirect) : '/mygames'
+      var redirectUrl = redirector.getRedirectUrlFromLogin(req);
       res.redirect(redirectUrl);
     });
     
