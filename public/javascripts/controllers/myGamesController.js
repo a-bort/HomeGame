@@ -10,6 +10,18 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     $scope.waitlistedGames = waitlistedGames;
   }
   
+  $scope.noOwnedGames = function(){
+    return $scope.ownedGames.length == 0;
+  }
+  
+  $scope.noPlayerGames = function(){
+    return $scope.playerGames.length == 0;
+  }
+  
+  $scope.noWaitlistedGames = function(){
+    return $scope.waitlistedGames.length == 0;
+  }
+  
   $scope.copyUrl = function(game){
     window.prompt("Copy to clipboard: Ctrl+C, Enter", util.urlBase() + game.joinGameUrl);
   }

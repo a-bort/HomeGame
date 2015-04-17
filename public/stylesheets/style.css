@@ -309,6 +309,10 @@ a.pure-button-primary {
 *  Custom Stylez
 */
 
+.game-list{
+  padding-bottom: 25px;
+}
+
 .game-grid{
   padding: 10px;
   margin-right: 10px;
