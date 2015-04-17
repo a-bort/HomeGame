@@ -96,6 +96,10 @@ module.exports = function(app, passport) {
     
     app.get('/join/:gameId', isLoggedIn, function(req, res) {
       gameRepo.getGameById(req.params.gameId, function(err, game){
+        if(err || !game){
+          defaultRedirect(res);
+          return;
+        }
         res.render('joinGame', {
             title: "Join a Game",
             user : req.user,

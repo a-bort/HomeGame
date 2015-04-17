@@ -37,7 +37,7 @@ exports.configureSeatsAfterCancellation = function(game, userId){
 }
 
 exports.seatPlayerFromWaitlist = function(game){
-  sortWaitListCollection(game);
+  sortWaitList(game);
   game.seatCollection.push(game.waitListCollection[0]);
   game.waitListCollection.splice(0, 1);
 }
