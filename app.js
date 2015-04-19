@@ -18,7 +18,6 @@ var express = require('express')
   , favicon = require('serve-favicon');
 
 //public path
-console.log(__dirname);
 app.use(express.static(path.join(__dirname, 'public')));
 
  //view stuff
