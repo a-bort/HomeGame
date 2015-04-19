@@ -17,6 +17,9 @@ var express = require('express')
   
   , favicon = require('serve-favicon');
 
+//public path
+app.use(express.static(path.join(__dirname, 'public')));
+
  //view stuff
 app.use(favicon(path.join(__dirname,'public','images','favicon.ico')));
 
@@ -46,7 +49,6 @@ app.use(flash());
 
 //routes
 require('./routes.js')(app, passport);
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen(port);
 console.log("Listening on " + port);
