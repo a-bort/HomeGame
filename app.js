@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname,'public','images','favicon.ico')));
 
 //var uri = 'localhost';
-var uri = 'mongodb://homegame_app:tensfullofseven@ds061721.mongolab.com:61721/heroku_app36004460';
+var uri = 'mongodb://homegame_user:tensfull0fsevens@ds053877.mongolab.com:53877/heroku_app36004460';
 
 var db = mongoose.connect(uri, 'homegame');
 
