@@ -26,7 +26,7 @@ app.use(favicon(path.join(__dirname,'public','images','favicon.ico')));
 //var uri = 'localhost';
 var uri = 'mongodb://homegame_user:tensfull0fsevens@ds053877.mongolab.com:53877/heroku_app36004460';
 
-var db = mongoose.connect(uri, 'homegame');
+var db = mongoose.connect(uri);
 
 require('./config/passport')(passport); // pass passport for configuration
 
