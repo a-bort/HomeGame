@@ -3,9 +3,11 @@
  * Module dependencies.
  */
 
-var express = require('express')
+var config = require('./config/config')
+
+  , express = require('express')
   , app = express()
-  , port = process.env.PORT || 3000
+  , port = process.env.PORT || config.port
   , path = require('path')
   , mongoose = require('mongoose')
   , passport = require('passport')
@@ -23,8 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
  //view stuff
 app.use(favicon(path.join(__dirname,'public','images','favicon.ico')));
 
-//var uri = 'localhost';
-var uri = 'mongodb://homegame_user:tensfull0fsevens@ds053877.mongolab.com:53877/heroku_app36004460';
+var uri = config.dbUri;
 
 var db = mongoose.connect(uri);
 

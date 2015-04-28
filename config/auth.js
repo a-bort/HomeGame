@@ -1,9 +1,11 @@
+var config = require('./config');
+
 module.exports = {
 
     'facebookAuth' : {
         'clientID'      : '1554131611521512', // your App ID
         'clientSecret'  : 'a93569788567937dccfe3d6a25ee9ebf', // your App Secret
-        'callbackURL'   : 'http://homegame.a-bort.com/auth/facebook/callback'
+        'callbackURL'   : config.fbCallback
     },
 
 };
