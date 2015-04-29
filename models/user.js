@@ -11,8 +11,13 @@ var userSchema = new mongoose.Schema({
   token: String,
   email: String,
   name: String,
+  customName: String,
   active: { type: Boolean, default: true },
   playerPool: [playerSchema]
+});
+
+userSchema.virtual('displayName').get(function(){
+  return this.customName || this.name;
 });
 
 exports.user = mongoose.model('User', userSchema);

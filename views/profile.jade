@@ -1,7 +1,9 @@
 extends layout
 
 block content
-  h2.content-head Profile - #{user.name}
-  p.
-    <strong>id</strong>: #{user.id}
-    <strong>email</strong>: #{user.email}
+  script(type="text/javascript" src="/javascripts/controllers/profileController.js")
+  div(ng-controller="ProfileController" ng-init="init(#{JSON.stringify(user)}, [])")
+    h2.content-head Profile - #{user.displayName}
+    p.
+      <strong>id</strong>: #{user.id}
+      <strong>email</strong>: #{user.email}

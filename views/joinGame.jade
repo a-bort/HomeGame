@@ -14,11 +14,11 @@ block content
               div.pure-g.roster-seat(ng-repeat="seat in activeGame.seatCollection | filter:filledSeatFilter")
                 div.pure-u-1-5
                   b Imagine a Picture Here
-                div.pure-u-4-5 {{seat.user.name}}
+                div.pure-u-4-5 {{seat.user.displayName}}
             div.roster-panel.pure-u-3-5
               h4.content-head Waitlist
               div.pure-g.roster-seat(ng-repeat="seat in activeGame.waitListCollection | orderBy: 'created'")
                 div.pure-u-1-5
                   b Imagine a Picture Here
-                div.pure-u-4-5 {{seat.user.name}}
+                div.pure-u-4-5 {{seat.user.displayName}}
             
