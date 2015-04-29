@@ -1,5 +1,6 @@
 var gameModel = require('../models/game').game;
 var seatModel = require('../models/game').seat;
+var userModel = require('../models/user');
 
 exports.createSeatsForGame = function(game, userId){
     for(var i = 0; i < game.seats; i++){
@@ -92,4 +93,8 @@ function sortWaitList(game){
   game.waitListCollection.sort(function(a, b){
     return a.created.getTime() - b.created.getTime();
   });
+}
+
+function addUserToGameOwnerPlayerPool(game, userId, callback){
+  
 }
