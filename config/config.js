@@ -1,4 +1,4 @@
-var dev = true;
+var dev = false;
 
 exports.fbCallback = dev ? 'http://localhost:3000/auth/facebook/callback' : 'http://homegame.a-bort.com/auth/facebook/callback';
 
