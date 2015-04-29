@@ -1,7 +1,6 @@
 var gameModel = require('../models/game').game;
 var seatModel = require('../models/game').seat;
-var userModel = require('../models/user').user;
-var playerModel = require('../models/user').player;
+var playerPoolRepo = require('./playerPoolRepository');
 
 exports.createSeatsForGame = function(game, userId){
     for(var i = 0; i < game.seats; i++){
@@ -66,7 +65,7 @@ exports.seatUserInGame = function(gameId, user, callback){
             console.log(err);
             callback(err);
           } else{
-            addUserToGameOwnerPlayerPool(game, user, callback);
+            playerPoolRepo.addUserToGameOwnerPlayerPool(game, user, callback);
           }
         });
     });
@@ -93,38 +92,5 @@ function addUserToWaitList(game, user){
 function sortWaitList(game){
   game.waitListCollection.sort(function(a, b){
     return a.created.getTime() - b.created.getTime();
-  });
-}
-
-function addUserToGameOwnerPlayerPool(game, user, callback){
-  var ownerId = game.owner;
-  userModel.findOne({_id: ownerId}, function(err, owner){
-    if(err){
-      callback(err);
-      return;
-    }
-    
-    if(!owner){
-      callback("Unable to locate owner with id = " + ownerId);
-      return;
-    }
-    
-    for(var i = 0; i < owner.playerPool.length; i++){
-      var player = owner.playerPool[i];
-      if(player.user.equals(user._id)){
-        callback();
-        return;
-      }
-    }
-    
-    var newPlayer = new playerModel({user: userId});
-    owner.playerPool.push(newPlayer);
-    
-    owner.save(function(err){
-      if(err){
-        console.log(err);
-      }
-      callback(err);
-    });
   });
 }
