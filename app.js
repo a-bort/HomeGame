@@ -40,7 +40,7 @@ app.set('views', __dirname + '/views');
 
 //passport setup
 app.use(session({ 
-	secret: 'tensfullofsevens',
+	secret: config.passportSecret,
 	resave: false,
 	saveUninitialized: false
 }));

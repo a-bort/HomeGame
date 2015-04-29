@@ -18,12 +18,15 @@ exports.userAuthorizedForGame = function(req, res, next){
     if(err || !game){
       console.log('Error finding game');
       redirector.defaultRedirect(res);
+      return;
     }
     
     var ownerPlayerPool = game.owner.playerPool;
+    
     for(var i = 0; i < ownerPlayerPool.length; i++){
       var player = ownerPlayerPool[i];
-      if(player.user == userId && player.blocked){
+      
+      if(player.user.equals(userId) && player.blocked){
         req.flash('error', 'Not Authorized');
         redirector.defaultRedirect(res);
         return;
