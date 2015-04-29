@@ -1,7 +1,7 @@
 var gameRepository = require('./gameRepository');
 var gameModel = require('../models/game').game;
 var seatModel = require('../models/game').seat;
-var userModel = require('../models/user');
+var userModel = require('../models/user').user;
 var redirector = require('./redirector');
 
 exports.userAuthorizedForGame = function(req, res, next){
