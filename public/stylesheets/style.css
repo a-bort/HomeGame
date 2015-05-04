@@ -66,6 +66,10 @@ label {
     margin-bottom: 1em;
 }
 
+.pure-checkbox input[type] {
+    width: inherit;
+}
+
 /*
  * -- PURE BUTTON STYLES --
  * I want my pure-button elements to look a little different
@@ -332,4 +336,8 @@ a.pure-button-primary {
 
 .roster-panel{
   margin-top: 20px;
+}
+
+.padded-input{
+  padding-right: 10px;
 }

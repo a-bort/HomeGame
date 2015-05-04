@@ -27,7 +27,7 @@ var gameSchema = new mongoose.Schema({
     waitListCollection: [seatSchema],
     gameFormat: String,
     date: Date,
-    time: String,
+    time: Date,
     notes: String,
     active: { type: Boolean, default: true }
 }, schemaOptions);

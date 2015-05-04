@@ -2,14 +2,15 @@ var gameModel = require('../models/game').game;
 var seatModel = require('../models/game').seat;
 var playerPoolRepo = require('./playerPoolRepository');
 
-exports.createSeatsForGame = function(game, userId){
+exports.createSeatsForGame = function(game, userId, seatHost){
     for(var i = 0; i < game.seats; i++){
-        exports.addSeatToGame(game, userId);
+        exports.addSeatToGame(game, userId, seatHost);
+        seatHost = false; //Ensures host is only seated once
     }
 }
 
-exports.addSeatToGame = function(game, userId){
-  var seat = new seatModel({});
+exports.addSeatToGame = function(game, userId, seatHost){
+  var seat = seatHost ? new seatModel({user: userId}) : new seatModel({});
   
   game.seatCollection.push(seat);
 }

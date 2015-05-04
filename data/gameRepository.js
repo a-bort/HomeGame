@@ -2,12 +2,14 @@ var gameModel = require('../models/game').game;
 var seatRepo = require('./seatRepository');
 
 exports.saveGame = function(gameObject, userId, callback){
+  var seatHost = gameObject.seatHost;
+  
   gameObject.owner = userId;
   var id = gameObject._id;
   delete gameObject._id;
   if(!id){
     var game = new gameModel(gameObject);
-    seatRepo.createSeatsForGame(game, userId);
+    seatRepo.createSeatsForGame(game, userId, seatHost);
     game.save(function(err){
       if(err){
         console.log(err);

@@ -10,7 +10,12 @@ homeGameApp.controller('HostGameController', function($scope, $http, $location){
     date: '',
     time: '',
     notes: '',
+    seatHost: true
   };
+  
+  $scope.gameIsNew = function(){
+    return !$scope.dataModel._id;
+  }
 
   $scope.initWithGame = function(game){
     if(game){
