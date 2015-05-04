@@ -3,6 +3,7 @@ module.exports = function(app, passport) {
   // Utility Classes
   var gameRepo = require('./data/gameRepository');
   var seatRepo = require('./data/seatRepository');
+  var userRepo = require('./data/userRepository');
   var redirector = require('./data/redirector');
   var authorization = require('./data/authorization');
   
@@ -56,6 +57,16 @@ module.exports = function(app, passport) {
         });
     });
 
+    app.post('/profile', isLoggedIn, function(req, res){
+      var user = req.body.userModel;
+      userRepo.updateUser(user, function(err){
+        if(err){
+          res.json({error: err});
+        } else{
+          res.json({success: true});
+        }
+      });
+    });
     // ================
     // VIEW GAMES
     // =================
