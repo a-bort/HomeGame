@@ -11,6 +11,11 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
     $scope.filledSeatFilter = function(seat){
       return seat.user;
     };
+        
+    $scope.getImgSrcFromSeat = function(seat){
+      if(!seat || !seat.user || !seat.user.id) return "";
+      return ;
+    }
     
     $scope.initWithGame = function(game, userAttending){
         $scope.activeGame = game;

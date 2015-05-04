@@ -9,16 +9,18 @@ block content
             h4.content-subhead {{activeGame.dateString}} @ {{activeGame.timeString}}
             button.pure-button(ng-click="join()" ng-disabled="userAttending" ng-class="{'pure-button-primary' : !userAttending, 'button-success' : userAttending}") {{joinButtonText()}}
           div
-            div.roster-panel.pure-u-3-5
-              h4.content-head Current Roster ({{activeGame.emptySeats}} Seats Remaining)
-              div.pure-g.roster-seat(ng-repeat="seat in activeGame.seatCollection | filter:filledSeatFilter")
-                div.pure-u-1-5
-                  b Imagine a Picture Here
-                div.pure-u-4-5 {{seat.user.displayName}}
-            div.roster-panel.pure-u-3-5
-              h4.content-head Waitlist
-              div.pure-g.roster-seat(ng-repeat="seat in activeGame.waitListCollection | orderBy: 'created'")
-                div.pure-u-1-5
-                  b Imagine a Picture Here
-                div.pure-u-4-5 {{seat.user.displayName}}
+            div.pure-g
+              div.roster-panel.pure-u-3-5
+                h4.content-head Current Roster ({{activeGame.emptySeats}} Seats Remaining)
+                div.pure-g.roster-seat(ng-repeat="seat in activeGame.seatCollection | filter:filledSeatFilter")
+                  div.pure-u-1-12
+                    img(ng-src="http://graph.facebook.com/{{seat.user.id}}/picture?type=square")
+                  div.pure-u-11-12 {{seat.user.displayName}}
+            div.pure-g(ng-hide="emptySeats()")
+              div.roster-panel.pure-u-3-5
+                h4.content-head Waitlist
+                div.pure-g.roster-seat(ng-repeat="seat in activeGame.waitListCollection | orderBy: 'created'")
+                  div.pure-u-1-12
+                    img(ng-src="http://graph.facebook.com/{{seat.user.id}}/picture?type=square")
+                  div.pure-u-11-12 {{seat.user.displayName}}
             
