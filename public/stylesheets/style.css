@@ -341,3 +341,10 @@ a.pure-button-primary {
 .padded-input{
   padding-right: 10px;
 }
+
+.header-button {
+  -webkit-margin-before: 1em;
+  -webkit-margin-after: 1em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+}

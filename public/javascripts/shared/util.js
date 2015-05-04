@@ -32,5 +32,9 @@ function util(){
         }
       }
     }
+    
+    util.deepCopy = function(obj){
+      return $.extend(true, {}, obj);
+    }
 }
 var util = new util();

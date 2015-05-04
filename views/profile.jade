@@ -3,7 +3,25 @@ extends layout
 block content
   script(type="text/javascript" src="/javascripts/controllers/profileController.js")
   div(ng-controller="ProfileController" ng-init="init(#{JSON.stringify(user)}, [])")
-    h2.content-head Profile - #{user.displayName}
-    p.
-      <strong>id</strong>: #{user.id}
-      <strong>email</strong>: #{user.email}
+    h2.content-head Profile
+    div.pure-g
+      div.pure-u-1-3
+        div.pure-g
+          div.pure-u-2-5
+            h3 {{user.name}}
+          div.pure-u-3-5
+            button.header-button(ng-hide="editing", ng-click="edit()") Edit
+            button.header-button(ng-show="editing", ng-click="cancel()") Cancel
+        div.pure-g
+          div.pure-u-2-5 Display Name
+          div.pure-u-3-5 
+            span(ng-hide="editing") {{user.customName}}
+            span(ng-show="editing")
+              input(type="text", ng-model="user.customName")
+        div.pure-g
+          div.pure-u-2-5 Email
+          div.pure-u-3-5 
+            span(ng-hide="editing") {{user.email}}
+            span(ng-show="editing")
+              input(type="text", ng-model="user.email")
+      
