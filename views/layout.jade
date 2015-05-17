@@ -8,6 +8,8 @@ html
     script(type='text/javascript' src='/javascripts/shared/base.js')
     script(type='text/javascript' src='/javascripts/shared/util.js')
     
+    script(type='text/javascript' src='/javascripts/controllers/sharedController.js')
+    
     script(type="text/javascript").
       if (window.location.hash && (window.location.hash == '#/_=_' || window.location.hash == '#_=_')) {window.location.hash = '';}
     
@@ -33,7 +35,7 @@ html
     meta(name='viewport' content='width=device-width, initial-scale=1')
   body(ng-app="homeGameApp")
     div#fb-root
-    .header
+    .header(ng-controller="SharedController", ng-init="init(#{JSON.stringify(sharedModel)})")
       .home-menu.pure-menu.pure-menu-horizontal.pure-menu-fixed
         a.pure-menu-heading(href="/") Home Game
         ul.pure-menu-list
@@ -45,6 +47,13 @@ html
             a.pure-menu-link(href="/profile") Profile
           li.pure-menu-item
             a.pure-menu-link(href="/logout") Logout
-          
+        div.email-confirm-box(ng-show="sharedModel.showEmailPrompt")
+          div.email-confirm-inner
+            div.email-confirm-input
+              label Is this the right email?
+              input(type="text", ng-model="sharedModel.email")
+            div.email-confirm-buttons
+              button.pure-button.button-small(ng-click="updateEmail()") Submit
+              button.pure-button.button-small.button-plain(ng-click="cancelEmailUpdate()") Cancel
     .content
       block content

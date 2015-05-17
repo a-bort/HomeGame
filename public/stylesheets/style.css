@@ -103,6 +103,26 @@ a.pure-button-primary {
 .button-secondary {
     background: rgb(66, 184, 221); /* this is a light blue */
 }
+
+.button-plain {
+    background: rgb(203, 203, 203); /* this is a light blue */
+}
+
+.button-xsmall {
+    font-size: 70%;
+}
+
+.button-small {
+    font-size: 85%;
+}
+
+.button-large {
+    font-size: 110%;
+}
+
+.button-xlarge {
+    font-size: 125%;
+}
 /*
  * -- MENU STYLES --
  * I want to customize how my .pure-menu looks at the top of the page
@@ -347,4 +367,35 @@ a.pure-button-primary {
   -webkit-margin-after: 1em;
   -webkit-margin-start: 0px;
   -webkit-margin-end: 0px;
+}
+  /*  Email Confirm Box  */
+  
+.email-confirm-box {
+  display: block;
+  position: absolute;
+  background: white;
+  top: 62px;
+  right: 0px;
+  border: 1px solid;
+  border-top: 0px;
+  padding-left: 25px;
+  padding-bottom: 20px;
+  border-bottom-left-radius: 25px;
+}
+
+.email-confirm-inner {
+  margin-top: 20px;
+  margin-right: 10px;
+}
+
+.email-confirm-buttons {
+  float: right;
+  margin-top: 5px;
+}
+.email-confirm-buttons > button{
+  margin-left: 5px;
+}
+
+.email-confirm-input > label {
+  margin-right: 5px;
 }

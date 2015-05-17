@@ -13,7 +13,8 @@ var userSchema = new mongoose.Schema({
   name: String,
   customName: String,
   active: { type: Boolean, default: true },
-  playerPool: [playerSchema]
+  playerPool: [playerSchema],
+  emailUpdatePrompted: { type: Boolean, default: false }
 });
 
 userSchema.virtual('displayName').get(function(){

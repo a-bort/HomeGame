@@ -4,6 +4,7 @@ module.exports = function(app, passport) {
   var gameRepo = require('./data/gameRepository');
   var seatRepo = require('./data/seatRepository');
   var userRepo = require('./data/userRepository');
+  var sharedRepo = require('./data/sharedRepository');
   var redirector = require('./data/redirector');
   var authorization = require('./data/authorization');
   
@@ -18,6 +19,17 @@ module.exports = function(app, passport) {
     }), function(req, res){
       var redirectUrl = redirector.getRedirectUrlFromLogin(req);
       res.redirect(redirectUrl);
+    });
+    
+    // ==============================
+    // GLOBAL FILTER
+    // ==============================
+    
+    app.all('*', function(req, res, next){
+      sharedRepo.getSharedData(req, function(data){
+        res.locals.sharedModel = data;
+        next();
+      });
     });
     
     // =====================================
@@ -67,6 +79,17 @@ module.exports = function(app, passport) {
         }
       });
     });
+    
+    app.post('/updateEmail', isLoggedIn, function(req, res){
+      var email = req.body.email;
+      userRepo.updateUserEmail(req.user, email, function(err){
+        if(err){
+          res.json({error: err});
+        } else{
+          res.json({success: true});
+        }
+      });
+    });
     // ================
     // VIEW GAMES
     // =================
@@ -75,7 +98,7 @@ module.exports = function(app, passport) {
         gameRepo.getGamesByPlayer(req.user._id, function(playerGames){
           gameRepo.getWaitlistedGames(req.user._id, function(waitlistedGames){
             res.render('myGames', {
-            title: "My Games",
+                  title: "My Games",
                   user : req.user,
                   ownedGames: ownedGames,
                   playerGames: playerGames,
