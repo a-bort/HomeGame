@@ -22,6 +22,10 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     return $scope.waitlistedGames.length == 0;
   }
   
+  $scope.viewGame = function(game){
+    window.location = game.joinGameUrl;
+  }
+  
   $scope.copyUrl = function(game){
     window.prompt("Copy to clipboard: Ctrl+C, Enter", util.urlBase() + game.joinGameUrl);
   }
