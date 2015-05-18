@@ -6,7 +6,7 @@ exports.getSharedData = function(req, callback){
       if(err || !user){
         defaultCallback(callback);
       }
-      callback({email: user.email, showEmailPrompt: !user.emailUpdatePrompted});
+      callback({email: user.email, showEmailPrompt: !user.emailUpdatePrompted, loggedIn: true});
     });
     return;
   }
@@ -19,6 +19,7 @@ exports.getSharedData = function(req, callback){
 function defaultCallback(callback){
   callback({
     email: "",
-    showEmailPrompt: false
+    showEmailPrompt: false,
+    loggedIn: false
   });
 }

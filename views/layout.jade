@@ -46,6 +46,8 @@ html
           li.pure-menu-item
             a.pure-menu-link(href="/profile") Profile
           li.pure-menu-item
+            a.pure-menu-link(href="/about") About
+          li.pure-menu-item(ng-show="sharedModel.loggedIn")
             a.pure-menu-link(href="/logout") Logout
         div.email-confirm-box(ng-show="sharedModel.showEmailPrompt")
           div.email-confirm-inner

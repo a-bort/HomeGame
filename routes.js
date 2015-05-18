@@ -192,6 +192,15 @@ module.exports = function(app, passport) {
     // =====================================
     // LOGOUT ==============================
     // =====================================
+    app.get('/about', function(req, res) {
+        res.render('about', {
+          title: "About Home Game"
+        });
+    });
+  
+    // =====================================
+    // LOGOUT ==============================
+    // =====================================
     app.get('/logout', function(req, res) {
         req.flash('message', 'Logout Successful');
         req.logout();
