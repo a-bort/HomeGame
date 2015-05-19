@@ -447,3 +447,15 @@ a.pure-button-primary {
 .email-confirm-input > label {
   margin-right: 5px;
 }
+
+/* About Page Syling */
+
+.features-content {
+  min-height: 50px;
+  margin-bottom: 40px;
+}
+
+.feedback-area {
+  width: 100%;
+  min-height: 100px;
+}

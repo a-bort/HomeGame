@@ -5,8 +5,10 @@ module.exports = function(app, passport) {
   var seatRepo = require('./data/seatRepository');
   var userRepo = require('./data/userRepository');
   var sharedRepo = require('./data/sharedRepository');
+  var feedbackRepo = require('./data/feedbackRepository');
   var redirector = require('./data/redirector');
   var authorization = require('./data/authorization');
+  
   
     // ============================
     // FB AUTH
@@ -196,6 +198,25 @@ module.exports = function(app, passport) {
         res.render('about', {
           title: "About Home Game"
         });
+    });
+    
+    app.post('/feedback', function(req, res){
+      var feedback = req.body.feedback;
+      var userId = null;
+      if(req.user){
+        userId = req.user._id;
+      }
+      
+      console.log(feedback);
+      console.log(userId);
+      
+      feedbackRepo.submitFeedback(feedback, userId, function(err){
+        if(err){
+          res.json({error: err});
+        } else{
+          res.json({success: true});
+        }
+      });
     });
   
     // =====================================
