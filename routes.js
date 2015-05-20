@@ -192,7 +192,7 @@ module.exports = function(app, passport) {
     });
 	
     // =====================================
-    // LOGOUT ==============================
+    // ABOUT ==============================
     // =====================================
     app.get('/about', function(req, res) {
         res.render('about', {
@@ -217,6 +217,16 @@ module.exports = function(app, passport) {
           res.json({success: true});
         }
       });
+    });
+    
+    // =====================================
+    // ABOUT ==============================
+    // =====================================
+    
+    app.get('/privacy', function(req, res) {
+        res.render('privacy', {
+          title: "Home Game Privacy Policy"
+        });
     });
   
     // =====================================

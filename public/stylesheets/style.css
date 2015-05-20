@@ -519,3 +519,9 @@ a.pure-button-primary {
   width: 100%;
   min-height: 100px;
 }
+
+/* Privacy Styling */
+
+.privacy-policy{
+  max-width: 900px;
+}
