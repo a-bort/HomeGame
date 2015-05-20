@@ -1,7 +1,9 @@
 extends layout
 
 block content
-  h2.content-head= title
-  p Welcome to #{title}
-  p Login or Register with:
-  a(href="/auth/facebook") Facebook
+  div.splash-container
+    div.splash
+      div.splash-head Welcome to #{title}!
+      div.splash-subhead Login or Register with&nbsp;
+        a(href="/auth/facebook") Facebook
+      

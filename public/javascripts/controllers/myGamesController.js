@@ -45,6 +45,17 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     window.prompt("Copy to clipboard: Ctrl+C, Enter", util.urlBase() + game.joinGameUrl);
   }
   
+  $scope.joinInfoVisible = false;
+  $scope.hostInfoVisible = false;
+  
+  $scope.showJoinInfo = function(){
+    $scope.joinInfoVisible = true;
+  };
+  
+  $scope.showHostInfo = function(){
+    $scope.hostInfoVisible = true;
+  }
+  
   $scope.sendLeaveRequest = function(game){
     $http.post('/mygames/leave', {gameId: game._id}).success(function(data){
       if(data.error){

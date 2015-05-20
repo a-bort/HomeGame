@@ -5,9 +5,17 @@ block content
     div(ng-controller="JoinGameController" ng-init="initWithGame(#{JSON.stringify(game)}, #{JSON.stringify(userAttending)})")
         div(ng-if="activeGame")
           div
-            h2.content-head {{activeGame.owner.name}}'s {{activeGame.stakes}} {{activeGame.gameType}} {{activeGame.gameFormat}}
-            h4.content-subhead {{activeGame.dateString}} @ {{activeGame.timeString}}
-            button.pure-button(ng-click="join()" ng-disabled="userAttending" ng-class="{'pure-button-primary' : !userAttending, 'button-success' : userAttending}") {{joinButtonText()}}
+            h2.content-head Game Info
+            div.content-subhead {{activeGame.owner.name}}'s {{activeGame.stakes}}, {{activeGame.gameType}} {{activeGame.gameFormat}}
+            div.game-grid.game-info
+              div 
+                span.strong-text When: 
+                |{{activeGame.dateString}} @ {{activeGame.timeString}}
+              div 
+                span.strong-text Where: 
+                | {{activeGame.location}}
+              div {{activeGame.notes}}
+            button.pure-button.pure-button-primary(ng-click="join()" ng-disabled="userAttending") {{joinButtonText()}}
           div
             div.pure-g
               div.roster-panel.pure-u-3-5
@@ -15,7 +23,7 @@ block content
                 div.pure-g.roster-seat(ng-repeat="seat in activeGame.seatCollection | filter:filledSeatFilter")
                   div.pure-u-1-12
                     img(ng-src="http://graph.facebook.com/{{seat.user.id}}/picture?type=square")
-                  div.pure-u-11-12 {{seat.user.displayName}}
+                  div.pure-u-11-12.roster-name {{seat.user.displayName}}
             div.pure-g(ng-hide="emptySeats()")
               div.roster-panel.pure-u-3-5
                 h4.content-head Waitlist
