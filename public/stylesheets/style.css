@@ -134,6 +134,14 @@ a.pure-button-primary {
   font-weight: bold;
 }
 
+.sub-text {
+  color: #3792E8
+}
+
+.push-sm {
+  margin-bottom: 5px;
+}
+
 /*
  * -- MENU STYLES --
  * I want to customize how my .pure-menu looks at the top of the page
@@ -375,10 +383,18 @@ a.pure-button-primary {
   height: 80px;
 }
 
+.game-grid-hosted-right {
+
+}
+
 .game-grid-button{
   min-width: 115px;
   position: absolute;
   right: 0px;
+}
+
+.game-grid-small-button{
+  min-width: 162px;
 }
 
 .game-grid-top-button{
