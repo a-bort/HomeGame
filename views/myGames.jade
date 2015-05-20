@@ -10,20 +10,24 @@ block content
             | Upcoming Games
           div.game-grid(ng-repeat="game in playerGames")
             div.pure-g
-              div.pure-u-12-24
+              div.pure-u-18-24
                 div.game-grid-top-left.game-grid-subhead {{game.owner.displayName}}'s {{game.stakes}} {{game.gameType}} {{game.gameFormat}}
-                div.game-grid-bottom-left {{game.dateString}} @ {{game.timeString}}
-              div.pure-u-6-24
-                div.info-content
-                  div.info-header Game Info
+                div.game-grid-middle-left {{game.dateString}}
+                  span.strong-text &nbsp;|&nbsp
+                  | {{game.timeString}}
+                div.game-grid-botttom-left 
                   div.info-body
-                    div {{game.filledSeats}} / {{game.seats}} Seats Filled
-                    div {{game.notes}}
+                    span {{game.filledSeats}} of {{game.seats}} Seats Filled&nbsp;
+                    span.strong-text &sect;&nbsp;
+                    span {{game.emptySeats}}&nbsp;Seat
+                    span(ng-show="game.multiSeats") s
+                    span &nbsp;Left&nbsp;
+                    span.strong-text &sect;&nbsp;
+                    span {{game.notes}}
               div.pure-u-6-24
-                div.game-grid-top-right
-                  button.pure-button.game-grid-button(href="#" ng-click="$parent.viewGame(game)") View 
-                div.game-grid-bottom-right
-                  button.pure-button.game-grid-button(href="#" ng-click="$parent.leaveGame(game)") Cancel                
+                div.game-grid-right
+                  button.pure-button.game-grid-button.game-grid-top-button(href="#" ng-click="$parent.viewGame(game)") View 
+                  button.pure-button.game-grid-button.game-grid-bottom-button(href="#" ng-click="$parent.leaveGame(game)") Cancel                
           div.game-grid.empty-game-grid(ng-show="noPlayerGames()")
             div.game-grid-subhead You have no upcoming games.
             a(href="#") How do I join a game?
@@ -32,15 +36,16 @@ block content
             span(ng-hide="noWaitlistedGames()") Waitlisted Games
           div.game-grid.waitlist-grid(ng-repeat="game in waitlistedGames")
             div.pure-g
-              div.pure-u-12-24
+              div.pure-u-18-24
                 div.game-grid-top-left.game-grid-subhead {{game.owner.displayName}}'s {{game.stakes}} {{game.gameType}} {{game.gameFormat}}
-                div.game-grid-bottom-left {{game.dateString}} @ {{game.timeString}}
-              div.pure-u-6-24
-                div.info-content
-                  div.info-header Game Info
+                div.game-grid-middle-left {{game.dateString}}
+                  span.strong-text &nbsp;|&nbsp
+                  | {{game.timeString}}
+                div.game-grid-botttom-left 
                   div.info-body
-                    div {{game.filledSeats}} / {{game.seats}} Seats Filled
-                    div {{game.notes}}
+                    span {{game.filledSeats}} / {{game.seats}} Seats Filled&nbsp;
+                    span.strong-text &sect;&nbsp;
+                    span {{game.notes}}
               div.pure-u-6-24
                 div.game-grid-top-right
                   button.pure-button.game-grid-button(href="#" ng-click="$parent.viewGame(game)") View 
@@ -52,7 +57,9 @@ block content
         div.game-grid(ng-repeat="game in ownedGames")
           div.pure-g
             div.pure-u-2-3
-              div {{game.dateString}} @ {{game.timeString}}
+              div {{game.dateString}}
+                  span.strong-text &nbsp;|&nbsp
+                  | {{game.timeString}}
               div.pure-g
                 div.pure-u-1-2 {{game.filledSeats}} / {{game.seats}} Seats Filled
                 div.pure-u-1-2

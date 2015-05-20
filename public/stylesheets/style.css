@@ -75,7 +75,7 @@ label {
  * I want my pure-button elements to look a little different
  */
 .pure-button {
-    background-color: #1f8dd6;
+    background-color: #3792E8;
     color: white;
     padding: 0.5em 2em;
     border-radius: 5px;
@@ -123,6 +123,17 @@ a.pure-button-primary {
 .button-xlarge {
     font-size: 125%;
 }
+
+/*
+*
+* -- Custom And Generic!
+*
+*/
+
+.strong-text {
+  font-weight: bold;
+}
+
 /*
  * -- MENU STYLES --
  * I want to customize how my .pure-menu looks at the top of the page
@@ -343,31 +354,43 @@ a.pure-button-primary {
   padding: 10px;
   margin-right: 10px;
   margin-bottom: 5px;
-  background-color: #0764A3;
-  color: white;
+  background-color: white;
+  color: #0764A3;
   border-radius: 10px;
   overflow: hidden;
+  border: 1px solid;
+  min-height: 103px;
 }
 
 .game-grid a{
-  color: beige;
+  color: #607CA8;
 }
 
 .game-grid-top-left {
-  padding-bottom: 40px;
   margin-right: 10px;
 }
 
-.game-grid-top-right {
-  padding-bottom: 25px;
+.game-grid-right {
+  position: relative;
+  height: 80px;
 }
 
 .game-grid-button{
   min-width: 115px;
+  position: absolute;
+  right: 0px;
+}
+
+.game-grid-top-button{
+  top: 0px;
+}
+
+.game-grid-bottom-button{
+  bottom: 0px;
 }
 
 .info-content{
-  background-color: #607CA8;
+  font-size: 14px;
   padding: 10px;
   margin-right: 20px;
   border-radius: 5px;
@@ -377,12 +400,11 @@ a.pure-button-primary {
 .info-header{
   margin-bottom: 10px;
   font-size: 22px;
-  font-variant: small-caps;
   color: #343A41;
 }
 
 .info-body{
-  color: #32475E;
+  font-size: 14px;
 }
 
 .empty-game-grid{
@@ -398,8 +420,8 @@ a.pure-button-primary {
 }
 
 .game-grid-subhead{
-  font-variant: small-caps;
-  font-size: 22px;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .roster-panel{

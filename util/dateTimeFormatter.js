@@ -1,12 +1,13 @@
 exports.formatDateString = function(dateString){
-  return new Date(dateString).toLocaleDateString('en-us')
+  var date = new Date(dateString);
+  return (date.getMonth() + 1) + '/' + date.getDate() + '/' +  date.getFullYear();
 }
 
 exports.formatTimeString = function(timeString) {
   var time = new Date(timeString);
   var hours = time.getHours();
   var minutes = time.getMinutes();
-  var ampm = hours >= 12 ? 'pm' : 'am';
+  var ampm = hours >= 12 ? 'PM' : 'AM';
   hours = hours % 12;
   hours = hours ? hours : 12; // the hour '0' should be '12'
   minutes = minutes < 10 ? '0'+minutes : minutes;
