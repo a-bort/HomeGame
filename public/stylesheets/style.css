@@ -424,15 +424,15 @@ a.pure-button-primary {
 }
 
 .empty-game-grid{
-  background-color: #607CA8;
+  background-color: #D3D7DD;
 }
 
 .empty-game-grid a{
-  color: rgb(204, 226, 255);
+  color: #3792E8;
 }
 
 .waitlist-grid{
-  background-color: #43A5E7
+  /*background-color: #43A5E7*/
 }
 
 .game-grid-subhead{
