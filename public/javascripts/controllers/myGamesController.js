@@ -26,15 +26,23 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     window.location = game.joinGameUrl;
   }
   
-  $scope.copyUrl = function(game){
-    window.prompt("Copy to clipboard: Ctrl+C, Enter", util.urlBase() + game.joinGameUrl);
-  }
-  
   $scope.leaveGame = function(game){
     var c = confirm("Do you want to cancel your reservation?");
     if(c){
       $scope.sendLeaveRequest(game);
     }
+  }
+  
+  $scope.editGame = function(game){
+    window.location = game.editGameUrl;
+  }
+  
+  $scope.viewGame = function(game){
+    window.location = game.joinGameUrl;
+  }
+  
+  $scope.copyUrl = function(game){
+    window.prompt("Copy to clipboard: Ctrl+C, Enter", util.urlBase() + game.joinGameUrl);
   }
   
   $scope.sendLeaveRequest = function(game){

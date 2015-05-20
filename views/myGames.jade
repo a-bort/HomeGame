@@ -67,11 +67,11 @@ block content
               div.sub-text {{game.filledSeats}} / {{game.seats}} Seats Filled
             div.pure-u-1-3.game-grid-hosted-right
               div.push-sm
-                button.pure-button.button-small.game-grid-small-button(href="{{game.editGameUrl}}") Edit Game Info
+                button.pure-button.button-small.game-grid-small-button(ng-click="$parent.editGame(game)") Edit Game Info
               div.push-sm
-                button.pure-button.button-small.game-grid-small-button(href="#" ng-click="$parent.copyUrl(game)") Copy Game URL
+                button.pure-button.button-small.game-grid-small-button(ng-click="$parent.copyUrl(game)") Copy Game URL
               div
-                button.pure-button.button-small(href="{{game.joinGameUrl}}") View Game Page
+                button.pure-button.button-small(ng-click="$parent.viewGame(game)") View Game Page
         div.game-grid.empty-game-grid(ng-show="noOwnedGames()")
             div.game-grid-subhead You are not hosting any games.
             a(href="#") How do I host a game?
