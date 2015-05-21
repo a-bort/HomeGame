@@ -6,6 +6,7 @@ exports.addUserToGameOwnerPlayerPool = function(game, user, callback){
   
   if(ownerId.equals(user._id)){
     callback();
+    return;
   };
   
   userModel.findOne({_id: ownerId}, function(err, owner){

@@ -42,7 +42,7 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
   }
   
   $scope.copyUrl = function(game){
-    window.prompt("Copy to clipboard: Ctrl+C, Enter", util.urlBase() + game.joinGameUrl);
+    window.prompt("Copy to clipboard: Ctrl+C, Enter", util.urlBase() + game.joinGameUrl + '?autoJoin=true');
   }
   
   $scope.joinInfoVisible = false;

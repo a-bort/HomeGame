@@ -17,12 +17,17 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       return ;
     }
     
-    $scope.initWithGame = function(game, userAttending){
+    $scope.initWithGame = function(game, userAttending, autoJoin){
         $scope.activeGame = game;
-        $scope.userAttending = userAttending;
+        $scope.userAttending = !!userAttending;
+        
+        if(autoJoin && !userAttending){
+          $scope.userAttending = true;
+          $scope.join();
+        }
     };
     
-    $scope.join = function(valid){
+    $scope.join = function(){
       if(!$scope.activeGame){
         return;
       }
@@ -38,6 +43,32 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       }).error(function(err){
         util.log(err);
         util.alert('Error saving game');
+      });
+    };
+    
+    $scope.cancel = function(){
+      var c = confirm("Do you want to cancel your reservation?");
+      if(c){
+        $scope.sendLeaveRequest();
+      }
+    }
+    
+    $scope.sendLeaveRequest = function(){
+      if(!$scope.activeGame){
+        return;
+      }
+      
+      $http.post('/mygames/leave/', {gameId: $scope.activeGame._id}).success(function(data){
+        if(data.error){
+          util.log(err);
+          util.alert('Error cancelling reservation');
+          return;
+        }
+        util.alert('Reservation Cancelled');
+        location = '/mygames';
+      }).error(function(err){
+        util.log(err);
+        util.alert('Error cancelling reservation');
       });
     };
 });

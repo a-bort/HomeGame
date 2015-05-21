@@ -2,7 +2,7 @@ extends layout
 
 block content
     script(type="text/javascript" src="/javascripts/controllers/joinGameController.js")
-    div(ng-controller="JoinGameController" ng-init="initWithGame(#{JSON.stringify(game)}, #{JSON.stringify(userAttending)})")
+    div(ng-controller="JoinGameController" ng-init="initWithGame(#{JSON.stringify(game)}, #{JSON.stringify(userAttending)}, #{JSON.stringify(autoJoin)})")
         div(ng-if="activeGame")
           div
             h2.content-head Game Info
@@ -15,20 +15,21 @@ block content
                 span.strong-text Where: 
                 | {{activeGame.location}}
               div {{activeGame.notes}}
-            button.pure-button.pure-button-primary(ng-click="join()" ng-disabled="userAttending") {{joinButtonText()}}
+            button.pure-button.pure-button-primary#join-button(ng-click="join()" ng-disabled="userAttending") {{joinButtonText()}}
+            button.pure-button.pure-button-primary#cancel-button(ng-click="cancel()" ng-show="userAttending") Cancel Reservation
           div
-            div.pure-g
-              div.roster-panel.pure-u-3-5
+            div
+              div.roster-panel
                 h4.content-head Current Roster ({{activeGame.emptySeats}} Seats Remaining)
-                div.pure-g.roster-seat(ng-repeat="seat in activeGame.seatCollection | filter:filledSeatFilter")
-                  div.pure-u-1-12
+                div.roster-seat(ng-repeat="seat in activeGame.seatCollection | filter:filledSeatFilter")
+                  div.roster-image
                     img(ng-src="http://graph.facebook.com/{{seat.user.id}}/picture?type=square")
-                  div.pure-u-11-12.roster-name {{seat.user.displayName}}
-            div.pure-g(ng-hide="emptySeats()")
-              div.roster-panel.pure-u-3-5
+                  div.roster-name {{seat.user.displayName}}
+            div(ng-hide="emptySeats()")
+              div.pure-u-3-5
                 h4.content-head Waitlist
-                div.pure-g.roster-seat(ng-repeat="seat in activeGame.waitListCollection | orderBy: 'created'")
-                  div.pure-u-1-12
+                div.roster-seat(ng-repeat="seat in activeGame.waitListCollection | orderBy: 'created'")
+                  div.roster-image
                     img(ng-src="http://graph.facebook.com/{{seat.user.id}}/picture?type=square")
-                  div.pure-u-11-12 {{seat.user.displayName}}
+                  div.roster-name {{seat.user.displayName}}
             

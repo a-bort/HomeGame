@@ -397,8 +397,12 @@ a.pure-button-primary {
   right: 0px;
 }
 
+.game-grid-button-container {
+  min-height: 32px;
+}
+
 .game-grid-small-button{
-  min-width: 162px;
+  float: right;
 }
 
 .game-grid-top-button{
@@ -503,9 +507,26 @@ a.pure-button-primary {
   min-width: 300px;
 }
 
+.roster-image {
+  display: inline-block;
+  height: 50px;
+}
+
 .roster-name {
+  display: inline-block;
   height: 50px;
   line-height: 50px;
+  vertical-align: top;
+  margin-left: 20px;
+}
+
+#cancel-button {
+  vertical-align: top;
+}
+
+#join-button {
+  margin-right: 10px;
+  margin-bottom: 10px;
 }
 
 /* About Page Syling */

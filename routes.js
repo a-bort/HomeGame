@@ -126,6 +126,7 @@ module.exports = function(app, passport) {
     // ======================
     
     app.get('/join/:gameId', isLoggedIn, authorization.userAuthorizedForGame, function(req, res) {
+      var autoJoin = !!req.query.autoJoin;
       gameRepo.getGameById(req.params.gameId, function(err, game){
         if(err || !game){
           redirector.defaultRedirect(res);
@@ -135,6 +136,7 @@ module.exports = function(app, passport) {
             title: "Join a Game",
             user : req.user,
             game : game,
+            autoJoin: autoJoin,
             userAttending : gameRepo.isUserRegisteredForGame(req.user._id, game)
         });
       });
