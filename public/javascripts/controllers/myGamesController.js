@@ -22,6 +22,20 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     return $scope.waitlistedGames.length == 0;
   }
   
+  $scope.pastGamesVisible = false;
+  
+  $scope.showPastGames = function(){
+    $scope.pastGamesVisible = true;
+  }
+  
+  $scope.hidePastGames = function(){
+    $scope.pastGamesVisible = false;
+  }
+  
+  $scope.gameShouldBeShown = function(game){
+    return game.pastGame == $scope.pastGamesVisible;
+  }
+  
   $scope.viewGame = function(game){
     window.location = game.joinGameUrl;
   }

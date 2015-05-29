@@ -6,9 +6,15 @@ block content
     div.pure-g
       div.pure-u-1-2
         div.game-list
-          h2.content-head 
+          h2.content-head(ng-hide="pastGamesVisible")
             | Upcoming Games
-          div.game-grid(ng-repeat="game in playerGames")
+            span.show-hide-link
+              a(href="#", ng-click="showPastGames()") Show Past Games
+          h2.content-head(ng-show="pastGamesVisible")
+            | Past Games
+            span.show-hide-link
+              a(href="#", ng-click="hidePastGames()") Show Upcoming Games
+          div.game-grid(ng-repeat="game in playerGames | filter:gameShouldBeShown")
             div.pure-g
               div.pure-u-18-24
                 div.game-grid-top-left.game-grid-subhead {{game.owner.displayName}}'s {{game.stakes}}, {{game.gameType}} {{game.gameFormat}}

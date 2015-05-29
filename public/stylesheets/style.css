@@ -389,6 +389,18 @@ a.pure-button-primary {
 *  Custom Stylez
 */
 
+.show-hide-link {
+  float: right;
+  font-size: 12px;
+  margin-right: 30px;
+  margin-top: 5px;
+  font-variant: normal;
+}
+
+.show-hide-link a{
+  color: #3792E8;
+}
+
 .game-list{
   padding-bottom: 25px;
 }

@@ -40,6 +40,16 @@ gameSchema.virtual('timeString').get(function(){
   return dateTimeFormatter.formatTimeString(this.time);
 });
 
+gameSchema.virtual('pastGame').get(function(){
+  var now = new Date();
+  if(this.date.getTime() <= now.getTime()){
+    if(this.time.getHours() < now.getHours()){
+      return true;
+    }
+  }
+  return false;
+});
+
 gameSchema.virtual('filledSeats').get(function(){
   var count = 0;
   for(var i = 0; i < this.seatCollection.length; i++){
