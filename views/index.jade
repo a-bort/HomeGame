@@ -4,6 +4,16 @@ block content
   div.splash-container
     div.splash
       div.splash-head Welcome to #{title}!
-      div.splash-subhead Login or Register with&nbsp;
-        a(href="/auth/facebook") Facebook
-      
+        div.splash-description Sign up for a Poker Game, or Host one yourself
+      div.splash-subhead 
+        div.login-section
+          div Login or Register with&nbsp;
+            a.strong-text(href="/auth/facebook") Facebook
+          div.login-disclaimer-section
+            div.login-disclaimer-link
+              a(href="#", onclick="") WTF why do I need to login with facebook? Is this a scam?
+            div.login-disclaimer(style="display: none;")
+              div.disclaimer-subsection Facebook integration lets you use this app without creating a brand new account. It's less work for everyone that way. 
+              div.disclaimer-subsection You will be taken to Facebook's secure server for authentication. We do not store any Facebook login information (we couldn't if we wanted to). We won't even try to post anything to your wall. The only information we collect is your name and email address.
+            script(type="text/javascript")
+              | $('.login-disclaimer-link a').on('click', function(){ $('.login-disclaimer').css('display', 'block'); $('.login-disclaimer-link').css('display', 'none'); });

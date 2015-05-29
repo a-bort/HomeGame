@@ -225,6 +225,11 @@ a.pure-button-primary {
     line-height: 1em;
 }
 
+.splash-description {
+  margin-top: 5px;
+  font-size: 16px;
+}
+
 /* This is the subheading that appears on the blue section */
 .splash-subhead {
     color: white;
@@ -234,6 +239,32 @@ a.pure-button-primary {
 
 .splash-subhead a{
   color: #dddddd;
+}
+
+.login-section {
+  margin-top: 5px;
+}
+
+.login-disclaimer-section{
+  font-variant: normal;
+  margin-top: 15px;
+}
+
+.login-disclaimer-link{
+  font-size: 12px;
+}
+
+.login-disclaimer {
+  background: white;
+  color: #0764A3;
+  border: 2px solid #2d3e50;
+  border-radius: 5px;
+  font-size: 14px;
+  text-align: left;
+}
+
+.disclaimer-subsection {
+  padding: 10px;
 }
 
 /*
