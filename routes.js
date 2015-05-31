@@ -9,6 +9,8 @@ module.exports = function(app, passport) {
   var redirector = require('./data/redirector');
   var authorization = require('./data/authorization');
   
+  var emailSender = require('./services/emailSender');
+  
   
     // ============================
     // FB AUTH
@@ -74,22 +76,14 @@ module.exports = function(app, passport) {
     app.post('/profile', isLoggedIn, function(req, res){
       var user = req.body.userModel;
       userRepo.updateUser(user, function(err){
-        if(err){
-          res.json({error: err});
-        } else{
-          res.json({success: true});
-        }
+        defaultJson(res, err);
       });
     });
     
     app.post('/updateEmail', isLoggedIn, function(req, res){
       var email = req.body.email;
       userRepo.updateUserEmail(req.user, email, function(err){
-        if(err){
-          res.json({error: err});
-        } else{
-          res.json({success: true});
-        }
+        defaultJson(res, err);
       });
     });
     // ================
@@ -113,11 +107,7 @@ module.exports = function(app, passport) {
     
     app.post('/mygames/leave', isLoggedIn, function(req, res) {
       gameRepo.leaveGame(req.body.gameId, req.user._id, function(err){
-        if(err){
-          res.json({error: err});
-        } else{
-          res.json({success: true});
-        }
+        defaultJson(res, err);
       });
     });
     
@@ -149,11 +139,7 @@ module.exports = function(app, passport) {
     app.post('/join', isLoggedIn, authorization.userAuthorizedForGame, function(req, res){
       var gameId = req.body.gameId;
       seatRepo.seatUserInGame(gameId, req.user, function(err){
-          if(err){
-              res.json({error: err});
-          } else{
-              res.json({success: true});
-          }
+        defaultJson(res, err);
       });
     }); 
     
@@ -185,14 +171,23 @@ module.exports = function(app, passport) {
     
     app.post('/host/saveGame', isLoggedIn, function(req, res){
       gameRepo.saveGame(req.body, req.user._id, function(err){
-        if(err){
-          res.json({error: err});
-        } else{
-          res.json({success: true});
-        }
+        defaultJson(res, err);
       });
     });
-	
+    
+    // =====================================
+    // CONTACT =============================
+    // =====================================
+    
+    app.post('/contact/emailPlayerPool', isLoggedIn, function(req, res){
+      var info = req.body;
+      
+      emailSender.emailPlayerPool(req.user, info.subject, info.html, info.text, function(err){
+        defaultJson(res, err);
+      });
+    });
+  
+  
     // =====================================
     // ABOUT ==============================
     // =====================================
@@ -209,15 +204,8 @@ module.exports = function(app, passport) {
         userId = req.user._id;
       }
       
-      console.log(feedback);
-      console.log(userId);
-      
       feedbackRepo.submitFeedback(feedback, userId, function(err){
-        if(err){
-          res.json({error: err});
-        } else{
-          res.json({success: true});
-        }
+        defaultJson(res, err);
       });
     });
     
@@ -250,4 +238,14 @@ function isLoggedIn(req, res, next) {
 
     // if they aren't redirect them to the home page
     res.redirect('/redirect/' + encodeURIComponent(req.url));
+}
+
+function defaultJson(res, err){
+  if(res){
+    if(err){
+      res.json({error: err});
+    } else{
+      res.json({success: true});
+    }
+  }
 }
