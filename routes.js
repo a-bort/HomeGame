@@ -68,7 +68,7 @@ module.exports = function(app, passport) {
     // we will use route middleware to verify this (the isLoggedIn function)
     app.get('/profile', isLoggedIn, function(req, res) {
       res.render('profile', {
-			title: "Home Game - " + req.user.name,
+			title: "Profile",
             user : req.user
         });
     });
@@ -176,8 +176,22 @@ module.exports = function(app, passport) {
     });
     
     // =====================================
-    // CONTACT =============================
+    // PLAYER POOL =========================
     // =====================================
+    
+    app.get('/playerPool', isLoggedIn, function(req, res){
+      userRepo.getUserWithPlayerPool(req.user._id, function(err, user){
+        if(err){
+          console.log('Error getting user with player pool');
+          defaultRedirect(res);
+        } else{
+          res.render('playerPool', {
+            title: 'Player Pool',
+            playerPool: user.playerPool
+          });
+        }
+      });
+    });
     
     app.post('/contact/emailPlayerPool', isLoggedIn, function(req, res){
       var info = req.body;

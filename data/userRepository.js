@@ -1,14 +1,11 @@
 var userModel = require('../models/user').user;
 
 exports.getUserWithPlayerPool = function(userId, callback){
-  var conditions = { _id: user._id };
+  var conditions = { _id: userId };
   
   userModel.findOne(conditions).populate('playerPool.user').exec(function(err, user){
-    if(err){
-      callback(err);
-      return;
-    }
-    callback(null, user)
+    console.log(user.playerPool);
+    callback(err, user)
   });
 }
 

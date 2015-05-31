@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  script(type="text/javascript" src="/javascripts/controllers/playerPoolController.js")
+  div(ng-controller="PlayerPoolController" ng-init="init(#{JSON.stringify(playerPool)})")
+    h2.content-head Player Pool
+    div.roster-panel
+      h4.content-head Active Player Pool
+      div.roster-seat(ng-repeat="player in playerPool")
+        div.roster-image
+          img(ng-src="http://graph.facebook.com/{{player.user.id}}/picture?type=square")
+        div.roster-name {{player.user.displayName}}
+      
