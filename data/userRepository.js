@@ -4,7 +4,6 @@ exports.getUserWithPlayerPool = function(userId, callback){
   var conditions = { _id: userId };
   
   userModel.findOne(conditions).populate('playerPool.user').exec(function(err, user){
-    console.log(user.playerPool);
     callback(err, user)
   });
 }

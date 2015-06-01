@@ -22,8 +22,10 @@ exports.emailPlayerPool = function(user, subject, html, text, callback){
     for(var i = 0; i < user.playerPool.length; i++){
       var player = user.playerPool[i];
       
-      var email = player.user ? player.user.email : null;
-      if(email){
+      //if(!player.confirmed || player.blocked) continue;
+      
+      var user = player.user;
+      if(user && email){
         exports.sendSingleEmail(email, subject, html, text, callback);
       } else{
         console.log("Bad email logic");

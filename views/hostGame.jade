@@ -3,44 +3,55 @@ extends layout
 block content
   script(type="text/javascript" src="/javascripts/controllers/hostGameController.js")
   div(ng-controller="HostGameController" ng-init="initWithGame(#{JSON.stringify(game)})")
-    form.pure-form.pure-form-stacked.pure-u-3-5(name="gameForm", ng-submit="save(gameForm.$valid)", novalidate)
-      fieldset
-        legend Enter Game Details
-        div.pure-g
-          div.pure-u-1-2.padded-input
-            label(for="gameType") Game Type
-            input#gameType(type="text", placeholder="e.g. Hold'em, Omaha, Mixed", ng-model="dataModel.gameType", required)
-          div.pure-u-1-2
-            label(for="gameFormat") Game Format
-            select#gameFormat(ng-model="dataModel.gameFormat", required)
-              option(value="Cash Game") Cash Game
-              option(value="Tournament") Tournament
-              option(value="Other") Other
-        div.pure-g
-          div.pure-u-1-2.padded-input
-            label(for="stakes") Stakes
-            input#stakes(type="text", placeholder="e.g. $1/$2, $20 buy in", ng-model="dataModel.stakes", required)
-          div.pure-u-1-2
-            label(for="seats") Number of Seats
-            input#seats(type="number", placeholder="2 or more", min=2, ng-model="dataModel.seats", required)
-        div
-          label(for="location") Location
-          input#location(type="text", placeholder="Enter Address/Neighborhood/Transit Location", ng-model="dataModel.location", required)
-        div.pure-g
-          div.pure-u-1-2.padded-input
-            label(for="date") Date
-            input#date(type="date", ng-model="dataModel.date", required)
-          div.pure-u-1-2
-            label(for="time") Time
-            input#time(type="time" ng-model="dataModel.time", required)
-        div
-          label(for="notes") Notes
-          textarea#notes.pure-u-1-1(ng-model="dataModel.notes", style="")
-        div.pure-g
-          div.pure-u-4-5
-            label.pure-checkbox(for="seatHost", ng-show="gameIsNew()")
-              input#seatHost(type="checkbox", ng-model="dataModel.seatHost")
-              | &nbsp;Seat Me Automatically
-          div.pure-u-1-5
-            input.pure-button.pure-button-primary.pure-u-2-4(type="submit", value="Save")
-      
+    form.pure-form.pure-form-stacked.pure-g(name="gameForm", ng-submit="save(gameForm.$valid)", novalidate)
+      div.pure-u-1-2.padded-input
+        fieldset
+          legend Enter Game Details
+          div.pure-g
+            div.pure-u-1-2.padded-input
+              label(for="gameType") Game Type
+              input#gameType(type="text", placeholder="e.g. Hold'em, Omaha, Mixed", ng-model="dataModel.gameType", required)
+            div.pure-u-1-2
+              label(for="gameFormat") Game Format
+              select#gameFormat(ng-model="dataModel.gameFormat", required)
+                option(value="Cash Game") Cash Game
+                option(value="Tournament") Tournament
+                option(value="Other") Other
+          div.pure-g
+            div.pure-u-1-2.padded-input
+              label(for="stakes") Stakes
+              input#stakes(type="text", placeholder="e.g. $1/$2, $20 buy in", ng-model="dataModel.stakes", required)
+            div.pure-u-1-2
+              label(for="seats") Number of Seats
+              input#seats(type="number", placeholder="2 or more", min=2, ng-model="dataModel.seats", required)
+          div
+            label(for="location") Location
+            input#location(type="text", placeholder="Enter Address/Neighborhood/Transit Location", ng-model="dataModel.location", required)
+          div.pure-g
+            div.pure-u-1-2.padded-input
+              label(for="date") Date
+              input#date(type="date", ng-model="dataModel.date", required)
+            div.pure-u-1-2
+              label(for="time") Time
+              input#time(type="time" ng-model="dataModel.time", required)
+          div
+            label(for="notes") Notes
+            textarea#notes.pure-u-1-1(ng-model="dataModel.notes", style="")
+          div.pure-g
+            div.pure-u-4-5
+              label.pure-checkbox(for="seatHost", ng-show="gameIsNew()")
+                input#seatHost(type="checkbox", ng-model="dataModel.seatHost")
+                | &nbsp;Seat Me Automatically
+            div.pure-u-1-5
+              input.pure-button.pure-button-primary.pure-u-2-4(type="submit", value="Save")
+      div.pure-u-1-2.padded-input
+        fieldset
+          legend Email Options
+          div
+            label.pure-checkbox(for="sendEmail", ng-show="gameIsNew()")
+                input#sendEmail(type="checkbox", ng-model="emailEnabled")
+                | &nbsp;Email Player Pool
+          div
+            label(for="subject") Subject
+              input#subject(type="text", ng-model="subject")
+          

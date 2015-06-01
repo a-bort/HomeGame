@@ -13,6 +13,10 @@ homeGameApp.controller('HostGameController', function($scope, $http, $location){
     seatHost: true
   };
   
+  $scope.emailEnabled = false;
+  $scope.subject = "";
+  $scope.html = "";
+  
   $scope.gameIsNew = function(){
     return !$scope.dataModel._id;
   }
