@@ -9,5 +9,5 @@ block content
       div.roster-seat(ng-repeat="player in playerPool")
         div.roster-image
           img(ng-src="http://graph.facebook.com/{{player.user.id}}/picture?type=square")
-        div.roster-name {{player.user.displayName}}
+        div.roster-name(ng-bind="parsePlayerName(player)")
       
