@@ -174,7 +174,6 @@ module.exports = function(app, passport) {
       var extraOptions = req.body.extraOptions || {};
       gameRepo.saveGame(dataModel, extraOptions.seatHost, req.user._id, function(err){
         if(extraOptions.emailEnabled){
-          console.log("Sending email");
           emailSender.emailPlayerPool(req.user, extraOptions.subject, extraOptions.html, "", function(err){
             defaultJson(res, err);
           });

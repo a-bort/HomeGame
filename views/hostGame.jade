@@ -56,5 +56,6 @@ block content
             input#subject(type="text", ng-model="subject", ng-disabled="!emailEnabled")
           div
             label(for="html") HTML Content
+            div.small-text(ng-show="emailEnabled") *Note: this will render HTML in the email. A proper HTML editor coming soon!
             textarea#html(style="width: 100%; min-height: 150px", ng-model="html", ng-disabled="!emailEnabled")
           
