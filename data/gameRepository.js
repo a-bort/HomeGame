@@ -1,9 +1,7 @@
 var gameModel = require('../models/game').game;
 var seatRepo = require('./seatRepository');
 
-exports.saveGame = function(gameObject, userId, callback){
-  var seatHost = gameObject.seatHost;
-  
+exports.saveGame = function(gameObject, seatHost, userId, callback){ 
   gameObject.owner = userId;
   var id = gameObject._id;
   delete gameObject._id;

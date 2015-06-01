@@ -170,8 +170,17 @@ module.exports = function(app, passport) {
     });
     
     app.post('/host/saveGame', isLoggedIn, function(req, res){
-      gameRepo.saveGame(req.body, req.user._id, function(err){
-        defaultJson(res, err);
+      var dataModel = req.body.dataModel;
+      var extraOptions = req.body.extraOptions || {};
+      gameRepo.saveGame(dataModel, extraOptions.seatHost, req.user._id, function(err){
+        if(extraOptions.emailEnabled){
+          console.log("Sending email");
+          emailSender.emailPlayerPool(req.user, extraOptions.subject, extraOptions.html, "", function(err){
+            defaultJson(res, err);
+          });
+        } else{
+          defaultJson(res, err);
+        }
       });
     });
     

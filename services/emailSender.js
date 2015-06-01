@@ -19,14 +19,19 @@ exports.emailPlayerPool = function(user, subject, html, text, callback){
       return;
     }
     
+    if(!user){
+      callback("Unable to load player pool to email. No email was sent.");
+      return;
+    }
+    
     for(var i = 0; i < user.playerPool.length; i++){
       var player = user.playerPool[i];
       
       //if(!player.confirmed || player.blocked) continue;
       
       var user = player.user;
-      if(user && email){
-        exports.sendSingleEmail(email, subject, html, text, callback);
+      if(user && user.email){
+        exports.sendSingleEmail(user.email, subject, html, text);
       } else{
         console.log("Bad email logic");
       }
@@ -36,10 +41,10 @@ exports.emailPlayerPool = function(user, subject, html, text, callback){
 }
 
 exports.sendSingleEmail = function(address, subject, html, text, callback){
-  var opts = generateMailOptions;
+  var opts = generateMailOptions(address, subject, html, text);
   callback = callback || function(){};
   
-  transporter.sendMail(mailOptions, function(err, info){
+  transporter.sendMail(opts, function(err, info){
     if(err){
       console.log(err);
       callback(err);

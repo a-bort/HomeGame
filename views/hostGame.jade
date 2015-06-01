@@ -4,7 +4,7 @@ block content
   script(type="text/javascript" src="/javascripts/controllers/hostGameController.js")
   div(ng-controller="HostGameController" ng-init="initWithGame(#{JSON.stringify(game)})")
     form.pure-form.pure-form-stacked.pure-g(name="gameForm", ng-submit="save(gameForm.$valid)", novalidate)
-      div.pure-u-1-2.padded-input
+      div.pure-u-1-2.padded-right-lg
         fieldset
           legend Enter Game Details
           div.pure-g
@@ -40,11 +40,11 @@ block content
           div.pure-g
             div.pure-u-4-5
               label.pure-checkbox(for="seatHost", ng-show="gameIsNew()")
-                input#seatHost(type="checkbox", ng-model="dataModel.seatHost")
+                input#seatHost(type="checkbox", ng-model="seatHost")
                 | &nbsp;Seat Me Automatically
             div.pure-u-1-5
               input.pure-button.pure-button-primary.pure-u-2-4(type="submit", value="Save")
-      div.pure-u-1-2.padded-input
+      div.pure-u-1-2.padded-right-lg
         fieldset
           legend Email Options
           div
@@ -53,5 +53,8 @@ block content
                 | &nbsp;Email Player Pool
           div
             label(for="subject") Subject
-              input#subject(type="text", ng-model="subject")
+            input#subject(type="text", ng-model="subject", ng-disabled="!emailEnabled")
+          div
+            label(for="html") HTML Content
+            textarea#html(style="width: 100%; min-height: 150px", ng-model="html", ng-disabled="!emailEnabled")
           

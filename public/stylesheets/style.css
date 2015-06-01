@@ -142,6 +142,10 @@ a.pure-button-primary {
   margin-bottom: 5px;
 }
 
+.padded-right-lg {
+  padding-right: 25px;
+}
+
 /*
  * -- MENU STYLES --
  * I want to customize how my .pure-menu looks at the top of the page

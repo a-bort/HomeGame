@@ -9,10 +9,10 @@ homeGameApp.controller('HostGameController', function($scope, $http, $location){
     gameFormat: '',
     date: '',
     time: '',
-    notes: '',
-    seatHost: true
+    notes: ''
   };
   
+  $scope.seatHost = true;
   $scope.emailEnabled = false;
   $scope.subject = "";
   $scope.html = "";
@@ -36,7 +36,14 @@ homeGameApp.controller('HostGameController', function($scope, $http, $location){
       return;
     }
     
-    $http.post('/host/saveGame', $scope.dataModel).success(function(data){
+    var extraOptions = {
+      seatHost: $scope.seatHost,
+      emailEnabled: $scope.emailEnabled,
+      subject: $scope.subject,
+      html: $scope.html
+    };
+    
+    $http.post('/host/saveGame', {dataModel: $scope.dataModel, extraOptions: extraOptions}).success(function(data){
       if(data.error){
         util.log(err);
         util.alert('Error saving game');
