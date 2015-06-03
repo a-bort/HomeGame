@@ -2,6 +2,13 @@ extends layout
 
 block content
   script(type="text/javascript" src="/javascripts/controllers/hostGameController.js")
+  
+  link(rel='stylesheet', href="/javascripts/vendor/font-awesome/css/font-awesome.css")
+  link(rel='stylesheet', href="/javascripts/vendor/textAngular/dist/textAngular.css")
+  script(type="text/javascript", src='/javascripts/vendor/textAngular/dist/textAngular-rangy.min.js')
+  script(type="text/javascript", src='/javascripts/vendor/textAngular/dist/textAngular-sanitize.min.js')
+  script(type="text/javascript", src='/javascripts/vendor/textAngular/dist/textAngular.min.js')
+  
   div(ng-controller="HostGameController" ng-init="initWithGame(#{JSON.stringify(game)})")
     form.pure-form.pure-form-stacked.pure-g(name="gameForm", ng-submit="save(gameForm.$valid)", novalidate)
       div.pure-u-1-2.padded-right-lg
@@ -51,11 +58,10 @@ block content
             label.pure-checkbox(for="sendEmail", ng-show="gameIsNew()")
                 input#sendEmail(type="checkbox", ng-model="emailEnabled")
                 | &nbsp;Email Player Pool
-          div
+          div(ng-show="emailEnabled")
             label(for="subject") Subject
-            input#subject(type="text", ng-model="subject", ng-disabled="!emailEnabled")
-          div
+            input#subject(type="text", ng-model="subject")
+          div(ng-show="emailEnabled")
             label(for="html") HTML Content
-            div.small-text(ng-show="emailEnabled") *Note: this will render HTML in the email. A proper HTML editor coming soon!
-            textarea#html(style="width: 100%; min-height: 150px", ng-model="html", ng-disabled="!emailEnabled")
+            div(text-angular, name="html-edit", ng-model="html", ta-text-editor-class="border-around", ta-html-editor-class="border-around")
           

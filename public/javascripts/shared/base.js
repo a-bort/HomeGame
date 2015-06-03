@@ -1,1 +1,1 @@
-var homeGameApp = angular.module('homeGameApp', []);
+var homeGameApp = angular.module('homeGameApp', ['textAngular']);
