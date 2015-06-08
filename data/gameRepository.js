@@ -1,19 +1,19 @@
 var gameModel = require('../models/game').game;
 var seatRepo = require('./seatRepository');
 
-exports.saveGame = function(gameObject, seatHost, userId, callback){ 
+exports.saveGame = function(gameObject, seatHost, userId, callback){
   gameObject.owner = userId;
   var id = gameObject._id;
   delete gameObject._id;
   if(!id){
     var game = new gameModel(gameObject);
     seatRepo.createSeatsForGame(game, userId, seatHost);
-    game.save(function(err){
+    game.save(function(err, obj){
       if(err){
         console.log(err);
       }
-      
-      callback(err);
+
+      callback(err, obj._id);
     });
   }
   else{
@@ -22,8 +22,8 @@ exports.saveGame = function(gameObject, seatHost, userId, callback){
         if(err){
           console.log(err);
         }
-        
-        callback(err);
+
+        callback(err, id);
       }
     );
   }
@@ -83,7 +83,7 @@ exports.leaveGame = function(gameId, userId, callback){
     if(err || !game){
       callback(err);
     }
-    
+
     if(!tryLeaveSeatCollection(game, userId, callback)){
       if(!tryLeaveWaitListCollection(game, userId, callback)){
         callback("Couldn't find this player's seat");
@@ -102,7 +102,7 @@ function tryLeaveSeatCollection(game, userId, callback){
         if(err){
           console.log(err);
         }
-        
+
         callback(err);
       });
       return true;
@@ -120,7 +120,7 @@ function tryLeaveWaitListCollection(game, userId, callback){
         if(err){
           console.log(err);
         }
-        
+
         callback(err);
       });
       return true;

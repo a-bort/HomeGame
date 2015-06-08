@@ -8,34 +8,34 @@ module.exports = function(app, passport) {
   var feedbackRepo = require('./data/feedbackRepository');
   var redirector = require('./data/redirector');
   var authorization = require('./data/authorization');
-  
+
   var emailSender = require('./services/emailSender');
-  
-  
+
+
     // ============================
     // FB AUTH
     // ============================
-    
+
     app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email'}));
-    
+
     app.get('/auth/facebook/callback', passport.authenticate('facebook', {
       failureRedirect: '/'
     }), function(req, res){
       var redirectUrl = redirector.getRedirectUrlFromLogin(req);
       res.redirect(redirectUrl);
     });
-    
+
     // ==============================
     // GLOBAL FILTER
     // ==============================
-    
+
     app.all('*', function(req, res, next){
       sharedRepo.getSharedData(req, function(data){
         res.locals.sharedModel = data;
         next();
       });
     });
-    
+
     // =====================================
     // HOME PAGE (with login links) ========
     // =====================================
@@ -46,7 +46,7 @@ module.exports = function(app, passport) {
 		  res.render('index', {title: "Home Game", message: req.flash('message')});
 		}
     });
-    
+
     app.get('/redirect/:redirectUrl', function(req, res) {
 		if (req.isAuthenticated()){
 		  redirector.redirectToUrlParam(req.params.redirectUrl);
@@ -60,7 +60,7 @@ module.exports = function(app, passport) {
       req.logout();
       res.redirect('/');
     });
-    
+
     // =====================================
     // PROFILE SECTION =====================
     // =====================================
@@ -79,7 +79,7 @@ module.exports = function(app, passport) {
         defaultJson(res, err);
       });
     });
-    
+
     app.post('/updateEmail', isLoggedIn, function(req, res){
       var email = req.body.email;
       userRepo.updateUserEmail(req.user, email, function(err){
@@ -104,17 +104,17 @@ module.exports = function(app, passport) {
         });
       });
     });
-    
+
     app.post('/mygames/leave', isLoggedIn, function(req, res) {
       gameRepo.leaveGame(req.body.gameId, req.user._id, function(err){
         defaultJson(res, err);
       });
     });
-    
+
     // ======================
     // JOIN GAMES
     // ======================
-    
+
     app.get('/join/:gameId', isLoggedIn, authorization.userAuthorizedForGame, function(req, res) {
       var autoJoin = !!req.query.autoJoin;
       gameRepo.getGameById(req.params.gameId, function(err, game){
@@ -131,29 +131,29 @@ module.exports = function(app, passport) {
         });
       });
     });
-    
+
     app.get('/join', isLoggedIn, function(req, res) {
       redirector.defaultRedirect(res);
     });
-    
+
     app.post('/join', isLoggedIn, authorization.userAuthorizedForGame, function(req, res){
       var gameId = req.body.gameId;
       seatRepo.seatUserInGame(gameId, req.user, function(err){
         defaultJson(res, err);
       });
-    }); 
-    
+    });
+
 	  // =====================================
     // HOST A GAME
     // =====================================
-    
+
     app.get('/host', isLoggedIn, function(req, res) {
       res.render('hostGame', {
 			title: "Host a Game",
             user : req.user
         });
     });
-    
+
     app.get('/host/:gameId', isLoggedIn, function(req, res) {
       gameRepo.getGameById(req.params.gameId, function(err, game){
         if(game.owner._id .equals(req.user._id)){
@@ -162,19 +162,19 @@ module.exports = function(app, passport) {
             user : req.user,
             game: game
           });
-        } 
+        }
         else{
           redirector.defaultRedirect(res);
         }
       });
     });
-    
+
     app.post('/host/saveGame', isLoggedIn, function(req, res){
       var dataModel = req.body.dataModel;
       var extraOptions = req.body.extraOptions || {};
-      gameRepo.saveGame(dataModel, extraOptions.seatHost, req.user._id, function(err){
+      gameRepo.saveGame(dataModel, extraOptions.seatHost, req.user._id, function(err, gameId){
         if(extraOptions.emailEnabled){
-          emailSender.emailPlayerPool(req.user, extraOptions.subject, extraOptions.html, "", function(err){
+          emailSender.emailPlayerPool(req.user, gameId, extraOptions.subject, extraOptions.html, "", function(err){
             defaultJson(res, err);
           });
         } else{
@@ -182,11 +182,11 @@ module.exports = function(app, passport) {
         }
       });
     });
-    
+
     // =====================================
     // PLAYER POOL =========================
     // =====================================
-    
+
     app.get('/playerPool', isLoggedIn, function(req, res){
       userRepo.getUserWithPlayerPool(req.user._id, function(err, user){
         if(err){
@@ -200,16 +200,16 @@ module.exports = function(app, passport) {
         }
       });
     });
-    
-    app.post('/contact/emailPlayerPool', isLoggedIn, function(req, res){
+
+    /*app.post('/contact/emailPlayerPool', isLoggedIn, function(req, res){
       var info = req.body;
-      
+
       emailSender.emailPlayerPool(req.user, info.subject, info.html, info.text, function(err){
         defaultJson(res, err);
       });
-    });
-  
-  
+    });*/
+
+
     // =====================================
     // ABOUT ==============================
     // =====================================
@@ -218,29 +218,29 @@ module.exports = function(app, passport) {
           title: "About Home Game"
         });
     });
-    
+
     app.post('/feedback', function(req, res){
       var feedback = req.body.feedback;
       var userId = null;
       if(req.user){
         userId = req.user._id;
       }
-      
+
       feedbackRepo.submitFeedback(feedback, userId, function(err){
         defaultJson(res, err);
       });
     });
-    
+
     // =====================================
     // ABOUT ==============================
     // =====================================
-    
+
     app.get('/privacy', function(req, res) {
         res.render('privacy', {
           title: "Home Game Privacy Policy"
         });
     });
-  
+
     // =====================================
     // LOGOUT ==============================
     // =====================================
@@ -254,7 +254,7 @@ module.exports = function(app, passport) {
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
 
-    // if user is authenticated in the session, carry on 
+    // if user is authenticated in the session, carry on
     if (req.isAuthenticated())
         return next();
 
