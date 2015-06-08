@@ -124,6 +124,29 @@ a.pure-button-primary {
     font-size: 125%;
 }
 
+/* TA Text Editor Styles */
+
+.ta-toolbar {
+	background-color: #F0F0F0;
+	padding: 10px 10px 5px;
+	margin-left: 0px; /* Override bootstrap */
+	border: 1px solid #EEE;
+}
+
+.ta-toolbar .btn-group {
+	margin-bottom: 5px;
+}
+
+.ta-editor, .white-box {
+	padding: 10px;
+	background-color: #FFF;
+	border: 1px solid #EEE;
+}
+
+textarea.ta-bind {
+	width: 100%;
+}
+
 /*
 *
 * -- Custom And Generic!
@@ -276,7 +299,7 @@ a.pure-button-primary {
  * This represents the content area (everything below the blue section)
  */
 
- 
+
 .content-wrapper {
     /* These styles are required for the "scroll-over" effect */
     position: absolute;
@@ -382,7 +405,7 @@ a.pure-button-primary {
     .splash-head {
         font-size: 300%;
     }
-    
+
 }
 
  .content {
@@ -514,7 +537,7 @@ a.pure-button-primary {
   -webkit-margin-end: 0px;
 }
   /*  Email Confirm Box  */
-  
+
 .email-confirm-box {
   display: block;
   position: absolute;
