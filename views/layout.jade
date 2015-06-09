@@ -59,7 +59,7 @@ html
             a.pure-menu-link(href="/about") About
           li.pure-menu-item(ng-show="sharedModel.loggedIn")
             a.pure-menu-link(href="/logout") Logout
-        div.email-confirm-box(ng-show="sharedModel.showEmailPrompt")
+        div.email-confirm-box(ng-show="sharedModel.showEmailPrompt", style="display: none;")
           div.email-confirm-inner
             div.email-confirm-input
               label Is this the right email?

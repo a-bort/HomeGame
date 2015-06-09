@@ -52,7 +52,6 @@ block content
             label.pure-checkbox(for="sendEmail", ng-show="gameIsNew()")
                 input#sendEmail(type="checkbox", ng-model="emailEnabled")
                 | &nbsp;Email Player Pool
-            button.pure-button(ng-click="populate()", type="button") Populate
           div(ng-show="emailEnabled")
             label(for="subject") Subject
             input#subject(type="text", ng-model="subject")
