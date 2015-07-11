@@ -42,10 +42,11 @@ gameSchema.virtual('timeString').get(function(){
 
 gameSchema.virtual('pastGame').get(function(){
   var now = new Date();
-  if(this.date.getTime() <= now.getTime()){
-    if(this.time.getHours() < now.getHours()){
+  if(this.date.getTime() < now.getTime()){
+    return true;
+  }
+  if(this.date.getTime() == now.getTime() && this.time.getHours() < now.getHours()){
       return true;
-    }
   }
   return false;
 });
