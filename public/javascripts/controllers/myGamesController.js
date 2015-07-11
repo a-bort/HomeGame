@@ -19,7 +19,12 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
   }
   
   $scope.noWaitlistedGames = function(){
-    return $scope.waitlistedGames.length == 0;
+    for(var i = 0; i < $scope.waitlistedGames.length; i++){
+      if($scope.waitlistedGames[i].pastGame == $scope.pastGamesVisible){
+        return false;
+      }
+    }
+    return true;
   }
   
   $scope.pastGamesVisible = false;

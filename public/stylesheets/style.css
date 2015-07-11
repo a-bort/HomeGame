@@ -169,6 +169,10 @@ textarea.ta-bind {
   padding-right: 25px;
 }
 
+.multi-line {
+  line-height: 1.3em;
+}
+
 /*
  * -- MENU STYLES --
  * I want to customize how my .pure-menu looks at the top of the page

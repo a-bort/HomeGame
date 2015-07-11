@@ -22,7 +22,7 @@ block content
                   span.strong-text &nbsp;|&nbsp
                   | {{game.timeString}}
                 div.game-grid-botttom-left 
-                  div.info-body
+                  div.info-body.multi-line
                     span {{game.filledSeats}} of {{game.seats}} Seats Filled&nbsp;
                     span.strong-text &sect;&nbsp;
                     span {{game.emptySeats}}&nbsp;Seat
@@ -42,7 +42,7 @@ block content
         div.game-list
           h2.content-head 
             span(ng-hide="noWaitlistedGames()") Waitlisted Games
-          div.game-grid.waitlist-grid(ng-repeat="game in waitlistedGames")
+          div.game-grid.waitlist-grid(ng-repeat="game in waitlistedGames | filter:gameShouldBeShown")
             div.pure-g
               div.pure-u-18-24
                 div.game-grid-top-left.game-grid-subhead {{game.owner.displayName}}'s {{game.stakes}} {{game.gameType}} {{game.gameFormat}}
@@ -50,7 +50,7 @@ block content
                   span.strong-text &nbsp;|&nbsp
                   | {{game.timeString}}
                 div.game-grid-botttom-left 
-                  div.info-body
+                  div.info-body.multi-line
                     span {{game.filledSeats}} of {{game.seats}} Seats Filled&nbsp;
                     span.strong-text &sect;&nbsp;
                     span {{game.emptySeats}}&nbsp;Seat
