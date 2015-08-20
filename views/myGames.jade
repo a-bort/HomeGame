@@ -65,7 +65,11 @@ block content
       div.pure-u-1-2
         h2.content-head
           | Hosted Games
-        div.game-grid(ng-repeat="game in ownedGames")
+          span.show-hide-link(ng-hide="pastOwnedGamesVisible")
+              a(href="#", ng-click="showPastOwnedGames()") Show Past Games
+          span.show-hide-link(ng-show="pastOwnedGamesVisible")
+              a(href="#", ng-click="hidePastOwnedGames()") Hide Past Games
+        div.game-grid(ng-repeat="game in ownedGames | filter:ownedGameShouldBeShown")
           div.pure-g
             div.pure-u-1-2
               div.strong-text {{game.location}}

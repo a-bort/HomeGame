@@ -15,14 +15,29 @@ exports.addSeatToGame = function(game, userId, seatHost){
   game.seatCollection.push(seat);
 }
 
-exports.configureSeatsAfterCancellation = function(game, userId){
-  var count = 0;
-  var seats = game.seats;
+exports.addSeatsToGame = function(game, count){
+  for(var i = 0; i < count; i++){
+    exports.addSeatToGame(game, null, false);
+  }
+}
+
+exports.removeEmptySeatsFromGame = function(game, toRemove){
+  var removed = 0;
   for(var i = 0; i < game.seatCollection.length; i++){
-    if(game.seatCollection[i].active){
-      count++;
+    var seat = game.seatCollection[i];
+    if(!seat.user && seat.active){
+      seat.active = false;
+      removed++;
+      if(removed >= toRemove){
+        return;
+      }
     }
   }
+}
+
+exports.configureSeatsAfterCancellation = function(game, userId){
+  var seats = game.seats;
+  var count = getActiveSeatCount(game);
   
   if(count < seats){
     for(var i = 0; i < seats-count; i++){
@@ -34,6 +49,43 @@ exports.configureSeatsAfterCancellation = function(game, userId){
       }
     }
   }
+}
+
+exports.ensureSeatCountIsAccurate = function(gameId, callback){
+  gameModel.findOne({_id: gameId}, function(err, game){
+    if(err){
+        console.log(err);
+        callback(err);
+        return;
+    }
+    
+    if(!game){
+        callback("No game found");
+        return;
+    }
+    
+    var count = getActiveSeatCount(game);
+  
+    if(count > game.seats){
+      exports.removeEmptySeatsFromGame(game, count - game.seats);
+    } else if(count < game.seats){
+      exports.addSeatsToGame(game, game.seats - count);
+    }
+    
+    game.save(function(err){
+      callback(err, gameId);
+    });
+  });
+}
+
+function getActiveSeatCount(game){
+  var count = 0;
+  for(var i = 0; i < game.seatCollection.length; i++){
+    if(game.seatCollection[i].active){
+      count++;
+    }
+  }
+  return count;
 }
 
 exports.seatPlayerFromWaitlist = function(game){

@@ -21,9 +21,11 @@ exports.saveGame = function(gameObject, seatHost, userId, callback){
       {_id: id}, gameObject, {upsert: true}, function(err){
         if(err){
           console.log(err);
+          callback(err, id);
+          return;
         }
-
-        callback(err, id);
+        
+        seatRepo.ensureSeatCountIsAccurate(id, callback);
       }
     );
   }
