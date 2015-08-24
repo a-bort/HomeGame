@@ -24,6 +24,19 @@ module.exports = function(app, passport) {
       var redirectUrl = redirector.getRedirectUrlFromLogin(req);
       res.redirect(redirectUrl);
     });
+    
+    // ============================
+    // GOOGLE AUTH
+    // ============================
+
+    app.get('/auth/google', passport.authenticate('google', {scope: ['https://www.googleapis.com/auth/plus.login', 'email']}));
+
+    app.get('/auth/google/callback', passport.authenticate('google', {
+      failureRedirect: '/'
+    }), function(req, res){
+      var redirectUrl = redirector.getRedirectUrlFromLogin(req);
+      res.redirect(redirectUrl);
+    });
 
     // ==============================
     // GLOBAL FILTER
