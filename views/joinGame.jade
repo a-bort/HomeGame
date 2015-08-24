@@ -21,14 +21,13 @@ block content
             div(ng-show="activeGame.pastGame")
               button.pure-button.button-error(disabled="true") Registration Closed
           div
-            div
-              div.roster-panel
-                h4.content-head Current Roster ({{activeGame.emptySeats}}&nbsp;/&nbsp;{{activeGame.seats}} Seats Remaining)
-                div.roster-seat(ng-repeat="seat in activeGame.seatCollection | filter:filledSeatFilter")
-                  div.roster-image
-                    img(ng-src="{{seat.user.imageUrl}}")
-                  div.roster-name {{seat.user.displayName}}
-            div(ng-hide="emptySeats()")
+            div.roster-panel
+              h4.content-head Current Roster ({{activeGame.emptySeats}}&nbsp;/&nbsp;{{activeGame.seats}} Seats Remaining)
+              div.roster-seat(ng-repeat="seat in activeGame.seatCollection | filter:filledSeatFilter")
+                div.roster-image
+                  img(ng-src="{{seat.user.imageUrl}}")
+                div.roster-name {{seat.user.displayName}}
+            div.roster-panel(ng-hide="emptySeats()")
               div.pure-u-3-5
                 h4.content-head Waitlist
                 div.roster-seat(ng-repeat="seat in activeGame.waitListCollection | orderBy: 'created'")
