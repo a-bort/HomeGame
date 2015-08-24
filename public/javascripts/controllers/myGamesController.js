@@ -41,7 +41,24 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     return game.pastGame == $scope.pastGamesVisible;
   }
   
+  $scope.noOwnedGamesShowing = function(){
+    for(var i = 0; i < $scope.ownedGames.length; i++){
+      if($scope.ownedGameShouldBeShown($scope.ownedGames[i])){
+        return false;
+      }
+    }
+    return true;
+  }
   
+  $scope.noPlayerGamesShowing = function(){
+    for(var i = 0; i < $scope.playerGames.length; i++){
+      if($scope.gameShouldBeShown($scope.playerGames[i])){
+        return false;
+      }
+    }
+    return true;
+  }
+    
   $scope.pastOwnedGamesVisible = false;
   
   $scope.showPastOwnedGames = function(){

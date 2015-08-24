@@ -6,7 +6,7 @@ block content
         div(ng-if="activeGame")
           div
             h2.content-head Game Info
-            div.content-subhead {{activeGame.owner.name}}'s {{activeGame.stakes}}, {{activeGame.gameType}} {{activeGame.gameFormat}}
+            div.content-subhead {{activeGame.owner.displayName}}'s {{activeGame.stakes}}, {{activeGame.gameType}} {{activeGame.gameFormat}}
             div.game-grid.game-info
               div 
                 span.strong-text When: 
@@ -15,12 +15,15 @@ block content
                 span.strong-text Where: 
                 | {{activeGame.location}}
               div {{activeGame.notes}}
-            button.pure-button.pure-button-primary#join-button(ng-click="join()" ng-disabled="userAttending") {{joinButtonText()}}
-            button.pure-button.pure-button-primary#cancel-button(ng-click="cancel()" ng-show="userAttending") Cancel Reservation
+            div(ng-show="!activeGame.pastGame")
+              button.pure-button.pure-button-primary#join-button(ng-click="join()" ng-disabled="userAttending") {{joinButtonText()}}
+              button.pure-button.pure-button-primary#cancel-button(ng-click="cancel()" ng-show="userAttending") Cancel Reservation
+            div(ng-show="activeGame.pastGame")
+              button.pure-button.button-error(disabled="true") Registration Closed
           div
             div
               div.roster-panel
-                h4.content-head Current Roster ({{activeGame.emptySeats}} Seats Remaining)
+                h4.content-head Current Roster ({{activeGame.emptySeats}}&nbsp;/&nbsp;{{activeGame.seats}} Seats Remaining)
                 div.roster-seat(ng-repeat="seat in activeGame.seatCollection | filter:filledSeatFilter")
                   div.roster-image
                     img(ng-src="{{seat.user.imageUrl}}")

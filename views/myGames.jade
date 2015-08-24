@@ -34,8 +34,11 @@ block content
                 div.game-grid-right
                   button.pure-button.game-grid-button.game-grid-top-button(href="#" ng-click="$parent.viewGame(game)") View 
                   button.pure-button.game-grid-button.game-grid-bottom-button(href="#" ng-click="$parent.leaveGame(game)") Cancel                
-          div.game-grid.empty-game-grid(ng-show="noPlayerGames()")
-            div.game-grid-subhead You have no upcoming games.
+          div.game-grid.empty-game-grid(ng-show="noPlayerGamesShowing()")
+            div.game-grid-subhead You have no&nbsp
+              span(ng-show="!pastGamesVisible") upcoming
+              span(ng-show="pastGamesVisible") past
+              | &nbsp;games.
             div.game-grid-info-link
               a(href="#", ng-hide="joinInfoVisible", ng-click="showJoinInfo()") How do I join a game?
             div.game-grid-info(ng-show="joinInfoVisible") A game host has to share a link with you, which will take you to the game page. You can join from there.
@@ -84,8 +87,11 @@ block content
                 button.pure-button.button-small.game-grid-small-button(ng-click="$parent.copyUrl(game)") Copy Game URL
               div.game-grid-button-container
                 button.pure-button.button-small.game-grid-small-button(ng-click="$parent.viewGame(game)") View Game Page
-        div.game-grid.empty-game-grid(ng-show="noOwnedGames()")
-            div.game-grid-subhead You are not hosting any games.
+        div.game-grid.empty-game-grid(ng-show="noOwnedGamesShowing()")
+            div.game-grid-subhead You&nbsp;
+              span(ng-show="!pastOwnedGamesVisible") are not hosting
+              span(ng-show="pastOwnedGamesVisible") have not hosted
+              | &nbsp;any games.
             div.game-grid-info-link
               a(href="#", ng-hide="hostInfoVisible", ng-click="showHostInfo()") How do I host a game?
             div.game-grid-info(ng-show="hostInfoVisible") Click the "Host" menu item above, and fill out the form.
