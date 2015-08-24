@@ -2,6 +2,7 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 var User = require('../models/user').user;
+var userRepo = require('../data/userRepository');
 
 var configAuth = require('./auth');
 
@@ -43,7 +44,7 @@ module.exports = function(passport){
 
 					// if the user is found, then log them in
 					if (user) {
-						return done(null, user); // user found, return that user
+            return userRepo.setUserDataAfterLogin(user, {isFacebook: true, isGoogle: false}, done) //ensure its marked as facebook login
 					} else {
 						// if there is no user found with that facebook id, create them
 						var newUser            = new User();
@@ -53,6 +54,7 @@ module.exports = function(passport){
 						newUser.token = token; // we will save the token that facebook provides to the user                    
 						newUser.name  = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
 						newUser.email = profile.emails[0].value; // facebook can return multiple emails so we'll take the first
+            newUser.isFacebook = true;
 
 						// save our user to the database
 						newUser.save(function(err) {
@@ -91,10 +93,9 @@ module.exports = function(passport){
 					if (err){
 						return done(err);
 					}
-
 					// if the user is found, then log them in
 					if (user) {
-						return done(null, user); // user found, return that user
+						return userRepo.setUserDataAfterLogin(user, {isFacebook: false, isGoogle: true, googleImage: profile._json.image.url}, done) //ensure its marked as google login
 					} else {
 						// if there is no user found with that google id, create them       
             var newUser            = new User();
@@ -104,7 +105,8 @@ module.exports = function(passport){
 						newUser.token = token; // we will save the token that google provides to the user                    
 						newUser.name  = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
 						newUser.email = profile.emails[0] ? profile.emails[0].value : ""; // google can return multiple emails so we'll take the first
-
+            newUser.isGoogle = true;
+            
 						// save our user to the database
 						newUser.save(function(err) {
 							if (err){

@@ -95,7 +95,7 @@ exports.seatPlayerFromWaitlist = function(game){
 }
 
 exports.seatUserInGame = function(gameId, user, callback){
-    gameModel.findOne({_id: gameId}, function(err, game){
+    gameModel.findOne({_id: gameId, active: true}, function(err, game){
         if(err){
             console.log(err);
             callback(err);

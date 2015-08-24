@@ -23,11 +23,24 @@ var userSchema = new mongoose.Schema({
   customName: String,
   active: { type: Boolean, default: true },
   playerPool: [playerSchema],
-  emailUpdatePrompted: { type: Boolean, default: false }
+  emailUpdatePrompted: { type: Boolean, default: false },
+  isFacebook: Boolean,
+  isGoogle: Boolean,
+  googleImage: String
 }, schemaOptions);
 
 userSchema.virtual('displayName').get(function(){
   return this.customName || this.name;
+});
+
+userSchema.virtual('imageUrl').get(function(){
+  if(this.isFacebook){
+    return "http://graph.facebook.com/" + this.id + "/picture?type=square";
+  } else if(this.isGoogle){
+    return this.googleImage;
+  } else{
+    return "/images/anon-user.png";
+  }
 });
 
 exports.user = mongoose.model('User', userSchema);

@@ -45,7 +45,7 @@ html
     div#fb-root
     .header(ng-controller="SharedController", ng-init="init(#{JSON.stringify(sharedModel)})")
       .home-menu.pure-menu.pure-menu-horizontal.pure-menu-fixed
-        a.pure-menu-heading(href="/") Home Game
+        a.pure-menu-heading(href="/") Home Game - #{user && user.displayName ? user.displayName : "Welcome"}
         ul.pure-menu-list
           li.pure-menu-item
             a.pure-menu-link(href="/mygames") My Games
