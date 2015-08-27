@@ -9,7 +9,8 @@ homeGameApp.controller('HostGameController', function($scope, $http, $location){
     gameFormat: '',
     date: '',
     time: '',
-    notes: ''
+    notes: '',
+    emailNotifications: ''
   };
 
   $scope.seatHost = true;

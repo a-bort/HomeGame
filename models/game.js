@@ -29,6 +29,7 @@ var gameSchema = new mongoose.Schema({
     date: Date,
     time: Date,
     notes: String,
+    emailNotifications: { type: Boolean, default: true },
     active: { type: Boolean, default: true }
 }, schemaOptions);
 

@@ -49,6 +49,10 @@ block content
         fieldset
           legend Email Options
           div
+            label.pure-checkbox(for="emailNotifications")
+              input#emailNotifications(type="checkbox", ng-model="dataModel.emailNotifications")
+              | &nbsp;Notify Me when Players Join/Leave the Game
+          div
             label.pure-checkbox(for="sendEmail", ng-show="gameIsNew()")
                 input#sendEmail(type="checkbox", ng-model="emailEnabled")
                 | &nbsp;Email Player Pool
