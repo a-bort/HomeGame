@@ -1,6 +1,7 @@
 var gameModel = require('../models/game').game;
 var seatModel = require('../models/game').seat;
 var playerPoolRepo = require('./playerPoolRepository');
+var emailSender = require('../services/emailSender');
 
 exports.createSeatsForGame = function(game, userId, seatHost){
     for(var i = 0; i < game.seats; i++){
@@ -11,7 +12,7 @@ exports.createSeatsForGame = function(game, userId, seatHost){
 
 exports.addSeatToGame = function(game, userId, seatHost){
   var seat = seatHost ? new seatModel({user: userId}) : new seatModel({});
-  
+
   game.seatCollection.push(seat);
 }
 
@@ -38,7 +39,7 @@ exports.removeEmptySeatsFromGame = function(game, toRemove){
 exports.configureSeatsAfterCancellation = function(game, userId){
   var seats = game.seats;
   var count = getActiveSeatCount(game);
-  
+
   if(count < seats){
     for(var i = 0; i < seats-count; i++){
       if(game.waitListCollection.length > 0){
@@ -58,20 +59,20 @@ exports.ensureSeatCountIsAccurate = function(gameId, callback){
         callback(err);
         return;
     }
-    
+
     if(!game){
         callback("No game found");
         return;
     }
-    
+
     var count = getActiveSeatCount(game);
-  
+
     if(count > game.seats){
       exports.removeEmptySeatsFromGame(game, count - game.seats);
     } else if(count < game.seats){
       exports.addSeatsToGame(game, game.seats - count);
     }
-    
+
     game.save(function(err){
       callback(err, gameId);
     });
@@ -101,23 +102,27 @@ exports.seatUserInGame = function(gameId, user, callback){
             callback(err);
             return;
         }
-        
+
         if(!game){
             callback("No game found");
             return;
         }
-        
+
+        var isWaitList = false;
+
         if(game.emptySeats > 0){
           addUserToSeatList(game, user);
         } else{
           addUserToWaitList(game, user);
+          isWaitList = true;
         }
-        
+
         game.save(function(err){
           if(err){
             console.log(err);
             callback(err);
           } else{
+            emailSender.notifyOnJoin(game, user._id, isWaitList);
             playerPoolRepo.addUserToGameOwnerPlayerPool(game, user, callback);
           }
         });
@@ -138,7 +143,7 @@ function addUserToWaitList(game, user){
   var seat = new seatModel({
     user: user
   });
-  
+
   game.waitListCollection.push(seat);
 }
 

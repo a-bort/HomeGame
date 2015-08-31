@@ -1,5 +1,6 @@
 var gameModel = require('../models/game').game;
 var seatRepo = require('./seatRepository');
+var emailSender = require('../services/emailSender');
 
 exports.saveGame = function(gameObject, seatHost, userId, callback){
   gameObject.owner = userId;
@@ -24,7 +25,7 @@ exports.saveGame = function(gameObject, seatHost, userId, callback){
           callback(err, id);
           return;
         }
-        
+
         seatRepo.ensureSeatCountIsAccurate(id, callback);
       }
     );
@@ -80,14 +81,14 @@ exports.isUserRegisteredForGame = function(userId, game){
   return false;
 }
 
-exports.leaveGame = function(gameId, userId, callback){
+exports.leaveGame = function(gameId, user, callback){
   gameModel.findOne({_id: gameId}, function(err, game){
     if(err || !game){
       callback(err);
     }
 
-    if(!tryLeaveSeatCollection(game, userId, callback)){
-      if(!tryLeaveWaitListCollection(game, userId, callback)){
+    if(!tryLeaveSeatCollection(game, user._id, callback)){
+      if(!tryLeaveWaitListCollection(game, user._id, callback)){
         callback("Couldn't find this player's seat");
       }
     }
@@ -104,7 +105,7 @@ function tryLeaveSeatCollection(game, userId, callback){
         if(err){
           console.log(err);
         }
-
+        emailSender.notifyOnCancel(game, userId);
         callback(err);
       });
       return true;

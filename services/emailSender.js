@@ -41,6 +41,64 @@ exports.emailPlayerPool = function(user, gameId, subject, html, text, callback){
   });
 }
 
+exports.notifyOnJoin = function(game, playerId, joinedWaitlist){
+  game = game.toJSON();
+  sendNotificationEmail(game, playerId,
+    function(name){
+      return name + " has joined " + (joinedWaitlist ? "the waitlist for " : "")  + "your game";
+    },
+    function(name){
+      var str = name + "&nbsp;joined your poker game! (" + game.dateString + ")";
+      str = str + "<br><br>Currently <b>" + game.filledSeats + "/" + game.seats + "</b>&nbsp;seats are filled.";
+      str = str + "<br><br><b><a href='" + config.baseUrl + game.joinGameUrl + "'>View Game Page</a></b>";
+      return str;
+    },
+    function(name){
+      return name + " just joined your game (" + game.date + "). Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
+    },
+    function(){});
+}
+
+exports.notifyOnCancel = function(game, playerId){
+  game = game.toJSON();
+  sendNotificationEmail(game, playerId,
+    function(name){
+      return name + " has left your game";
+    },
+    function(name){
+      var str = name + "&nbsp;cancelled their reservation for your poker game. (" + game.dateString + ")";
+      str = str + "<br><br>Currently <b>" + game.filledSeats + "/" + game.seats + "</b>&nbsp;seats are filled.";
+      str = str + "<br><br><b><a href='" + config.baseUrl + game.joinGameUrl + "'>View Game Page</a></b>";
+      return str;
+    },
+    function(name){
+      return name + " just left your game on " + game.date + ". Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
+    },
+    function(){});
+}
+
+var sendNotificationEmail = function(game, playerId, subject, html, text, callback){
+  userRepo.getUserWithPlayerPool(game.owner, function(err1, owner){
+    if(err1){
+      callback(err);
+    }
+    userRepo.getUserWithPlayerPool(playerId, function(err2, player){
+      if(err2){
+        callback(err);
+      }
+
+      var theSubject = extractText(subject, player.name);
+      var theHtml = extractText(html, player.name);
+      var theText = extractText(text, player.name);
+      exports.sendSingleEmail(owner.email, theSubject, theHtml, theText, function(){});
+    });
+  });
+}
+
+var extractText = function(input, playerName){
+  return typeof input == "function" ? input(playerName) : input;
+}
+
 exports.sendSingleEmail = function(address, subject, html, text, callback){
   var opts = generateMailOptions(address, subject, html, text);
   callback = callback || function(){};

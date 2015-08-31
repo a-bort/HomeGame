@@ -16,3 +16,5 @@ exports.baseMailOptions = {
 
 exports.gmailUser = process.env.GMAIL_USER;
 exports.gmailPass = process.env.GMAIL_PASS;
+
+exports.baseUrl = process.env.BASE_URL || "homegame.a-bort.com";

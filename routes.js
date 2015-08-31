@@ -24,7 +24,7 @@ module.exports = function(app, passport) {
       var redirectUrl = redirector.getRedirectUrlFromLogin(req);
       res.redirect(redirectUrl);
     });
-    
+
     // ============================
     // GOOGLE AUTH
     // ============================
@@ -119,7 +119,7 @@ module.exports = function(app, passport) {
     });
 
     app.post('/mygames/leave', isLoggedIn, function(req, res) {
-      gameRepo.leaveGame(req.body.gameId, req.user._id, function(err){
+      gameRepo.leaveGame(req.body.gameId, req.user, function(err){
         defaultJson(res, err);
       });
     });
