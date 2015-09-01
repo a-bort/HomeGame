@@ -93,9 +93,14 @@ var extractText = function(input, playerName){
 }
 
 exports.sendSingleEmail = function(address, subject, html, text, callback){
+  if(config.dev){
+    //don't send mails from dev, it costs us
+    callback("No emails from dev");
+    return;
+  }
+  
   var email = generateMailOptions(address, subject, html, text);
   callback = callback || function(){};
-  console.log("Sending Email to " + address);
   sendgrid.send(email, function(err, info){
     if(err){
       console.log(err);

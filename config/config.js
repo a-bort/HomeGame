@@ -15,6 +15,7 @@ exports.baseMailOptions = {
   from: 'noreply@homegame.a-bort.com'
 }
 
+exports.dev = process.env.DEV;
 exports.emailUser = process.env.SENDGRID_USERNAME;
 exports.emailPass = process.env.SENDGRID_PASSWORD;
 
