@@ -11,10 +11,11 @@ exports.port = process.env.PORT;
 exports.passportSecret = process.env.PASSPORT_SECRET;
 
 exports.baseMailOptions = {
-  from: 'Homegame Alerts <noreply@homegame.a-bort.com>'
+  fromname: 'Homegame Alerts',
+  from: 'noreply@homegame.a-bort.com'
 }
 
-exports.gmailUser = process.env.GMAIL_USER;
-exports.gmailPass = process.env.GMAIL_PASS;
+exports.emailUser = process.env.SENDGRID_USER;
+exports.emailPass = process.env.SENDGRID_PASS;
 
 exports.baseUrl = process.env.BASE_URL || "homegame.a-bort.com";

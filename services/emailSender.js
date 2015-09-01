@@ -1,14 +1,7 @@
 var config = require('../config/config');
 var baseMailOptions = config.baseMailOptions;
 
-var nodemailer = require('nodemailer');
-var transporter = nodemailer.createTransport({
-  service: 'Gmail',
-  auth: {
-    user: config.gmailUser,
-    pass: config.gmailPass
-  }
-});
+var sendgrid = require('sendgrid')(config.emailUser, config.emailPass);
 
 var userRepo = require('../data/userRepository');
 
@@ -100,10 +93,10 @@ var extractText = function(input, playerName){
 }
 
 exports.sendSingleEmail = function(address, subject, html, text, callback){
-  var opts = generateMailOptions(address, subject, html, text);
+  var email = generateMailOptions(address, subject, html, text);
   callback = callback || function(){};
-
-  transporter.sendMail(opts, function(err, info){
+  console.log("Sending Email to " + address);
+  sendgrid.send(email, function(err, info){
     if(err){
       console.log(err);
       callback(err);
@@ -125,5 +118,6 @@ var generateMailOptions = function(address, subject, html, text){
   opts.text = text;
   opts.html = html;
 
-  return opts;
+  var email = new sendgrid.Email(opts);
+  return email;
 }
