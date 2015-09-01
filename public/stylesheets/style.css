@@ -610,6 +610,10 @@ textarea.ta-bind {
   margin-left: 20px;
 }
 
+.roster-seat {
+  margin-bottom: 5px;
+}
+
 #cancel-button {
   vertical-align: top;
 }
