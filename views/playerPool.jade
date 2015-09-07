@@ -6,12 +6,14 @@ block content
     div.pure-g
       div.pure-u-1-2
         h2.content-head Player Pool
+        h4.sub-text This page is under construction
         div.roster-panel
           h4.content-head Active Player Pool
           div.roster-seat(ng-repeat="player in playerPool | filter:activePlayer")
             div.roster-image
               img(ng-src="{{player.user.imageUrl}}")
             div.roster-name(ng-bind="parsePlayerName(player)")
+          div
         div.roster-panel
           h4.content-head Blocked Players
           div.roster-seat(ng-repeat="player in playerPool | filter:blockedPlayer")
