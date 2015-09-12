@@ -4,18 +4,18 @@ block content
     script(type="text/javascript" src="/javascripts/controllers/joinGameController.js")
     div(ng-controller="JoinGameController" ng-init="initWithGame(#{JSON.stringify(game)}, #{JSON.stringify(userAttending)}, #{JSON.stringify(autoJoin)})")
         div(ng-if="activeGame")
-          div
-            div
+          div.row
+            div.col-md-6
               h2.content-head Game Info
               div.content-subhead {{activeGame.owner.displayName}}'s {{activeGame.stakes}}, {{activeGame.gameType}} {{activeGame.gameFormat}}
-              div.game-grid.game-info
+              div.game-grid
                 div
                   span.strong-text When:
                   |{{activeGame.dateString}} @ {{activeGame.timeString}}
                 div
                   span.strong-text Where:
                   | {{activeGame.location}}
-                div {{activeGame.notes}}
+                div.info-body.multi-line {{activeGame.notes}}
               div(ng-show="!activeGame.pastGame")
                 button.pure-button.pure-button-primary#join-button(ng-click="join()" ng-disabled="userAttending") {{joinButtonText()}}
                 button.pure-button.pure-button-primary#cancel-button(ng-click="cancel()" ng-show="userAttending") Cancel Reservation
@@ -24,7 +24,7 @@ block content
                 div.small-text Simply send them the url of this page. However, know that the game owner can kick them if they so choose.
               div(ng-show="activeGame.pastGame")
                 button.pure-button.button-error(disabled="true") Registration Closed
-            div
+            div.col-md-6
               div.roster-panel
                 h4.content-head Current Roster ({{activeGame.emptySeats}}&nbsp;/&nbsp;{{activeGame.seats}} Seats Remaining)
                 div.roster-seat(ng-repeat="seat in activeGame.seatCollection | filter:filledSeatFilter")

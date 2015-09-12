@@ -14,13 +14,13 @@ block content
             button.header-button(ng-show="editing", ng-click="cancel()") Cancel
             button.header-button(ng-show="editing", ng-click="save()") Save
         div
-          div Display Name
+          div.strong-text Display Name
           div
             span(ng-hide="editing") {{user.customName}}
             span(ng-show="editing")
               input(type="text", ng-model="user.customName")
-        div
-          div Email
+        div.drop-md
+          div.strong-text Email
           div
             span(ng-hide="editing") {{user.email}}
             span(ng-show="editing")
