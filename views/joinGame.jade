@@ -4,8 +4,8 @@ block content
     script(type="text/javascript" src="/javascripts/controllers/joinGameController.js")
     div(ng-controller="JoinGameController" ng-init="initWithGame(#{JSON.stringify(game)}, #{JSON.stringify(userAttending)}, #{JSON.stringify(autoJoin)})")
         div(ng-if="activeGame")
-          div.pure-g
-            div.pure-u-1-2
+          div
+            div
               h2.content-head Game Info
               div.content-subhead {{activeGame.owner.displayName}}'s {{activeGame.stakes}}, {{activeGame.gameType}} {{activeGame.gameFormat}}
               div.game-grid.game-info
@@ -24,7 +24,7 @@ block content
                 div.small-text Simply send them the url of this page. However, know that the game owner can kick them if they so choose.
               div(ng-show="activeGame.pastGame")
                 button.pure-button.button-error(disabled="true") Registration Closed
-            div.pure-u-1-2
+            div
               div.roster-panel
                 h4.content-head Current Roster ({{activeGame.emptySeats}}&nbsp;/&nbsp;{{activeGame.seats}} Seats Remaining)
                 div.roster-seat(ng-repeat="seat in activeGame.seatCollection | filter:filledSeatFilter")
@@ -32,7 +32,7 @@ block content
                     img(ng-src="{{seat.user.imageUrl}}")
                   div.roster-name {{seat.user.displayName}}
               div.roster-panel(ng-hide="emptySeats()")
-                div.pure-u-3-5
+                div
                   h4.content-head Waitlist
                   div.roster-seat(ng-repeat="seat in activeGame.waitListCollection | orderBy: 'created'")
                     div.roster-image

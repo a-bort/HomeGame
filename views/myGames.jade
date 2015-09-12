@@ -3,8 +3,8 @@ extends layout
 block content
   script(type="text/javascript" src="/javascripts/controllers/myGamesController.js")
   div(ng-controller="MyGamesController", ng-init="initWithGames(#{JSON.stringify(ownedGames)}, #{JSON.stringify(playerGames)}, #{JSON.stringify(waitlistedGames)})")
-    div.pure-g
-      div.pure-u-1-2
+    div
+      div
         div.game-list
           h2.content-head(ng-hide="pastGamesVisible")
             | Upcoming Games
@@ -15,8 +15,8 @@ block content
             span.show-hide-link
               a(href="#", ng-click="hidePastGames()") Show Upcoming Games
           div.game-grid(ng-repeat="game in playerGames | filter:gameShouldBeShown")
-            div.pure-g
-              div.pure-u-18-24
+            div
+              div
                 div.game-grid-top-left.game-grid-subhead {{game.owner.displayName}}'s {{game.stakes}}, {{game.gameType}} {{game.gameFormat}}
                 div.game-grid-middle-left {{game.dateString}}
                   span.strong-text &nbsp;|&nbsp
@@ -30,7 +30,7 @@ block content
                     span &nbsp;Left&nbsp;
                     span.strong-text &sect;&nbsp;
                     span {{game.notes}}
-              div.pure-u-6-24
+              div
                 div.game-grid-right
                   button.pure-button.game-grid-button.game-grid-top-button(href="#" ng-click="$parent.viewGame(game)") View 
                   button.pure-button.game-grid-button.game-grid-bottom-button(href="#" ng-click="$parent.leaveGame(game)") Cancel                
@@ -46,8 +46,8 @@ block content
           h2.content-head 
             span(ng-hide="noWaitlistedGames()") Waitlisted Games
           div.game-grid.waitlist-grid(ng-repeat="game in waitlistedGames | filter:gameShouldBeShown")
-            div.pure-g
-              div.pure-u-18-24
+            div
+              div
                 div.game-grid-top-left.game-grid-subhead {{game.owner.displayName}}'s {{game.stakes}} {{game.gameType}} {{game.gameFormat}}
                 div.game-grid-middle-left {{game.dateString}}
                   span.strong-text &nbsp;|&nbsp
@@ -61,11 +61,11 @@ block content
                     span &nbsp;Left&nbsp;
                     span.strong-text &sect;&nbsp;
                     span {{game.notes}}
-              div.pure-u-6-24
+              div
                 div.game-grid-right
                   button.pure-button.game-grid-button.game-grid-top-button(href="#" ng-click="$parent.viewGame(game)") View 
                   button.pure-button.game-grid-button.game-grid-bottom-button(href="#" ng-click="$parent.leaveGame(game)") Cancel                             
-      div.pure-u-1-2
+      div
         h2.content-head
           | Hosted Games
           span.show-hide-link(ng-hide="pastOwnedGamesVisible")
@@ -73,14 +73,14 @@ block content
           span.show-hide-link(ng-show="pastOwnedGamesVisible")
               a(href="#", ng-click="hidePastOwnedGames()") Hide Past Games
         div.game-grid(ng-repeat="game in ownedGames | filter:ownedGameShouldBeShown")
-          div.pure-g
-            div.pure-u-1-2
+          div
+            div
               div.strong-text {{game.location}}
               div {{game.dateString}}
                 span.strong-text &nbsp;|&nbsp
                 | {{game.timeString}}
               div.info-body.strong-text {{game.filledSeats}} of {{game.seats}} Seats Filled
-            div.pure-u-1-2.game-grid-hosted-right
+            div.game-grid-hosted-right
               div.game-grid-button-container
                 button.pure-button.button-small.game-grid-small-button(ng-click="$parent.editGame(game)") Edit Game Info
               div.game-grid-button-container

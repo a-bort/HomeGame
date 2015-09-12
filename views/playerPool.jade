@@ -3,8 +3,8 @@ extends layout
 block content
   script(type="text/javascript" src="/javascripts/controllers/playerPoolController.js")
   div(ng-controller="PlayerPoolController" ng-init="init(#{JSON.stringify(playerPool)})")
-    div.pure-g
-      div.pure-u-1-2
+    div
+      div
         h2.content-head Player Pool
         h4.sub-text This page is under construction
         div.roster-panel
@@ -20,7 +20,7 @@ block content
             div.roster-image
               img(ng-src="{{player.user.imageUrl}}")
             div.roster-name(ng-bind="parsePlayerName(player)")
-      div.pure-u-1-2
+      div
         div.roster-panel
           h4.content-head Pending Requests
           div.roster-seat(ng-repeat="player in playerPool | filter:pendingPlayer")

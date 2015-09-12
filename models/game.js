@@ -30,6 +30,10 @@ var gameSchema = new mongoose.Schema({
     time: Date,
     notes: String,
     emailNotifications: { type: Boolean, default: true },
+    dayOfNotification: { type: Boolean, default: false },
+    dayOfNotificationTime: Date,
+    targetFilledSeats: Number,
+    cancelled: { type: Boolean, default: false },
     active: { type: Boolean, default: true }
 }, schemaOptions);
 
@@ -45,7 +49,7 @@ gameSchema.virtual('pastGame').get(function(){
   var now = new Date();
   var today = new Date(now.toDateString());
   var gameDate = new Date(this.date.toDateString());
-  
+
   return gameDate < today;
 });
 
