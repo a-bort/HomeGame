@@ -4,6 +4,7 @@ html
     title= title
     script(type='text/javascript' src='/javascripts/vendor/jquery/dist/jquery.min.js')
     script(type='text/javascript' src='/javascripts/vendor/angular/angular.js')
+    script(type='text/javascript' src='/javascripts/vendor/bootstrap/dist/js/bootstrap.js')
 
     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
     link(rel='stylesheet', href="/javascripts/vendor/font-awesome/css/font-awesome.css")
@@ -43,22 +44,29 @@ html
     meta(name='viewport' content='width=device-width, initial-scale=1')
   body(ng-app="homeGameApp")
     div#fb-root
-    .header(ng-controller="SharedController", ng-init="init(#{JSON.stringify(sharedModel)})")
-      .home-menu.pure-menu.pure-menu-horizontal.pure-menu-fixed
-        a.pure-menu-heading(href="/") Home Game - #{user && user.displayName ? user.displayName : "Welcome"}
-        ul.pure-menu-list
-          li.pure-menu-item
-            a.pure-menu-link(href="/mygames") My Games
-          li.pure-menu-item
-            a.pure-menu-link(href="/host") Host a Game
-          li.pure-menu-item
-            a.pure-menu-link(href="/playerPool") Player Pool
-          li.pure-menu-item
-            a.pure-menu-link(href="/profile") Profile
-          li.pure-menu-item
-            a.pure-menu-link(href="/about") About
-          li.pure-menu-item(ng-show="sharedModel.loggedIn")
-            a.pure-menu-link(href="/logout") Logout
+    header.navbar.navbar-inverse.navbar-static-top(ng-controller="SharedController", ng-init="init(#{JSON.stringify(sharedModel)})")
+      .container
+        div.navbar-header
+          button.navbar-toggle.collapsed(type="button", data-toggle="collapse", data-target="#navigationList" aria-expanded="false")
+            span.sr-only Toggle Navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href="/") Home Game
+        div#navigationList.collapse.navbar-collapse
+          ul.nav.navbar-nav
+            li
+              a(href="/mygames") My Games
+            li
+              a(href="/host") Host a Game
+            li
+              a(href="/playerPool") Player Pool
+            li
+              a(href="/profile") Profile
+            li
+              a(href="/about") About
+            li(ng-show="sharedModel.loggedIn")
+              a(href="/logout") Logout
         div.email-confirm-box(ng-show="sharedModel.showEmailPrompt", style="display: none;")
           div.email-confirm-inner
             div.email-confirm-input
@@ -67,5 +75,5 @@ html
             div.email-confirm-buttons
               button.pure-button.button-small(ng-click="updateEmail()") Submit
               button.pure-button.button-small.button-plain(ng-click="cancelEmailUpdate()") Cancel
-    .content
+    .container-fluid
       block content
