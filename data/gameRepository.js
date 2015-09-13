@@ -38,6 +38,12 @@ exports.getGameById = function(gameId, callback){
     });
 }
 
+exports.getLatestGameByOwner = function(ownerId, callback){
+  exports.getGamesByOwner(ownerId, function(games){
+    callback(games && games.length > 0 ? games[0] : null);
+  })
+}
+
 exports.getGamesByOwner = function(ownerId, callback){
   gameModel.find({owner: ownerId}, null, {sort: {date: -1}}, function(err, games){
     if(err){

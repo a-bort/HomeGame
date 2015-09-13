@@ -7,10 +7,11 @@ block content
         div.splash-description Sign up for a Poker Game, or Host one yourself
       div.splash-subhead
         div.login-section
-          div
-            a.strong-text(href="/auth/facebook") Login with Facebook
+          div#login-links
+            a.strong-text(href="/auth/facebook", onclick="$('#login-links').hide(); $('#logging-in').show();") Login with Facebook
             |&nbsp;|&nbsp;
-            a.strong-text(href="/auth/google") Login with Google
+            a.strong-text(href="/auth/google", onclick="$('#login-links').hide(); $('#logging-in').show();") Login with Google
+          div#logging-in(style="display: none") Logging In...
           div.login-disclaimer-section
             div.login-disclaimer-link
               a(href="#", onclick="") WTF why do I need to login with facebook or google? Is this a scam?

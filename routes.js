@@ -161,10 +161,15 @@ module.exports = function(app, passport) {
     // =====================================
 
     app.get('/host', isLoggedIn, function(req, res) {
-      res.render('hostGame', {
-			title: "Host a Game",
-            user : req.user
+      gameRepo.getLatestGameByOwner(req.user._id, function(latestGame){
+        latestGame._id = '';
+        latestGame.date = '';
+        res.render('hostGame', {
+  			     title: "Host a Game",
+             user : req.user,
+             game: latestGame
         });
+      });
     });
 
     app.get('/host/:gameId', isLoggedIn, function(req, res) {
@@ -173,7 +178,7 @@ module.exports = function(app, passport) {
           res.render('hostGame', {
             title: "Host a Game",
             user : req.user,
-            game: game
+            game : game
           });
         }
         else{

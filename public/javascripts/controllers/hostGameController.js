@@ -59,8 +59,8 @@ homeGameApp.controller('HostGameController', function($scope, $http, $location){
 
   $scope.initWithGame = function(game){
     if(game){
-      game.date = new Date(game.date);
-      game.time = new Date(game.time);
+      game.date = game.date ? new Date(game.date) : '';
+      game.time = game.time ? new Date(game.time) : '';
 
       util.mapSourceToTarget(game, $scope.dataModel);
     }

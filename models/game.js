@@ -46,6 +46,7 @@ gameSchema.virtual('timeString').get(function(){
 });
 
 gameSchema.virtual('pastGame').get(function(){
+  if(!this.date) return false;
   var now = new Date();
   var today = new Date(now.toDateString());
   var gameDate = new Date(this.date.toDateString());

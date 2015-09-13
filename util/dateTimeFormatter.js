@@ -1,10 +1,14 @@
 exports.formatDateString = function(dateString){
+  if(!dateString) return '';
+
   var date = new Date(dateString);
   var dayOfWeek = exports.getDayOfWeekFromDate(date);
   return dayOfWeek + ' ' + (date.getMonth() + 1) + '/' + date.getDate() + '/' +  date.getFullYear();
 }
 
 exports.formatTimeString = function(timeString) {
+  if(!timeString) return '';
+
   var time = new Date(timeString);
   var hours = time.getHours();
   var minutes = time.getMinutes();
@@ -17,6 +21,8 @@ exports.formatTimeString = function(timeString) {
 }
 
 exports.getDayOfWeekFromDate = function(d){
+if(!d) return '';
+
   var weekday = new Array(7);
   weekday[0]=  "Sunday";
   weekday[1] = "Monday";
