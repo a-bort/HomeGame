@@ -36,7 +36,7 @@ userSchema.virtual('displayName').get(function(){
 userSchema.virtual('imageUrl').get(function(){
   if(this.isFacebook){
     return "http://graph.facebook.com/" + this.id + "/picture?type=square";
-  } else if(this.isGoogle){
+  } else if(this.isGoogle && this.googleImage){
     return this.googleImage;
   } else{
     return "/images/anon-user.png";
