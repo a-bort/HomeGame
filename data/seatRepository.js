@@ -122,7 +122,9 @@ exports.seatUserInGame = function(gameId, user, callback){
             console.log(err);
             callback(err);
           } else{
-            emailSender.notifyOnJoin(game, user._id, isWaitList);
+            if(game.emailNotifications){
+              emailSender.notifyOnJoin(game, user._id, isWaitList);
+            }
             playerPoolRepo.addUserToGameOwnerPlayerPool(game, user, callback);
           }
         });

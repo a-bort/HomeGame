@@ -104,9 +104,13 @@ function tryLeaveSeatCollection(game, userId, callback){
       game.save(function(err){
         if(err){
           console.log(err);
+          callback(err);
+        } else{
+          if(game.emailNotifications){
+            emailSender.notifyOnCancel(game, userId);
+          }
+          callback();
         }
-        emailSender.notifyOnCancel(game, userId);
-        callback(err);
       });
       return true;
     }

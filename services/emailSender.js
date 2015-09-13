@@ -74,10 +74,12 @@ var sendNotificationEmail = function(game, playerId, subject, html, text, callba
   userRepo.getUserWithPlayerPool(game.owner, function(err1, owner){
     if(err1){
       callback(err);
+      return;
     }
     userRepo.getUserWithPlayerPool(playerId, function(err2, player){
       if(err2){
         callback(err);
+        return;
       }
 
       var theSubject = extractText(subject, player.name);
@@ -98,15 +100,16 @@ exports.sendSingleEmail = function(address, subject, html, text, callback){
     callback("No emails from dev");
     return;
   }
-  
+
   var email = generateMailOptions(address, subject, html, text);
   callback = callback || function(){};
   sendgrid.send(email, function(err, info){
     if(err){
       console.log(err);
       callback(err);
+    } else{
+      callback(null, info);
     }
-    callback(null, info);
   });
 }
 
