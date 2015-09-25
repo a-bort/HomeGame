@@ -164,6 +164,7 @@ module.exports = function(app, passport) {
       gameRepo.getLatestGameByOwner(req.user._id, function(latestGame){
         latestGame._id = '';
         latestGame.date = '';
+        latestGame.seatCollection = [];
         res.render('hostGame', {
   			     title: "Host a Game",
              user : req.user,
