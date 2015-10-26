@@ -2,14 +2,12 @@ extends layout
 
 block content
   script(type="text/javascript" src="/javascripts/controllers/aboutController.js")
-  div(ng-controller="AboutController")
-    div
+  div.row(ng-controller="AboutController")
+    div.col-md-6
       h2.content-head Planned Features
       div.features-content
         div(ng-repeat="feature in features") {{feature.title}}
-      div.privacy-link
-        a(href="/privacy") View our Privacy Policy
-    div
+    div.col-md-6
       h2.content-head Known Issues
       div.features-content
         div(ng-repeat="issue in issues") {{issue.title}}
@@ -17,3 +15,5 @@ block content
       div.features-content
         textarea.feedback-area(ng-model="feedback")
         button.pure-button#submit-button(ng-click="submit()") Submit
+      div.privacy-link
+        a(href="/privacy") View our Privacy Policy

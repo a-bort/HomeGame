@@ -3,16 +3,9 @@ extends layout
 block content
   script(type="text/javascript" src="/javascripts/controllers/profileController.js")
   div(ng-controller="ProfileController" ng-init="init(#{JSON.stringify(user)}, [])")
-    h2.content-head Profile
-    div
-      div
-        div
-          div
-            h3 {{user.name}}
-          div
-            button.header-button(ng-hide="editing", ng-click="edit()") Edit
-            button.header-button(ng-show="editing", ng-click="cancel()") Cancel
-            button.header-button(ng-show="editing", ng-click="save()") Save
+    h2.content-head Profile for {{user.name}}
+    div.row
+      div.col-md-4
         div
           div.strong-text Display Name
           div
@@ -25,4 +18,8 @@ block content
             span(ng-hide="editing") {{user.email}}
             span(ng-show="editing")
               input(type="text", ng-model="user.email")
+      div.col-md-4
+        button.pure-button(ng-hide="editing", ng-click="edit()") Edit
+        button.pure-button(ng-show="editing", ng-click="cancel()", style="margin-right: 10px") Cancel
+        button.pure-button(ng-show="editing", ng-click="save()") Save
       
