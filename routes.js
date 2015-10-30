@@ -162,12 +162,16 @@ module.exports = function(app, passport) {
 
     app.get('/host', isLoggedIn, function(req, res) {
       gameRepo.getLatestGameByOwner(req.user._id, function(latestGame){
-        latestGame = latestGame.toJSON();
+        if(latestGame && latestGame.toJSON){
+          latestGame = latestGame.toJSON();
+        } else{
+          latestGame = {};
+        }
 
         latestGame._id = '';
         latestGame.date = '';
         latestGame.seatCollection = [];
-        console.log(latestGame);
+
         res.render('hostGame', {
   			     title: "Host a Game",
              user : req.user,
