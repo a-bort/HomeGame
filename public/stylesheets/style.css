@@ -186,6 +186,10 @@ input[type=date]::-webkit-inner-spin-button {
   font-size: 13px;
 }
 
+.left-sm {
+  margin-left: 5px;
+}
+
 .padded-right-lg {
   padding-right: 25px;
 }

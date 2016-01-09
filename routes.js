@@ -227,6 +227,41 @@ module.exports = function(app, passport) {
       });
     });
 
+    app.post('/playerPool/confirm', isLoggedIn, function(req, res){
+      setConfirmedStatus(req, res, true);
+    });
+
+    app.post('/playerPool/block', isLoggedIn, function(req, res){
+      setConfirmedStatus(req, res, false);
+    })
+
+    function setConfirmedStatus(req, res, doConfirm){
+      if(!req.body.playerId){
+        defaultJson(res, "No Player Id Passed");
+        return;
+      };
+
+      var playerId = req.body.playerId;
+
+      userRepo.getUserWithPlayerPool(req.user._id, function(err, user){
+        if(err){
+          console.log('Error getting user with player pool');
+          defaultJson(res, err);
+        } else{
+          for(var i = 0; i < user.playerPool.length; i++){
+            var player = user.playerPool[i];
+            if(player._id == playerId){
+              player.confirmed = doConfirm;
+              player.blocked = !doConfirm;
+              userRepo.updatePlayerPool(user, function(err){
+                defaultJson(res, err);
+              })
+            }
+          }
+        }
+      });
+    }
+
     /*app.post('/contact/emailPlayerPool', isLoggedIn, function(req, res){
       var info = req.body;
 
@@ -258,7 +293,7 @@ module.exports = function(app, passport) {
     });
 
     // =====================================
-    // ABOUT ==============================
+    // PRIVACY ==============================
     // =====================================
 
     app.get('/privacy', function(req, res) {
