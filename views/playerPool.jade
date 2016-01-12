@@ -8,33 +8,36 @@ block content
       div.col-md-6(ng-show="(playerPool | filter:pendingPlayer).length > 0")
         div.roster-panel
           h4.content-head Pending Requests
-          div.roster-seat.game-grid(ng-repeat="player in playerPool | filter:pendingPlayer")
-            div
-              div.roster-image
-                img(ng-src="{{player.user.imageUrl}}")
-              div.roster-name(ng-bind="parsePlayerName(player)")
-            div
-              button.pure-button.button-success.button-small(ng-click="$parent.confirmPlayer(player)") Confirm
-              button.pure-button.button-plain.left-sm.button-small(ng-click="$parent.blockPlayer(player)") Block
+          div.roster-seat.shadow-box(ng-repeat="player in playerPool | filter:pendingPlayer")
+            div.row
+              div.col-md-9
+                div.roster-image
+                  img(ng-src="{{player.user.imageUrl}}")
+                div.roster-name(ng-bind="parsePlayerName(player)")
+              div.col-md-3
+                button.pure-button.button-success.button-small.drop-btn(ng-click="$parent.confirmPlayer(player)") Confirm
+                button.pure-button.button-error.left-sm.button-small.drop-btn(ng-click="$parent.blockPlayer(player)") Block
           div(ng-show="(playerPool | filter:pendingPlayer).length == 0") No pending players
       div.col-md-6
         div.roster-panel
           h4.content-head Active Player Pool
-          div.roster-seat.game-grid(ng-repeat="player in playerPool | filter:activePlayer")
-            div
-              div.roster-image
-                img(ng-src="{{player.user.imageUrl}}")
-              div.roster-name(ng-bind="parsePlayerName(player)")
-            div
-              button.pure-button.button-plain.button-small(ng-click="$parent.blockPlayer(player)") Block
+          div.roster-seat.shadow-box(ng-repeat="player in playerPool | filter:activePlayer")
+            div.row
+              div.col-md-9
+                div.roster-image
+                  img(ng-src="{{player.user.imageUrl}}")
+                div.roster-name(ng-bind="parsePlayerName(player)")
+              div.col-md-3
+                button.pure-button.button-error.button-small.drop-btn(ng-click="$parent.blockPlayer(player)") Block
           div(ng-show="(playerPool | filter:activePlayer).length == 0") No active players
         div.roster-panel
           h4.content-head Blocked Players
-          div.roster-seat.game-grid(ng-repeat="player in playerPool | filter:blockedPlayer")
-            div
-              div.roster-image
-                img(ng-src="{{player.user.imageUrl}}")
-              div.roster-name(ng-bind="parsePlayerName(player)")
-            div
-              button.pure-button.button-success.button-small(ng-click="$parent.confirmPlayer(player)") Confirm
+          div.roster-seat.shadow-box(ng-repeat="player in playerPool | filter:blockedPlayer")
+            div.row
+              div.col-md-9
+                div.roster-image
+                  img(ng-src="{{player.user.imageUrl}}")
+                div.roster-name(ng-bind="parsePlayerName(player)")
+              div.col-md-3
+                button.pure-button.button-success.button-small.drop-btn(ng-click="$parent.confirmPlayer(player)") Un-Block
           div(ng-show="(playerPool | filter:blockedPlayer).length == 0") No blocked players

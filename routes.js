@@ -44,7 +44,8 @@ module.exports = function(app, passport) {
 
     app.all('*', function(req, res, next){
       sharedRepo.getSharedData(req, function(data){
-        res.locals.sharedModel = data;
+        res.locals.sharedModel = data || {};
+        res.locals.sharedModel.errors = req.flash('error');
         next();
       });
     });

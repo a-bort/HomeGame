@@ -67,7 +67,7 @@ html
               a(href="/about") About
             li(ng-show="sharedModel.loggedIn")
               a(href="/logout") Logout
-        div.email-confirm-box(ng-show="sharedModel.showEmailPrompt", style="display: none;")
+        div.email-confirm-box.ng-hide(ng-show="sharedModel.showEmailPrompt")
           div.email-confirm-inner
             div.email-confirm-input
               label Is this the right email?
@@ -75,5 +75,10 @@ html
             div.email-confirm-buttons
               button.pure-button.button-small(ng-click="updateEmail()") Submit
               button.pure-button.button-small.button-plain(ng-click="cancelEmailUpdate()") Cancel
+      div.alert-container.container.ng-hide(ng-show="errorsExist()")
+        div.alert.alert-danger.alert-dismissible.fade.in
+          button.close(type="button", data-dismiss="alert", aria-label="Close")
+            span(aria-hidden="true") x
+          | {{errorText()}}
     .container-fluid
       block content
