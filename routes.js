@@ -120,7 +120,17 @@ module.exports = function(app, passport) {
     });
 
     app.post('/mygames/leave', isLoggedIn, function(req, res) {
-      gameRepo.leaveGame(req.body.gameId, req.user, function(err){
+      gameRepo.leaveGame(req.body.gameId, req.user._id, function(err){
+        defaultJson(res, err);
+      });
+    });
+
+    app.post('/mygames/kick', isLoggedIn, function(req, res) {
+      if(!req.body.userId){
+        defaultJson(res, "No UserId Passed");
+        return;
+      }
+      gameRepo.kickPlayer(req.body.gameId, req.body.userId, req.user._id, function(err){
         defaultJson(res, err);
       });
     });
@@ -140,6 +150,7 @@ module.exports = function(app, passport) {
             title: "Join a Game",
             user : req.user,
             game : game,
+            userIsOwner : (req.user._id.equals(game.owner._id)),
             autoJoin: autoJoin,
             userAttending : gameRepo.isUserRegisteredForGame(req.user._id, game)
         });

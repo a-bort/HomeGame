@@ -194,6 +194,10 @@ input[type=date]::-webkit-inner-spin-button {
   margin-left: 5px;
 }
 
+.left-lg {
+  margin-left: 25px;
+}
+
 .padded-right-lg {
   padding-right: 25px;
 }

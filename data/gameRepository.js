@@ -87,18 +87,51 @@ exports.isUserRegisteredForGame = function(userId, game){
   return false;
 }
 
-exports.leaveGame = function(gameId, user, callback){
+exports.leaveGame = function(gameId, userId, callback){
   gameModel.findOne({_id: gameId}, function(err, game){
     if(err || !game){
       callback(err);
+      return;
     }
 
-    if(!tryLeaveSeatCollection(game, user._id, callback)){
-      if(!tryLeaveWaitListCollection(game, user._id, callback)){
-        callback("Couldn't find this player's seat");
+    var afterLeaveCallback = function(err){
+      if(err){
+        console.log(err);
+        callback(err);
+      } else{
+        if(game.emailNotifications){
+          emailSender.notifyOnCancel(game, userId);
+        }
+        callback();
       }
-    }
+    };
+
+    removePlayerFromGame(game, userId, afterLeaveCallback)
   });
+}
+
+exports.kickPlayer = function(gameId, playerIdToKick, userId, callback){
+  gameModel.findOne({_id: gameId}, function(err, game){
+    if(err || !game){
+      callback(err);
+      return;
+    }
+
+    if(!game.owner.equals(userId)){
+      callback("Not Authorized");
+      return;
+    }
+
+    removePlayerFromGame(game, playerIdToKick, callback);
+  })
+}
+
+function removePlayerFromGame(game, userId, callback){
+  if(!tryLeaveSeatCollection(game, userId, callback)){
+    if(!tryLeaveWaitListCollection(game, userId, callback)){
+      callback("Couldn't find this player's seat");
+    }
+  }
 }
 
 function tryLeaveSeatCollection(game, userId, callback){
@@ -110,13 +143,9 @@ function tryLeaveSeatCollection(game, userId, callback){
       game.save(function(err){
         if(err){
           console.log(err);
-          callback(err);
-        } else{
-          if(game.emailNotifications){
-            emailSender.notifyOnCancel(game, userId);
-          }
-          callback();
         }
+
+        callback(err);
       });
       return true;
     }

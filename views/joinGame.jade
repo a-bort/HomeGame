@@ -2,7 +2,7 @@ extends layout
 
 block content
     script(type="text/javascript" src="/javascripts/controllers/joinGameController.js")
-    div(ng-controller="JoinGameController" ng-init="initWithGame(#{JSON.stringify(game)}, #{JSON.stringify(userAttending)}, #{JSON.stringify(autoJoin)})")
+    div(ng-controller="JoinGameController" ng-init="initWithGame(#{JSON.stringify(game)}, #{JSON.stringify(userAttending)}, #{JSON.stringify(autoJoin)}, #{JSON.stringify(user._id)})")
         div(ng-if="activeGame")
           div.row
             div.col-md-6
@@ -31,6 +31,8 @@ block content
                   div.roster-image
                     img(ng-src="{{seat.user.imageUrl}}")
                   div.roster-name {{seat.user.displayName}}
+                  if userIsOwner
+                    button.pure-button.button-error.button-xsmall.left-lg(ng-hide="seat.user._id == currentUserId", ng-click="kick(seat.user._id)") X
               div.roster-panel(ng-hide="emptySeats()")
                 div
                   h4.content-head Waitlist
