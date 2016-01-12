@@ -32,7 +32,7 @@ block content
                     img(ng-src="{{seat.user.imageUrl}}")
                   div.roster-name {{seat.user.displayName}}
                   if userIsOwner
-                    button.pure-button.button-error.button-xsmall.left-lg(ng-hide="seat.user._id == currentUserId", ng-click="kick(seat.user._id)") X
+                    button.pure-button.button-error.button-xsmall.left-lg(ng-hide="seat.user._id == currentUserId || activeGame.pastGame", ng-click="kick(seat.user._id)") X
               div.roster-panel(ng-hide="emptySeats()")
                 div
                   h4.content-head Waitlist
