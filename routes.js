@@ -143,17 +143,24 @@ module.exports = function(app, passport) {
       var autoJoin = !!req.query.autoJoin;
       gameRepo.getGameById(req.params.gameId, function(err, game){
         if(err || !game){
+          req.flash("error", "Error retrieving game");
           redirector.defaultRedirect(res);
           return;
         }
-        res.render('joinGame', {
-            title: "Join a Game",
-            user : req.user,
-            game : game,
-            userIsOwner : (req.user._id.equals(game.owner._id)),
-            autoJoin: autoJoin,
-            userAttending : gameRepo.isUserRegisteredForGame(req.user._id, game)
-        });
+        userRepo.getUserWithPlayerPool(req.user._id, function(err2, fullUser){
+          if(err2 || !fullUser){
+            req.flash("error", "Error retrieving user details");
+            redirector.defaultRedirect(res);
+            return;
+          }
+          res.render('joinGame', {
+              title: "Join a Game",
+              user : fullUser,
+              game : game,
+              autoJoin: autoJoin,
+              userAttending : gameRepo.isUserRegisteredForGame(req.user._id, game)
+          });
+        })
       });
     });
 

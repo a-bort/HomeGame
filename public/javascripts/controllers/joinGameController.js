@@ -2,7 +2,9 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
 
     $scope.activeGame = undefined;
     $scope.userAttending = false;
-    $scope.currentUserId = "";
+    $scope.currentUser = {};
+    $scope.currentUserIsOwner = false;
+
     $scope.emptySeats = function(){
       return $scope.activeGame && $scope.activeGame.emptySeats > 0;
     };
@@ -18,11 +20,11 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       return ;
     }
 
-    $scope.initWithGame = function(game, userAttending, autoJoin, currentUserId){
+    $scope.initWithGame = function(game, userAttending, autoJoin, currentUser){
         $scope.activeGame = game;
         $scope.userAttending = !!userAttending;
-        $scope.currentUserId = currentUserId;
-
+        $scope.currentUser = currentUser;
+        $scope.currentUserIsOwner = (currentUser._id == game.owner._id);
         if(autoJoin && !userAttending){
           $scope.userAttending = true;
           $scope.join();
