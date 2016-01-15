@@ -62,7 +62,11 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
   $scope.computedGameDescriptionHtml = function(game){
     var delim = "&nbsp;<b>&sect</b>&nbsp";
     var text = game.filledSeats + " of " + game.seats + " Seats Filled" + delim;
-    text += game.emptySeats + " Seats Left" + delim;
+    if(game.emptySeats == 0 && !game.pastGame){
+      text += "Waitlist Available!" + delim;
+    } else{
+      text += game.emptySeats + " Seats Left" + delim;
+    }
     text += game.notes;
     return text;
   }

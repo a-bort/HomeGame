@@ -70,6 +70,28 @@ exports.notifyOnCancel = function(game, playerId){
     function(){});
 }
 
+exports.notifyMovedOffWaitlist = function(game, playerId, callback){
+  game = game.toJSON();
+  userRepo.getUserWithPlayerPool(playerId, function(err1, player){
+    if(err1){
+      callback(err1);
+      return;
+    }
+    userRepo.getUserWithPlayerPool(game.owner, function(err2, owner){
+      if(err2){
+        callback(err2);
+        return;
+      }
+
+      var theSubject = "You're off the Waitlist!";
+      var theHtml = "You have been moved off of the waitlist for " + owner.name + "'s poker game on " + game.dateString;
+      theHtml += "<br><br><b><a href='" + config.baseUrl + game.joinGameUrl + "'>View Game Page</a></b>";
+      var theText = "You have been moved off of the waitlist for " + owner.name + "'s poker game on " + game.dateString;
+      exports.sendSingleEmail(player.email, theSubject, theHtml, theText, function(){});
+    });
+  });
+}
+
 var sendNotificationEmail = function(game, playerId, subject, html, text, callback){
   userRepo.getUserWithPlayerPool(game.owner, function(err1, owner){
     if(err1){

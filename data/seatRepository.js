@@ -91,8 +91,12 @@ function getActiveSeatCount(game){
 
 exports.seatPlayerFromWaitlist = function(game){
   sortWaitList(game);
-  game.seatCollection.push(game.waitListCollection[0]);
+  var waitlistSeat = game.waitListCollection[0];
+  game.seatCollection.push(waitlistSeat);
   game.waitListCollection.splice(0, 1);
+  emailSender.notifyMovedOffWaitlist(game, waitlistSeat.user, function(err){
+    if(err){ console.log("DIDN'T SEND EMAIL: " + err); }
+  });
 }
 
 exports.seatUserInGame = function(gameId, user, callback){
