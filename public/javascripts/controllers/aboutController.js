@@ -1,7 +1,6 @@
 homeGameApp.controller('AboutController', function($scope, $http, $location){
 
     $scope.features = [
-      {title: 'Player Pool Management', description: ''},
       {title: 'Player Groups', description: ''},
       {title: 'Game Schedule', description: ''}
     ];

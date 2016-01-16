@@ -26,7 +26,7 @@ exports.userAuthorizedForGame = function(req, res, next){
     for(var i = 0; i < ownerPlayerPool.length; i++){
       var player = ownerPlayerPool[i];
 
-      if(player.user.equals(userId) && player.blocked){
+      if(player.user && player.user.equals(userId) && player.blocked){
         req.flash('error', 'Not authorized, contact the game owner if you think this is a mistake');
         redirector.defaultRedirect(res);
         return;

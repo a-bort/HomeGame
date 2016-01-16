@@ -15,8 +15,8 @@ block content
                   img(ng-src="{{player.user.imageUrl}}")
                 div.roster-name(ng-bind="parsePlayerName(player)")
               div.col-md-3
-                button.pure-button.button-success.button-small.drop-btn(ng-click="$parent.confirmPlayer(player)") Confirm
-                button.pure-button.button-error.left-sm.button-small.drop-btn(ng-click="$parent.blockPlayer(player)") Block
+                button.pure-button.button-success.right-sm.button-small.drop-btn(ng-click="$parent.confirmPlayer(player)") Confirm
+                button.pure-button.button-error.button-small.drop-btn(ng-click="$parent.blockPlayer(player)") Block
           div(ng-show="(playerPool | filter:pendingPlayer).length == 0") No pending players
       div.col-md-6
         div.roster-panel

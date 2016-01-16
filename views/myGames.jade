@@ -15,19 +15,19 @@ block content
             div.col-md-4.show-hide-link
               a(href="#", ng-click="hidePastGames()") Show Upcoming Games
           div.game-grid(ng-repeat="game in playerGames | filter:gameShouldBeShown")
-            div.game-grid-top-left.game-grid-subhead {{game.owner.displayName}}'s {{game.stakes}}, {{game.gameType}} {{game.gameFormat}}
+            div.game-grid-subhead {{game.owner.displayName}}'s {{game.stakes}}, {{game.gameType}} {{game.gameFormat}}
             div {{game.dateString}}
-              span.strong-text &nbsp;|&nbsp
+              span.strong-text &nbsp;|&nbsp;
               | {{game.timeString}}
             div
               div.info-body.multi-line(ng-bind-html="computedGameDescriptionHtml(game)")
             div
-              span.game-grid-button
+              span.game-grid-button.button-small
                 button.pure-button(href="#" ng-click="$parent.viewGame(game)") View 
-              span.game-grid-button
+              span.game-grid-button.button-small
                 button.pure-button(href="#" ng-click="$parent.leaveGame(game)") Cancel                
           div.game-grid.empty-game-grid(ng-show="noPlayerGamesShowing()")
-            div.game-grid-subhead You have no&nbsp
+            div.game-grid-subhead You have no&nbsp;
               span(ng-show="!pastGamesVisible") upcoming
               span(ng-show="pastGamesVisible") past
               | &nbsp;games.
@@ -38,25 +38,17 @@ block content
           h2.content-head 
             span(ng-hide="noWaitlistedGames()") Waitlisted Games
           div.game-grid.waitlist-grid(ng-repeat="game in waitlistedGames | filter:gameShouldBeShown")
+            div.game-grid-subhead {{game.owner.displayName}}'s {{game.stakes}}, {{game.gameType}} {{game.gameFormat}}
+            div {{game.dateString}}
+              span.strong-text &nbsp;|&nbsp;
+              | {{game.timeString}}
             div
-              div
-                div.game-grid-top-left.game-grid-subhead {{game.owner.displayName}}'s {{game.stakes}} {{game.gameType}} {{game.gameFormat}}
-                div.game-grid-middle-left {{game.dateString}}
-                  span.strong-text &nbsp;|&nbsp
-                  | {{game.timeString}}
-                div.game-grid-botttom-left 
-                  div.info-body.multi-line
-                    span {{game.filledSeats}} of {{game.seats}} Seats Filled&nbsp;
-                    span.strong-text &sect;&nbsp;
-                    span {{game.emptySeats}}&nbsp;Seat
-                    span(ng-show="game.multiSeats") s
-                    span &nbsp;Left&nbsp;
-                    span.strong-text &sect;&nbsp;
-                    span {{game.notes}}
-              div
-                div.game-grid-right
-                  button.pure-button.game-grid-button.game-grid-top-button(href="#" ng-click="$parent.viewGame(game)") View 
-                  button.pure-button.game-grid-button.game-grid-bottom-button(href="#" ng-click="$parent.leaveGame(game)") Cancel                             
+              div.info-body.multi-line(ng-bind-html="computedGameDescriptionHtml(game)")
+            div
+              span.game-grid-button.button-small
+                button.pure-button.button-small(href="#" ng-click="$parent.viewGame(game)") View 
+              span.game-grid-button.button-small
+                button.pure-button.button-small(href="#" ng-click="$parent.leaveGame(game)") Cancel                         
       div.col-md-6
         h2.row.content-head
           div.col-md-8 Hosted Games
@@ -66,9 +58,9 @@ block content
             span(ng-show="pastOwnedGamesVisible")
                 a(href="#", ng-click="hidePastOwnedGames()") Hide Past Games
         div.game-grid(ng-repeat="game in ownedGames | filter:ownedGameShouldBeShown")
-          div.strong-text {{game.location}}
-          div {{game.dateString}}&nbsp;|&nbsp;{{game.timeString}}
-          div.strong-text {{game.filledSeats}} of {{game.seats}} Seats Filled
+          div.game-grid-subhead {{game.dateString}}&nbsp;|&nbsp;{{game.timeString}}
+          div {{game.stakes}} {{game.gameType}} {{game.gameFormat}}
+          div.info-body.multi-line {{game.filledSeats}} of {{game.seats}} Seats Filled
           div
             span.game-grid-button
               button.pure-button.button-small(ng-click="$parent.editGame(game)") Edit Game Info

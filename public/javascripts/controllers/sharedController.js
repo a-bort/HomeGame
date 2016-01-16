@@ -6,7 +6,6 @@ homeGameApp.controller('SharedController', function($scope, $http, $location){
   };
 
   $scope.init = function(model){
-    console.log(model);
     $scope.sharedModel = model || $scope.sharedModel;
     $scope.onPageReady();
   }

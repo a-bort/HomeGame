@@ -10,7 +10,7 @@
  */
 body {
     line-height: 1.7em;
-    color: #7f8c8d;
+    color: #516578;
     font-size: 13px;
 }
 
@@ -21,7 +21,7 @@ h4,
 h5,
 h6,
 label {
-    color: #34495e;
+    color: #3F556B;
 }
 
 .pure-img-responsive {
@@ -192,6 +192,10 @@ input[type=date]::-webkit-inner-spin-button {
 
 .left-sm {
   margin-left: 5px;
+}
+
+.right-sm {
+  margin-right: 5px;
 }
 
 .left-lg {
@@ -514,9 +518,6 @@ input[type=date]::-webkit-inner-spin-button {
   color: #607CA8;
 }
 
-.game-grid-top-left {
-}
-
 .game-grid-button{
   margin-right: 5px;
   margin-bottom: 5px;
@@ -573,7 +574,7 @@ input[type=date]::-webkit-inner-spin-button {
 
 .game-grid-subhead{
   font-size: 18px;
-  font-weight: bold;
+  color: #5382B0;
 }
 
 .roster-panel{
@@ -633,6 +634,7 @@ input[type=date]::-webkit-inner-spin-button {
 .roster-image {
   display: inline-block;
   height: 50px;
+  margin-right: 20px;
 }
 
 .roster-name {
@@ -640,7 +642,6 @@ input[type=date]::-webkit-inner-spin-button {
   height: 50px;
   line-height: 50px;
   vertical-align: top;
-  margin-left: 20px;
   overflow: hidden;
 }
 
