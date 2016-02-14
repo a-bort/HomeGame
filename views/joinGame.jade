@@ -37,11 +37,17 @@ block content
                     button.pure-button.button-error.button-xsmall.left-lg(ng-hide="!currentUserIsOwner || seat.user._id == currentUserId || activeGame.pastGame", ng-click="kick(seat.user._id)") X
               div.game-grid(ng-hide="emptySeats()")
                 div.game-grid-subhead Waitlist
+                div(ng-visible="activeGame.waitListCollection.length == 0") The waitlist is empty
                 div.roster-seat(ng-repeat="seat in activeGame.waitListCollection | orderBy: 'created'")
                   div.roster-image
                     img(ng-src="{{seat.user.imageUrl}}")
                   div.roster-name {{seat.user.displayName}}
-              //div.game-grid(ng-show="currentUserIsOwner")
+              div.game-grid(ng-show="currentUserIsOwner && anyAddablePlayers()")
                 div.game-grid-subhead Add Players from Player Pool
-                div.roster-seat(ng-repeat="player in currentUser.playerPool")
+                div.roster-seat(ng-repeat="player in currentUser.playerPool | filter:addablePlayer")
+                  div.roster-image
+                    img(ng-src="{{player.user.imageUrl}}")
+                  div.roster-name {{player.user.displayName}}
+                    button.pure-button.button-success.button-xsmall.left-lg(ng-click="add(player.user._id)")
+                      span.glyphicon.glyphicon-plus
                   

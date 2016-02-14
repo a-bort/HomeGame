@@ -99,7 +99,7 @@ exports.seatPlayerFromWaitlist = function(game){
   });
 }
 
-exports.seatUserInGame = function(gameId, user, callback){
+exports.seatUserInGame = function(gameId, userId, ownerAdded, callback){
     gameModel.findOne({_id: gameId, active: true}, function(err, game){
         if(err){
             console.log(err);
@@ -115,39 +115,40 @@ exports.seatUserInGame = function(gameId, user, callback){
         var isWaitList = false;
 
         if(game.emptySeats > 0){
-          addUserToSeatList(game, user);
+          addUserToSeatList(game, userId);
         } else{
-          addUserToWaitList(game, user);
+          addUserToWaitList(game, userId);
           isWaitList = true;
         }
 
         game.save(function(err){
           if(err){
+            console.log("Error saving game");
             console.log(err);
             callback(err);
           } else{
-            if(game.emailNotifications){
-              emailSender.notifyOnJoin(game, user._id, isWaitList);
+            if(game.emailNotifications && !ownerAdded){
+              emailSender.notifyOnJoin(game, userId, isWaitList);
             }
-            playerPoolRepo.addUserToGameOwnerPlayerPool(game, user, callback);
+            playerPoolRepo.addUserToGameOwnerPlayerPool(game, userId, callback);
           }
         });
     });
 }
 
-function addUserToSeatList(game, user){
+function addUserToSeatList(game, userId){
   for(var i = 0; i < game.seatCollection.length; i++){
       var seat = game.seatCollection[i];
       if(!seat.user){
-          seat.user = user;
+          seat.user = userId;
           break;
       }
   }
 }
 
-function addUserToWaitList(game, user){
+function addUserToWaitList(game, userId){
   var seat = new seatModel({
-    user: user
+    user: userId
   });
 
   game.waitListCollection.push(seat);

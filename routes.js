@@ -170,10 +170,18 @@ module.exports = function(app, passport) {
 
     app.post('/join', isLoggedIn, authorization.userAuthorizedForGame, function(req, res){
       var gameId = req.body.gameId;
-      seatRepo.seatUserInGame(gameId, req.user, function(err){
+      seatRepo.seatUserInGame(gameId, req.user._id, false, function(err){
         defaultJson(res, err);
       });
     });
+
+    app.post('/join/add', isLoggedIn, function(req, res){
+      var gameId = req.body.gameId;
+      var userId = req.body.userId;
+      seatRepo.seatUserInGame(gameId, userId, true, function(err){
+        defaultJson(res, err);
+      })
+    })
 
 	  // =====================================
     // HOST A GAME

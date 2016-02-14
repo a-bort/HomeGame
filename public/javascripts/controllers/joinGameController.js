@@ -31,6 +31,31 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
         }
     };
 
+    $scope.addablePlayer = function(player){
+      if(!$scope.currentUserIsOwner || player.blocked) return false;
+
+      //Build hash map of currently signed up players
+      for(var i = 0; i < $scope.activeGame.seatCollection.length; i++){
+        var seat = $scope.activeGame.seatCollection[i];
+        if(seat.user && seat.user._id == player.user._id){
+          return false;
+        }
+      }
+
+      return true;
+    };
+
+    $scope.anyAddablePlayers = function(){
+      if(!$scope.currentUser) return false;
+      for(var i = 0; i < $scope.currentUser.playerPool.length; i++){
+        var player = $scope.currentUser.playerPool[i];
+        if($scope.addablePlayer(player)){
+          return true;
+        }
+      }
+      return false;
+    };
+
     $scope.join = function(){
       if(!$scope.activeGame){
         return;
@@ -38,7 +63,7 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
 
       $http.post('/join/', {gameId: $scope.activeGame._id}).success(function(data){
         if(data.error){
-          util.log(err);
+          util.log(data.error);
           util.alert('Error joining game');
           return;
         }
@@ -100,4 +125,23 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
         util.alert('Error kicking player');
       });
     };
+
+    $scope.add = function(userId){
+      if(!$scope.activeGame){
+        return;
+      }
+
+      $http.post('/join/add', {gameId: $scope.activeGame._id, userId: userId}).success(function(data){
+        if(data.error){
+          util.log(data.error);
+          util.alert('Error adding player to game');
+          return;
+        }
+        util.alert('Player added successfully');
+        location.reload();
+      }).error(function(err){
+        util.log(err);
+        util.alert('Error adding player to game');
+      });
+    }
 });

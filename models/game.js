@@ -16,6 +16,16 @@ var seatSchema = new mongoose.Schema({
     created: { type: Date, default: new Date()}
 });
 
+var commentSchema = new mongoose.Schema({
+    user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    date: { type: Date, default: new Date() },
+    commentText: String
+});
+
+commentSchema.virtual('dateString').get(function(){
+  return dateTimeFormatter.formatDateString(this.date);
+});
+
 var gameSchema = new mongoose.Schema({
     gameTemplateId: mongoose.Schema.Types.ObjectId,
     owner: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
