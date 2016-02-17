@@ -1,6 +1,4 @@
-mean-stack-skeleton
+Home Game app
 ===================
 
-NodeJS and MongoDB setup instructions:
-
-http://thecodebarbarian.com/2013/07/22/introduction-to-the-mean-stack-part-one-setting-up-your-tools/
+A glorified sign-up sheet, that is specialized for poker games.
