@@ -4,6 +4,7 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
     $scope.userAttending = false;
     $scope.currentUser = {};
     $scope.currentUserIsOwner = false;
+    $scope.commentText = "";
 
     $scope.emptySeats = function(){
       return $scope.activeGame && $scope.activeGame.emptySeats > 0;
@@ -142,6 +143,30 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       }).error(function(err){
         util.log(err);
         util.alert('Error adding player to game');
+      });
+    }
+
+    $scope.comment = function(){
+      if(!$scope.commentText){
+        alert("Comment cannot be empty!");
+        return;
+      }
+
+      $http.post('/join/comment', {gameId: $scope.activeGame._id, comment: $scope.commentText}).success(function(data){
+        if(data.error){
+          util.log(data.error);
+          util.alert('Error adding comment');
+          return;
+        }
+        $scope.commentText = "";
+        if(data.comments){
+          $scope.activeGame.comments = data.comments;
+        } else{
+          util.alert("Error reloading comments");
+        }
+      }).error(function(err){
+        util.log(err);
+        util.alert('Error adding comment');
       });
     }
 });

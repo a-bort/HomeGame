@@ -112,6 +112,10 @@ a.pure-button-primary {
     font-size: 70%;
 }
 
+.button-xsmall > span {
+  font-size: 65%;
+}
+
 .button-small {
     font-size: 85%;
 }
@@ -166,6 +170,10 @@ input[type=date]::-webkit-inner-spin-button {
   color: #3792E8
 }
 
+.grey-text {
+  color: #BABABA;
+}
+
 .push-sm {
   margin-bottom: 5px;
 }
@@ -196,6 +204,14 @@ input[type=date]::-webkit-inner-spin-button {
 
 .left-sm {
   margin-left: 5px;
+}
+
+.left-md {
+  margin-left: 15px;
+}
+
+.left-lg {
+  margin-left: 25px;
 }
 
 .right-sm {
@@ -659,8 +675,20 @@ input[type=date]::-webkit-inner-spin-button {
 
 #join-button {
   margin-right: 10px;
-  margin-bottom: 10px;
 }
+
+.comment-table {
+  border: 0;
+}
+
+.comment-table tr td:nth-child(2) {
+  width: 80%;
+}
+
+.comment-table tr td:nth-child(3) {
+  width: 50px;
+}
+
 
 /* About Page Syling */
 

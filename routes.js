@@ -183,14 +183,26 @@ module.exports = function(app, passport) {
       })
     });
 
-    app.post('join/comment', isLoggedIn, function(req, res){
+    app.post('/join/comment', isLoggedIn, function(req, res){
       var gameId = req.body.gameId;
       var comment = req.body.comment;
 
       if(!comment){ defaultJson(res, "No Comment Passed"); return; }
 
       gameRepo.addCommentToGame(gameId, req.user._id, comment, function(err){
-        defaultJson(res, err);
+        if(err){
+          console.log(err);
+          defaultJson(res, err);
+          return;
+        }
+        gameRepo.getGameById(gameId, function(err2, game){
+          if(err2){
+            console.log(err2);
+            defaultJson(res, err2);
+            return;
+          }
+          res.json({success: true, comments: game.toJSON().comments});
+        })
       });
     });
 

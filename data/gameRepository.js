@@ -34,7 +34,12 @@ exports.saveGame = function(gameObject, seatHost, userId, callback){
 }
 
 exports.getGameById = function(gameId, callback){
-    gameModel.findOne({_id: gameId}).populate('owner').populate('seatCollection.user').populate('waitListCollection.user').exec(function(err, game){
+    gameModel.findOne({_id: gameId})
+              .populate('owner')
+              .populate('seatCollection.user')
+              .populate('waitListCollection.user')
+              .populate('comments.user')
+    .exec(function(err, game){
         callback(err, game);
     });
 }
@@ -84,7 +89,7 @@ exports.addCommentToGame = function(gameId, userId, comment, callback){
       game.comments = [];
     }
 
-    game.comments.push(new comment({
+    game.comments.push(new commentModel({
       user: userId,
       text: comment
     }))

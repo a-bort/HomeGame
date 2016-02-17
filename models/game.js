@@ -20,7 +20,7 @@ var commentSchema = new mongoose.Schema({
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     date: { type: Date, default: new Date() },
     text: String
-});
+}, schemaOptions);
 
 commentSchema.virtual('dateString').get(function(){
   return dateTimeFormatter.formatDateString(this.date);

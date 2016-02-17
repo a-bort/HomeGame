@@ -21,21 +21,33 @@ block content
                 div(ng-show="!activeGame.pastGame")
                   button.pure-button.pure-button-primary#join-button(ng-click="join()" ng-disabled="userAttending") {{joinButtonText()}}
                   button.pure-button.pure-button-primary#cancel-button(ng-click="cancel()" ng-show="userAttending") Cancel Reservation
+                  div(style="float: right;")
+                    a.small-text.strong-text(href="#", onclick="$('#friend-instructions').show()") Want to invite a friend?
+                    div#friend-instructions.small-text(style="display: none") Simply send them the url of this page. However, know that the game owner can kick them if they so choose.  
                 div(ng-show="activeGame.pastGame")
-                  button.pure-button.button-error(disabled="true") Registration Closed
-                div.drop-sm(ng-show="!activeGame.pastGame")
-                  a.small-text.strong-text(href="#", onclick="$('#friend-instructions').show()") Want to invite a friend?
-                  div#friend-instructions.small-text(style="display: none") Simply send them the url of this page. However, know that the game owner can kick them if they so choose.
+                  button.pure-button.button-error(disabled="true") Registration Closed              
               div.game-grid
                 div.game-grid-subhead Comments
-                div.row
+                div.small-text(ng-hide="userAttending") Join this game to add a comment
+                div.row(ng-show="userAttending")
                   div.col-md-9.push-md
                     span.roster-image
                       img(ng-src="{{currentUser.imageUrl}}")
                     span
-                      textarea(style="vertical-align: top; width: 75%; height: 50px; resize: vertical;")
+                      textarea(style="vertical-align: top; width: 75%; height: 50px; resize: vertical;", ng-model="$parent.commentText")
                   div.col-md-3.push-md
-                    button.pure-button.button-info Post
+                    button.pure-button.button-info(ng-click="comment()") Post
+                hr(ng-show="activeGame.comments.length > 0")
+                table.comment-table
+                  tr(ng-repeat="comment in activeGame.comments")
+                    td.roster-image.push-md
+                      img(ng-src="{{comment.user.imageUrl}}")
+                    td
+                      div.small-text.grey-text(style="line-height: 14px;") {{comment.dateString}}
+                      div {{comment.text}}
+                    td
+                      button.pure-button.button-plain.button-xsmall(style="padding-bottom: 8px;")
+                        span.glyphicon.glyphicon-remove
             div.col-md-6
               div.game-grid
                 div.game-grid-subhead Current Roster ({{activeGame.emptySeats}}&nbsp;/&nbsp;{{activeGame.seats}} Seats Remaining)
@@ -57,6 +69,6 @@ block content
                   div.roster-image
                     img(ng-src="{{player.user.imageUrl}}")
                   div.roster-name {{player.user.displayName}}
-                    button.pure-button.button-success.button-xsmall.left-lg(ng-click="add(player.user._id)")
+                    button.pure-button.button-success.button-xsmall.left-lg(ng-click="add(player.user._id)", style="padding-bottom: 8px;")
                       span.glyphicon.glyphicon-plus
                   
