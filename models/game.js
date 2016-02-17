@@ -19,7 +19,7 @@ var seatSchema = new mongoose.Schema({
 var commentSchema = new mongoose.Schema({
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     date: { type: Date, default: new Date() },
-    commentText: String
+    text: String
 });
 
 commentSchema.virtual('dateString').get(function(){
@@ -44,7 +44,8 @@ var gameSchema = new mongoose.Schema({
     dayOfNotificationTime: Date,
     targetFilledSeats: Number,
     cancelled: { type: Boolean, default: false },
-    active: { type: Boolean, default: true }
+    active: { type: Boolean, default: true },
+    comments: [commentSchema]
 }, schemaOptions);
 
 gameSchema.virtual('dateString').get(function(){
@@ -100,6 +101,8 @@ gameSchema.virtual('editGameUrl').get(function(){
 
 var game = mongoose.model('Game', gameSchema);
 var seat = mongoose.model('Seat', seatSchema);
+var comment = mongoose.model('Comment', commentSchema);
 
 exports.game = game;
 exports.seat = seat;
+exports.comment = comment;

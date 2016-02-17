@@ -181,7 +181,18 @@ module.exports = function(app, passport) {
       seatRepo.seatUserInGame(gameId, userId, true, function(err){
         defaultJson(res, err);
       })
-    })
+    });
+
+    app.post('join/comment', isLoggedIn, function(req, res){
+      var gameId = req.body.gameId;
+      var comment = req.body.comment;
+
+      if(!comment){ defaultJson(res, "No Comment Passed"); return; }
+
+      gameRepo.addCommentToGame(gameId, req.user._id, comment, function(err){
+        defaultJson(res, err);
+      });
+    });
 
 	  // =====================================
     // HOST A GAME

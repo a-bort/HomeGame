@@ -23,10 +23,19 @@ block content
                   button.pure-button.pure-button-primary#cancel-button(ng-click="cancel()" ng-show="userAttending") Cancel Reservation
                 div(ng-show="activeGame.pastGame")
                   button.pure-button.button-error(disabled="true") Registration Closed
-              div.drop-md(ng-show="!activeGame.pastGame")
-                div.small-text.strong-text Want to invite a friend?
-                div.small-text Simply send them the url of this page. However, know that the game owner can kick them if they so choose.
-              
+                div.drop-sm(ng-show="!activeGame.pastGame")
+                  a.small-text.strong-text(href="#", onclick="$('#friend-instructions').show()") Want to invite a friend?
+                  div#friend-instructions.small-text(style="display: none") Simply send them the url of this page. However, know that the game owner can kick them if they so choose.
+              div.game-grid
+                div.game-grid-subhead Comments
+                div.row
+                  div.col-md-9.push-md
+                    span.roster-image
+                      img(ng-src="{{currentUser.imageUrl}}")
+                    span
+                      textarea(style="vertical-align: top; width: 75%; height: 50px; resize: vertical;")
+                  div.col-md-3.push-md
+                    button.pure-button.button-info Post
             div.col-md-6
               div.game-grid
                 div.game-grid-subhead Current Roster ({{activeGame.emptySeats}}&nbsp;/&nbsp;{{activeGame.seats}} Seats Remaining)

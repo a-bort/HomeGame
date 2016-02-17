@@ -1,4 +1,5 @@
 var gameModel = require('../models/game').game;
+var commentModel = require('../models/game').comment;
 var seatRepo = require('./seatRepository');
 var emailSender = require('../services/emailSender');
 
@@ -68,6 +69,29 @@ exports.getWaitlistedGames = function(playerId, callback){
       console.log(err);
     }
     callback(games);
+  });
+}
+
+exports.addCommentToGame = function(gameId, userId, comment, callback){
+  exports.getGameById(gameId, function(err, game){
+    if(err){
+      console.log("Error retrieving game");
+      callback(err);
+      return;
+    }
+
+    if(!game.comments){
+      game.comments = [];
+    }
+
+    game.comments.push(new comment({
+      user: userId,
+      text: comment
+    }))
+
+    gameModel.update(
+      {_id: gameId}, game, {upsert: true}, callback
+    );
   });
 }
 
