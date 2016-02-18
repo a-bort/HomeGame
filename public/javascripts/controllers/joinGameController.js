@@ -169,4 +169,27 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
         util.alert('Error adding comment');
       });
     }
+
+    $scope.deleteComment = function(commentId){
+      var c = confirm("Do you really want to delete this comment?");
+      if(!c){
+        return;
+      }
+
+      $http.post('/join/deleteComment', {gameId: $scope.activeGame._id, commentId: commentId}).success(function(data){
+        if(data.error){
+          util.log(data.error);
+          util.alert('Error deleting comment');
+          return;
+        }
+        if(data.comments){
+          $scope.activeGame.comments = data.comments;
+        } else{
+          util.alert("Error reloading comments");
+        }
+      }).error(function(err){
+        util.log(err);
+        util.alert('Error deleting comment');
+      });
+    }
 });

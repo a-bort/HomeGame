@@ -195,16 +195,36 @@ module.exports = function(app, passport) {
           defaultJson(res, err);
           return;
         }
-        gameRepo.getGameById(gameId, function(err2, game){
-          if(err2){
-            console.log(err2);
-            defaultJson(res, err2);
-            return;
-          }
-          res.json({success: true, comments: game.toJSON().comments});
-        })
+        getCommentList(gameId, res);
       });
     });
+
+    app.post('/join/deleteComment', isLoggedIn, function(req, res){
+      var gameId = req.body.gameId;
+      var commentId = req.body.commentId;
+
+      if(!gameId || !commentId){ defaultJson(res, "Missing Game or Comment Id"); return; }
+
+      gameRepo.removeCommentFromGame(gameId, commentId, req.user._id, function(err){
+        if(err){
+          console.log(err);
+          defaultJson(res, err);
+          return;
+        }
+        getCommentList(gameId, res);
+      })
+    });
+
+    function getCommentList(gameId, res){
+      gameRepo.getGameById(gameId, function(err, game){
+        if(err){
+          console.log(err);
+          defaultJson(res, err);
+          return;
+        }
+        res.json({success: true, comments: game.toJSON().comments});
+      })
+    }
 
 	  // =====================================
     // HOST A GAME

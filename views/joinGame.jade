@@ -27,35 +27,36 @@ block content
                 div(ng-show="activeGame.pastGame")
                   button.pure-button.button-error(disabled="true") Registration Closed              
               div.game-grid
-                div.game-grid-subhead Comments
+                div.game-grid-subhead.push-sm Comments
                 div.small-text(ng-hide="userAttending") Join this game to add a comment
                 div.row(ng-show="userAttending")
-                  div.col-md-9.push-md
-                    span.roster-image
+                  div.col-md-9
+                    span.roster-image.push-md
                       img(ng-src="{{currentUser.imageUrl}}")
                     span
-                      textarea(style="vertical-align: top; width: 75%; height: 50px; resize: vertical;", ng-model="$parent.commentText")
+                      textarea(style="vertical-align: top; width: 75%; height: 50px; resize: vertical;", ng-model="$parent.commentText").push-md
                   div.col-md-3.push-md
                     button.pure-button.button-info(ng-click="comment()") Post
                 hr(ng-show="activeGame.comments.length > 0")
-                table.comment-table
+                table.user-table
                   tr(ng-repeat="comment in activeGame.comments")
                     td.roster-image.push-md
                       img(ng-src="{{comment.user.imageUrl}}")
                     td
-                      div.small-text.grey-text(style="line-height: 14px;") {{comment.dateString}}
+                      div.small-text.grey-text(style="line-height: 14px;") {{comment.user.displayName}} - {{comment.dateString}}
                       div {{comment.text}}
                     td
-                      button.pure-button.button-plain.button-xsmall(style="padding-bottom: 8px;")
-                        span.glyphicon.glyphicon-remove
+                      button.pure-button.button-plain.button-xsmall(ng-show="comment.user._id == currentUser._id", ng-click="deleteComment(comment._id)") X
             div.col-md-6
               div.game-grid
                 div.game-grid-subhead Current Roster ({{activeGame.emptySeats}}&nbsp;/&nbsp;{{activeGame.seats}} Seats Remaining)
-                div.roster-seat(ng-repeat="seat in activeGame.seatCollection | filter:filledSeatFilter")
-                  div.roster-image
-                    img(ng-src="{{seat.user.imageUrl}}")
-                  div.roster-name {{seat.user.displayName}}
-                    button.pure-button.button-error.button-xsmall.left-lg(ng-hide="!currentUserIsOwner || seat.user._id == currentUserId || activeGame.pastGame", ng-click="kick(seat.user._id)") X
+                table.user-table
+                  tr(ng-repeat="seat in activeGame.seatCollection | filter:filledSeatFilter")
+                    td.roster-image.push-md
+                      img(ng-src="{{seat.user.imageUrl}}")
+                    td {{seat.user.displayName}}
+                    td
+                      button.pure-button.button-error.button-xsmall(ng-hide="!currentUserIsOwner || seat.user._id == currentUserId || activeGame.pastGame", ng-click="kick(seat.user._id)") X
               div.game-grid(ng-hide="emptySeats()")
                 div.game-grid-subhead Waitlist
                 div(ng-visible="activeGame.waitListCollection.length == 0") The waitlist is empty
@@ -65,10 +66,12 @@ block content
                   div.roster-name {{seat.user.displayName}}
               div.game-grid(ng-show="currentUserIsOwner && anyAddablePlayers()")
                 div.game-grid-subhead Add Players from Player Pool
-                div.roster-seat(ng-repeat="player in currentUser.playerPool | filter:addablePlayer")
-                  div.roster-image
-                    img(ng-src="{{player.user.imageUrl}}")
-                  div.roster-name {{player.user.displayName}}
-                    button.pure-button.button-success.button-xsmall.left-lg(ng-click="add(player.user._id)", style="padding-bottom: 8px;")
-                      span.glyphicon.glyphicon-plus
+                table.user-table
+                  tr(ng-repeat="player in currentUser.playerPool | filter:addablePlayer")
+                    td.roster-image.push-md
+                      img(ng-src="{{player.user.imageUrl}}")
+                    td {{player.user.displayName}}
+                    td
+                      button.pure-button.button-success.button-xsmall(ng-click="add(player.user._id)", style="padding-bottom: 8px;")
+                        span.glyphicon.glyphicon-plus
                   

@@ -100,6 +100,31 @@ exports.addCommentToGame = function(gameId, userId, comment, callback){
   });
 }
 
+exports.removeCommentFromGame = function(gameId, commentId, userId, callback){
+  exports.getGameById(gameId, function(err, game){
+    if(err || !game.comments){
+      console.log(err ? "Error retrieving game" : "No comments for game");
+      callback(err);
+      return;
+    }
+
+    for(var i = 0; i < game.comments.length; i++){
+      var comment = game.comments[i];
+      if(comment._id.equals(commentId)){
+        if(comment.user._id.equals(userId)){
+          game.comments.splice(i, 1);
+          gameModel.update({_id: gameId}, game, {upsert: true}, callback);
+        } else{
+          callback("User doesn't own this comment");
+        }
+        return;
+      }
+    }
+
+    callback("Unable to locate comment");
+  });
+}
+
 exports.isUserRegisteredForGame = function(userId, game){
   for(var i = 0; i < game.seatCollection.length; i++){
     var seat = game.seatCollection[i];

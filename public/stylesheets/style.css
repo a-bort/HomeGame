@@ -677,15 +677,15 @@ input[type=date]::-webkit-inner-spin-button {
   margin-right: 10px;
 }
 
-.comment-table {
+.user-table {
   border: 0;
 }
 
-.comment-table tr td:nth-child(2) {
+.user-table tr td:nth-child(2) {
   width: 80%;
 }
 
-.comment-table tr td:nth-child(3) {
+.user-table tr td:nth-child(3) {
   width: 50px;
 }
 
