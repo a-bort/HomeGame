@@ -4,13 +4,24 @@ block content
   script(type="text/javascript" src="/javascripts/controllers/aboutController.js")
   div.row(ng-controller="AboutController")
     div.col-md-6
+      h2.content-head About
+      div.features-content 
+        | The Home Game app is a glorified sign up sheet, which is meant to ease the headaches of hosting a poker game.
+        br
+        br
+        | Create a game and send the link out to your player pool via email or text. From there, it is a 1-click (sometime 2-click) process for them to sign up. 
+        br
+        br
+        | Want to invite a friend to a game you're attending? No problem! Anybody can share a game link with anybody else. However, the game owner is able to remove/block users from their game, if they so choose.
       h2.content-head Planned Features
       div.features-content
-        div(ng-repeat="feature in features") {{feature.title}}
+        ul
+          li(ng-repeat="feature in features") {{feature.title}}
     div.col-md-6
       h2.content-head Known Issues
       div.features-content
-        div(ng-repeat="issue in issues") {{issue.title}}
+        ul
+          li(ng-repeat="issue in issues") {{issue.title}}
       h2.content-head Feedback?
       div.features-content
         textarea.feedback-area(ng-model="feedback")

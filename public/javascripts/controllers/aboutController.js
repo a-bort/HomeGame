@@ -1,12 +1,11 @@
 homeGameApp.controller('AboutController', function($scope, $http, $location){
 
     $scope.features = [
-      {title: 'Player Groups', description: ''},
-      {title: 'Game Schedule', description: ''}
+      {title: 'None -- Suggest a new feature in the Feedback section', description: ''}
     ];
 
     $scope.issues = [
-      {title: 'None! (lol)', description: ''}
+      {title: 'None -- Feel free to report any in the Feedback section', description: ''}
     ];
 
     $scope.feedback = "";
