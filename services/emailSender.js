@@ -35,6 +35,7 @@ exports.emailPlayerPool = function(user, gameId, subject, html, text, callback){
 }
 
 exports.notifyOnJoin = function(game, playerId, joinedWaitlist){
+  if(!game || !playerId){ return; }
   game = game.toJSON();
   sendNotificationEmail(game, playerId,
     function(name){
@@ -71,6 +72,8 @@ exports.notifyOnCancel = function(game, playerId){
 }
 
 exports.notifyMovedOffWaitlist = function(game, playerId, callback){
+  if(!game || !playerId) return;
+
   game = game.toJSON();
   userRepo.getUserWithPlayerPool(playerId, function(err1, player){
     if(err1){
@@ -93,6 +96,7 @@ exports.notifyMovedOffWaitlist = function(game, playerId, callback){
 }
 
 var sendNotificationEmail = function(game, playerId, subject, html, text, callback){
+  if(!game || !playerId) return;
   userRepo.getUserWithPlayerPool(game.owner, function(err1, owner){
     if(err1){
       callback(err);

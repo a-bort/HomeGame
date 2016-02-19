@@ -49,23 +49,26 @@ block content
                       button.pure-button.button-plain.button-xsmall(ng-show="comment.user._id == currentUser._id", ng-click="deleteComment(comment._id)") X
             div.col-md-6
               div.game-grid
-                div.game-grid-subhead Current Roster ({{activeGame.emptySeats}}&nbsp;/&nbsp;{{activeGame.seats}} Seats Remaining)
+                div.game-grid-subhead.push-md Current Roster ({{activeGame.emptySeats}}&nbsp;/&nbsp;{{activeGame.seats}} Seats Remaining)
                 table.user-table
                   tr(ng-repeat="seat in activeGame.seatCollection | filter:filledSeatFilter")
                     td.roster-image.push-md
-                      img(ng-src="{{seat.user.imageUrl}}")
-                    td {{seat.user.displayName}}
+                      img(ng-src="{{seat.user.imageUrl || '/images/anon-user.png'}}")
+                    td {{seat.user.displayName || seat.name}}
                     td
-                      button.pure-button.button-error.button-xsmall(ng-hide="!currentUserIsOwner || seat.user._id == currentUserId || activeGame.pastGame", ng-click="kick(seat.user._id)") X
+                      button.pure-button.button-error.button-xsmall(ng-hide="!currentUserIsOwner || activeGame.pastGame", ng-click="kick(seat._id)") X
               div.game-grid(ng-hide="emptySeats()")
-                div.game-grid-subhead Waitlist
-                div(ng-visible="activeGame.waitListCollection.length == 0") The waitlist is empty
-                div.roster-seat(ng-repeat="seat in activeGame.waitListCollection | orderBy: 'created'")
-                  div.roster-image
-                    img(ng-src="{{seat.user.imageUrl}}")
-                  div.roster-name {{seat.user.displayName}}
-              div.game-grid(ng-show="currentUserIsOwner && anyAddablePlayers()")
-                div.game-grid-subhead Add Players from Player Pool
+                div.game-grid-subhead.push-md Waitlist
+                div(ng-show="activeGame.waitListCollection.length == 0") The waitlist is empty
+                table.user-table
+                  tr(ng-repeat="seat in activeGame.waitListCollection | orderBy: 'created'")
+                    td.roster-image.push-md
+                      img(ng-src="{{seat.user.imageUrl || '/images/anon-user.png'}}")
+                    td {{seat.user.displayName || seat.name}}
+                    td
+                      button.pure-button.button-error.button-xsmall(ng-hide="!currentUserIsOwner || activeGame.pastGame", ng-click="kick(seat._id)") X
+              div.game-grid(ng-show="currentUserIsOwner")
+                div.game-grid-subhead.push-md Add Players
                 table.user-table
                   tr(ng-repeat="player in currentUser.playerPool | filter:addablePlayer")
                     td.roster-image.push-md
@@ -73,5 +76,13 @@ block content
                     td {{player.user.displayName}}
                     td
                       button.pure-button.button-success.button-xsmall(ng-click="add(player.user._id)", style="padding-bottom: 8px;")
+                        span.glyphicon.glyphicon-plus
+                  tr
+                    td.roster-image.push-md
+                      img(src="/images/anon-user.png")
+                    td
+                      input(type="text", placeholder="Player Name", ng-model="tempPlayerText")
+                    td
+                      button.pure-button.button-success.button-xsmall(ng-click="add(null, tempPlayerText)", style="padding-bottom: 8px;")
                         span.glyphicon.glyphicon-plus
                   

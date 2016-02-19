@@ -13,7 +13,8 @@ var schemaOptions = {
 var seatSchema = new mongoose.Schema({
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     active: { type: Boolean, default: true },
-    created: { type: Date, default: new Date()}
+    created: { type: Date, default: new Date()},
+    name: { type: String }
 });
 
 var commentSchema = new mongoose.Schema({
@@ -69,7 +70,7 @@ gameSchema.virtual('filledSeats').get(function(){
   var count = 0;
   for(var i = 0; i < this.seatCollection.length; i++){
     var seat = this.seatCollection[i];
-    if(seat.user && seat.active){
+    if((seat.user || seat.name) && seat.active){
       count++;
     }
   }
@@ -80,7 +81,7 @@ gameSchema.virtual('emptySeats').get(function(){
   var count = 0;
   for(var i = 0; i < this.seatCollection.length; i++){
     var seat = this.seatCollection[i];
-    if(!seat.user && seat.active){
+    if(!seat.user && !seat.name && seat.active){
       count++;
     }
   }

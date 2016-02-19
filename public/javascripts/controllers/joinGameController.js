@@ -5,6 +5,7 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
     $scope.currentUser = {};
     $scope.currentUserIsOwner = false;
     $scope.commentText = "";
+    $scope.tempPlayerText = "";
 
     $scope.emptySeats = function(){
       return $scope.activeGame && $scope.activeGame.emptySeats > 0;
@@ -13,7 +14,7 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       return ($scope.userAttending ? "You are Signed Up" : ($scope.emptySeats() ? "Join!" : "Join Waitlist"));
     };
     $scope.filledSeatFilter = function(seat){
-      return seat.user;
+      return seat.user || seat.name;
     };
 
     $scope.getImgSrcFromSeat = function(seat){
@@ -88,13 +89,18 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
         return;
       }
 
-      $http.post('/mygames/leave/', {gameId: $scope.activeGame._id}).success(function(data){
+      var seat = $scope.findCurrentUserSeat();
+      if(!seat){
+        alert("Unable to cancel your reservation.");
+        return;
+      }
+
+      $http.post('/mygames/leave/', { gameId: $scope.activeGame._id, seatId: seat._id }).success(function(data){
         if(data.error){
-          util.log(err);
+          util.log(data.error);
           util.alert('Error cancelling reservation');
           return;
         }
-        util.alert('Reservation Cancelled');
         location = '/mygames';
       }).error(function(err){
         util.log(err);
@@ -102,19 +108,38 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       });
     };
 
-    $scope.kick = function(userId){
+    //Bit of a lame hack for the frontend...
+    $scope.findCurrentUserSeat = function(){
+      if(!$scope.currentUser || !$scope.activeGame) return;
+
+      for(var i = 0; i < $scope.activeGame.seatCollection.length; i++){
+        var seat = $scope.activeGame.seatCollection[i];
+        if(seat && seat.user && seat.user._id == $scope.currentUser._id){
+          return seat;
+        }
+      }
+
+      for(var i = 0; i < $scope.activeGame.waitListCollection.length; i++){
+        var seat = $scope.activeGame.waitListCollection[i];
+        if(seat && seat.user && seat.user._id == $scope.currentUser._id){
+          return seat;
+        }
+      }
+    }
+
+    $scope.kick = function(seatId){
       var c = confirm("Do you want to kick this player? (Note: you can block them from joining all future games on the Player Pool page)");
       if(c){
-        $scope.sendKickRequest(userId);
+        $scope.sendKickRequest(seatId);
       }
     };
 
-    $scope.sendKickRequest = function(userId){
+    $scope.sendKickRequest = function(seatId){
       if(!$scope.activeGame){
         return;
       }
 
-      $http.post('/mygames/kick', {gameId: $scope.activeGame._id, userId: userId}).success(function(data){
+      $http.post('/mygames/kick', {gameId: $scope.activeGame._id, seatId: seatId}).success(function(data){
         if(data.error){
           util.log(data.error);
           util.alert('Error kicking player');
@@ -127,12 +152,12 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       });
     };
 
-    $scope.add = function(userId){
+    $scope.add = function(userId, name){
       if(!$scope.activeGame){
         return;
       }
 
-      $http.post('/join/add', {gameId: $scope.activeGame._id, userId: userId}).success(function(data){
+      $http.post('/join/add', {gameId: $scope.activeGame._id, userId: userId, name: name}).success(function(data){
         if(data.error){
           util.log(data.error);
           util.alert('Error adding player to game');

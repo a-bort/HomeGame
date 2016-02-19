@@ -36,7 +36,7 @@ exports.removeEmptySeatsFromGame = function(game, toRemove){
   }
 }
 
-exports.configureSeatsAfterCancellation = function(game, userId){
+exports.configureSeatsAfterCancellation = function(game){
   var seats = game.seats;
   var count = getActiveSeatCount(game);
 
@@ -46,7 +46,7 @@ exports.configureSeatsAfterCancellation = function(game, userId){
         exports.seatPlayerFromWaitlist(game);
       }
       else{
-        exports.addSeatToGame(game, userId);
+        exports.addSeatToGame(game);
       }
     }
   }
@@ -99,7 +99,7 @@ exports.seatPlayerFromWaitlist = function(game){
   });
 }
 
-exports.seatUserInGame = function(gameId, userId, ownerAdded, callback){
+exports.seatUserInGame = function(gameId, userId, name, ownerAdded, callback){
     gameModel.findOne({_id: gameId, active: true}, function(err, game){
         if(err){
             console.log(err);
@@ -115,9 +115,9 @@ exports.seatUserInGame = function(gameId, userId, ownerAdded, callback){
         var isWaitList = false;
 
         if(game.emptySeats > 0){
-          addUserToSeatList(game, userId);
+          addToSeatList(game, userId, name);
         } else{
-          addUserToWaitList(game, userId);
+          addToWaitList(game, userId, name);
           isWaitList = true;
         }
 
@@ -136,20 +136,31 @@ exports.seatUserInGame = function(gameId, userId, ownerAdded, callback){
     });
 }
 
-function addUserToSeatList(game, userId){
+function addToSeatList(game, userId, name){
   for(var i = 0; i < game.seatCollection.length; i++){
       var seat = game.seatCollection[i];
-      if(!seat.user){
-          seat.user = userId;
+      if(!seat.user && !seat.name){
+          if(userId){
+            seat.user = userId;
+          }
+          if(name){
+            seat.name = name;
+          }
           break;
       }
   }
 }
 
-function addUserToWaitList(game, userId){
-  var seat = new seatModel({
-    user: userId
-  });
+function addToWaitList(game, userId, name){
+  var model = {};
+  if(userId){
+    model.user = userId;
+  }
+  if(name){
+    model.name = name;
+  }
+
+  var seat = new seatModel(model);
 
   game.waitListCollection.push(seat);
 }

@@ -120,17 +120,22 @@ module.exports = function(app, passport) {
     });
 
     app.post('/mygames/leave', isLoggedIn, function(req, res) {
-      gameRepo.leaveGame(req.body.gameId, req.user._id, function(err){
+      if(!req.body.gameId || !req.body.seatId){
+        defaultJson(res, "Missing parameters");
+        return;
+      }
+
+      gameRepo.leaveGame(req.body.gameId, req.body.seatId, function(err){
         defaultJson(res, err);
       });
     });
 
     app.post('/mygames/kick', isLoggedIn, function(req, res) {
-      if(!req.body.userId){
-        defaultJson(res, "No UserId Passed");
+      if(!req.body.gameId || !req.body.seatId){
+        defaultJson(res, "Missing parameters");
         return;
       }
-      gameRepo.kickPlayer(req.body.gameId, req.body.userId, req.user._id, function(err){
+      gameRepo.kickPlayer(req.body.gameId, req.body.seatId, req.user._id, function(err){
         defaultJson(res, err);
       });
     });
@@ -170,7 +175,7 @@ module.exports = function(app, passport) {
 
     app.post('/join', isLoggedIn, authorization.userAuthorizedForGame, function(req, res){
       var gameId = req.body.gameId;
-      seatRepo.seatUserInGame(gameId, req.user._id, false, function(err){
+      seatRepo.seatUserInGame(gameId, req.user._id, null, false, function(err){
         defaultJson(res, err);
       });
     });
@@ -178,7 +183,9 @@ module.exports = function(app, passport) {
     app.post('/join/add', isLoggedIn, function(req, res){
       var gameId = req.body.gameId;
       var userId = req.body.userId;
-      seatRepo.seatUserInGame(gameId, userId, true, function(err){
+      var name = req.body.name;
+      
+      seatRepo.seatUserInGame(gameId, userId, name, true, function(err){
         defaultJson(res, err);
       })
     });

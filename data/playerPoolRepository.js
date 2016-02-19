@@ -5,6 +5,11 @@ var playerModel = require('../models/user').player;
 var userRepo = require('../data/userRepository');
 
 exports.addUserToGameOwnerPlayerPool = function(game, userId, callback){
+  if(!game || !userId){
+    callback();
+    return;
+  }
+
   var ownerId = game.owner;
 
   if(ownerId.equals(userId)){
