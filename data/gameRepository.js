@@ -146,7 +146,7 @@ exports.leaveGame = function(gameId, seatId, callback){
       return;
     }
 
-    var afterLeaveCallback = function(err){
+    var afterLeaveCallback = function(err, userId){
       if(err){
         console.log(err);
         callback(err);
@@ -197,7 +197,7 @@ function tryLeaveSeatCollection(game, seatId, callback){
           console.log(err);
         }
 
-        callback(err);
+        callback(err, seat.user);
       });
       return true;
     }
@@ -215,7 +215,7 @@ function tryLeaveWaitListCollection(game, seatId, callback){
           console.log(err);
         }
 
-        callback(err);
+        callback(err, seat.user);
       });
       return true;
     }
