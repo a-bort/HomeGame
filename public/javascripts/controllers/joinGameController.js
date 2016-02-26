@@ -3,6 +3,7 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
     $scope.activeGame = undefined;
     $scope.userAttending = false;
     $scope.currentUser = {};
+    $scope.currentUserSeat = {};
     $scope.currentUserIsOwner = false;
     $scope.commentText = "";
     $scope.tempPlayerText = "";
@@ -27,6 +28,28 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
         $scope.userAttending = !!userAttending;
         $scope.currentUser = currentUser;
         $scope.currentUserIsOwner = (currentUser._id == game.owner._id);
+
+        if(userAttending){
+          for(var i = 0; i < game.seatCollection.length; i++){
+            var seat = game.seatCollection[i];
+            if(seat.user && seat.user._id == currentUser._id){
+              $scope.currentUserSeat = seat;
+
+              $scope.$watch('currentUserSeat.notifyOnJoin', function(value){
+                if(value === true || value === false){ //undefined initially
+                  console.log("Notify on Join");
+                }
+              });
+
+              $scope.$watch('currentUserSeat.notifyOnThreshold', function(value){
+                if(value === true || value === false){ //undefined initially
+                  console.log("Notify on Threshold");
+                }
+              });
+            }
+          }
+        }
+
         if(autoJoin && !userAttending){
           $scope.userAttending = true;
           $scope.join();

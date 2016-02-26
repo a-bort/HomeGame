@@ -22,7 +22,15 @@ block content
                   button.pure-button.pure-button-primary#join-button(ng-click="join()" ng-disabled="userAttending") {{joinButtonText()}}
                   button.pure-button.pure-button-primary#cancel-button(ng-click="cancel()" ng-show="userAttending") Cancel Reservation
                 div(ng-show="activeGame.pastGame")
-                  button.pure-button.button-error(disabled="true") Registration Closed              
+                  button.pure-button.button-error(disabled="true") Registration Closed
+                div(ng-show="userAttending && !currentUserIsOwner && !activeGame.pastGame")
+                  label.light-label.pure-checkbox(for="emailOnJoin")
+                    input#emailOnJoin(type="checkbox", ng-model="currentUserSeat.notifyOnJoin")
+                    | &nbsp;Notify me when players join
+                div(ng-show="userAttending && !currentUserIsOwner && !activeGame.pastGame")
+                  label.light-label.pure-checkbox(for="emailAtThreshold")
+                    input#emailAtThreshold(type="checkbox", ng-model="currentUserSeat.notifyOnThreshold")
+                    | &nbsp;Notify me when the game is almost full
               div.game-grid
                 div.game-grid-subhead.push-sm Comments
                 div.small-text(ng-hide="userAttending") Join this game to add a comment

@@ -58,6 +58,10 @@ label {
     font-size: 100%;
 }
 
+label.light-label {
+  font-weight: normal;
+}
+
 .pure-form input[type] {
     border: 2px solid #ddd;
     box-shadow: none;
