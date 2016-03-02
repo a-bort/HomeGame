@@ -37,13 +37,13 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
 
               $scope.$watch('currentUserSeat.notifyOnJoin', function(value){
                 if(value === true || value === false){ //undefined initially
-                  console.log("Notify on Join");
+                  notify(true, value);
                 }
               });
 
               $scope.$watch('currentUserSeat.notifyOnThreshold', function(value){
                 if(value === true || value === false){ //undefined initially
-                  console.log("Notify on Threshold");
+                  notify(true, value);
                 }
               });
             }
@@ -238,6 +238,19 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       }).error(function(err){
         util.log(err);
         util.alert('Error deleting comment');
+      });
+    }
+
+    function notify(onJoin, notify){
+      $http.post('/join/notifyOn' + (onJoin ? 'Join' : 'Threshold'), {gameId: $scope.activeGame._id, seatId: $scope.currentUserSeat._id, notify: notify}).success(function(data){
+        if(data.error){
+          util.log(data.error);
+          util.alert('Error setting notification status');
+          return;
+        }
+      }).error(function(err){
+        util.log(err);
+        util.alert('Error setting notification status');
       });
     }
 });

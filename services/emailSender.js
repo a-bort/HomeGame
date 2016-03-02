@@ -34,7 +34,7 @@ exports.emailPlayerPool = function(user, gameId, subject, html, text, callback){
   });
 }
 
-exports.notifyOnJoin = function(game, playerId, joinedWaitlist){
+exports.notifyOwnerOnJoin = function(game, playerId, joinedWaitlist){
   if(!game || !playerId){ return; }
   game = game.toJSON();
   sendNotificationEmail(game, playerId,

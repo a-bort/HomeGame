@@ -184,10 +184,46 @@ module.exports = function(app, passport) {
       var gameId = req.body.gameId;
       var userId = req.body.userId;
       var name = req.body.name;
-      
+
       seatRepo.seatUserInGame(gameId, userId, name, true, function(err){
         defaultJson(res, err);
       })
+    });
+
+    app.post('/join/notifyOnJoin', isLoggedIn, function(req, res){
+      var notify = req.body.notify;
+      var seatId = req.body.seatId;
+      var gameId = req.body.gameId;
+      var userId = req.user._id;
+
+      gameRepo.getGameById(gameId, function(err, game){
+        if(err){
+          defaultJson(res, err);
+          return;
+        }
+
+        seatRepo.setNotificationStatus(game, seatId, userId, "notifyOnJoin", notify, function(){
+          defaultJson(res, err);
+        });
+      });
+    });
+
+    app.post('/join/notifyOnThreshold', isLoggedIn, function(req, res){
+      var notify = req.body.notify;
+      var seatId = req.body.seatId;
+      var gameId = req.body.gameId;
+      var userId = req.user._id;
+
+      gameRepo.getGameById(gameId, function(err, game){
+        if(err){
+          defaultJson(res, err);
+          return;
+        }
+
+        seatRepo.setNotificationStatus(game, seatId, userId, "notifyOnThreshold", notify, function(err){
+          defaultJson(res, err);
+        });
+      });
     });
 
     app.post('/join/comment', isLoggedIn, function(req, res){

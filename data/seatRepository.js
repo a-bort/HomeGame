@@ -128,7 +128,7 @@ exports.seatUserInGame = function(gameId, userId, name, ownerAdded, callback){
             callback(err);
           } else{
             if(game.emailNotifications && !ownerAdded){
-              emailSender.notifyOnJoin(game, userId, isWaitList);
+              emailSender.notifyOwnerOnJoin(game, userId, isWaitList);
             }
             playerPoolRepo.addUserToGameOwnerPlayerPool(game, userId, callback);
           }
@@ -169,4 +169,20 @@ function sortWaitList(game){
   game.waitListCollection.sort(function(a, b){
     return a.created.getTime() - b.created.getTime();
   });
+}
+
+exports.setNotificationStatus = function(game, seatId, userId, notifyPropertyName, notify, callback){
+  for(var i = 0; i < game.seatCollection.length; i++){
+    var seat = game.seatCollection[i];
+    if(seat._id == seatId){
+      if(!seat.user == userId){
+        callback("Seat ID doesn't match logged in user");
+        return;
+      }
+
+      seat[notifyPropertyName] = notify;
+      game.save(callback);
+      return;
+    }
+  }
 }

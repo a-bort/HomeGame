@@ -19,7 +19,7 @@ block content
                   | {{activeGame.location}}
                 div.info-body.multi-line {{activeGame.notes}}
                 div(ng-show="!activeGame.pastGame")
-                  button.pure-button.pure-button-primary#join-button(ng-click="join()" ng-disabled="userAttending") {{joinButtonText()}}
+                  button.pure-button.pure-button-primary.push-sm#join-button(ng-click="join()" ng-disabled="userAttending") {{joinButtonText()}}
                   button.pure-button.pure-button-primary#cancel-button(ng-click="cancel()" ng-show="userAttending") Cancel Reservation
                 div(ng-show="activeGame.pastGame")
                   button.pure-button.button-error(disabled="true") Registration Closed
