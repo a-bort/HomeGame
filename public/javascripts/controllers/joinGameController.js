@@ -43,7 +43,7 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
 
               $scope.$watch('currentUserSeat.notifyOnThreshold', function(value){
                 if(value === true || value === false){ //undefined initially
-                  notify(true, value);
+                  notify(false, value);
                 }
               });
             }

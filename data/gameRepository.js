@@ -189,7 +189,7 @@ function removePlayerFromGame(game, seatId, callback){
 function tryLeaveSeatCollection(game, seatId, callback){
   for(var i = 0; i < game.seatCollection.length; i++){
     var seat = game.seatCollection[i];
-    if(seat.active && seat._id.equals(seatId)){
+    if(seat._id.equals(seatId)){
       game.seatCollection.splice(i, 1);
       seatRepo.configureSeatsAfterCancellation(game);
       game.save(function(err){
@@ -208,7 +208,7 @@ function tryLeaveSeatCollection(game, seatId, callback){
 function tryLeaveWaitListCollection(game, seatId, callback){
   for(var i = 0; i < game.waitListCollection.length; i++){
     var seat = game.waitListCollection[i];
-    if(seat.active && seat._id.equals(seatId)){
+    if(seat._id.equals(seatId)){
       game.waitListCollection.splice(i, 1);
       game.save(function(err){
         if(err){

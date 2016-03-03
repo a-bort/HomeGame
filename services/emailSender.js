@@ -37,7 +37,7 @@ exports.emailPlayerPool = function(user, gameId, subject, html, text, callback){
 exports.notifyOwnerOnJoin = function(game, playerId, joinedWaitlist){
   if(!game || !playerId){ return; }
   game = game.toJSON();
-  sendNotificationEmail(game, playerId,
+  sendNotificationEmail(game.owner, playerId,
     function(name){
       return name + " has joined " + (joinedWaitlist ? "the waitlist for " : "")  + "your game";
     },
@@ -53,9 +53,47 @@ exports.notifyOwnerOnJoin = function(game, playerId, joinedWaitlist){
     function(){});
 }
 
+exports.notifyPlayerOnJoin = function(game, recipientId, joinedWaitlist){
+  if(!game || !recipientId){ return; }
+  game = game.toJSON();
+  sendNotificationEmail(recipientId, game.owner,
+    function(name){
+      return "Another player has joined " + (joinedWaitlist ? "the waitlist for " : "")  + name + "'s game";
+    },
+    function(name){
+      var str = "Someone else joined " + name + "'s poker game! (" + game.dateString + ")";
+      str = str + "<br><br>Currently <b>" + game.filledSeats + "/" + game.seats + "</b>&nbsp;seats are filled.";
+      str = str + "<br><br><b><a href='" + config.baseUrl + game.joinGameUrl + "'>View Game Page</a></b>";
+      return str;
+    },
+    function(name){
+      return "Someone else just joined " + name +"'s game (" + game.date + "). Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
+    },
+    function(){});
+}
+
+exports.notifyPlayerOnThreshold = function(game, recipientId){
+  if(!game || !recipientId){ return; }
+  game = game.toJSON();
+  sendNotificationEmail(recipientId, game.owner,
+    function(name){
+      return name + "'s game on " + game.dateString + " is almost full!";
+    },
+    function(name){
+      var str = name + "'s game on " + game.dateString + " is almost full";
+      str = str + "<br><br>Currently <b>" + game.filledSeats + "/" + game.seats + "</b>&nbsp;seats are filled.";
+      str = str + "<br><br><b><a href='" + config.baseUrl + game.joinGameUrl + "'>View Game Page</a></b>";
+      return str;
+    },
+    function(name){
+      return name +"'s game on " + game.date + " is almost full. Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
+    },
+    function(){});
+}
+
 exports.notifyOnCancel = function(game, playerId){
   game = game.toJSON();
-  sendNotificationEmail(game, playerId,
+  sendNotificationEmail(game.owner, playerId,
     function(name){
       return name + " has left your game";
     },
@@ -95,9 +133,9 @@ exports.notifyMovedOffWaitlist = function(game, playerId, callback){
   });
 }
 
-var sendNotificationEmail = function(game, playerId, subject, html, text, callback){
-  if(!game || !playerId) return;
-  userRepo.getUserWithPlayerPool(game.owner, function(err1, owner){
+var sendNotificationEmail = function(recipientId, playerId, subject, html, text, callback){
+  if(!recipientId || !playerId) return;
+  userRepo.getUserWithPlayerPool(recipientId, function(err1, recipient){
     if(err1){
       callback(err);
       return;
@@ -111,7 +149,7 @@ var sendNotificationEmail = function(game, playerId, subject, html, text, callba
       var theSubject = extractText(subject, player.name);
       var theHtml = extractText(html, player.name);
       var theText = extractText(text, player.name);
-      exports.sendSingleEmail(owner.email, theSubject, theHtml, theText, function(){});
+      exports.sendSingleEmail(recipient.email, theSubject, theHtml, theText, function(){});
     });
   });
 }
@@ -123,6 +161,7 @@ var extractText = function(input, playerName){
 exports.sendSingleEmail = function(address, subject, html, text, callback){
   if(config.dev){
     //don't send mails from dev, it costs us
+    console.log("Email would be sent -- address: " + address + " -- subject: " + subject + " -- html: " + html + " -- text: " + text);
     callback("No emails from dev");
     return;
   }

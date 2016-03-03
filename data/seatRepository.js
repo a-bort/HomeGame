@@ -127,13 +127,26 @@ exports.seatUserInGame = function(gameId, userId, name, ownerAdded, callback){
             console.log(err);
             callback(err);
           } else{
-            if(game.emailNotifications && !ownerAdded){
+            if(game.emailNotifications && !ownerAdded && !game.owner.equals(userId)){
               emailSender.notifyOwnerOnJoin(game, userId, isWaitList);
             }
+            notifyPlayers(game, isWaitList);
             playerPoolRepo.addUserToGameOwnerPlayerPool(game, userId, callback);
           }
         });
     });
+}
+
+function notifyPlayers(game, joinedWaitlist){
+  var gameAlmostFull = ((game.filledSeats / game.seats) >= .8 || game.emptySeats == 1);
+  for(var i = 0; i < game.seatCollection.length; i++){
+    var seat = game.seatCollection[i];
+    if(gameAlmostFull && seat.notifyOnThreshold){
+      emailSender.notifyPlayerOnThreshold(game, seat.user);
+    } else if(seat.notifyOnJoin){
+      emailSender.notifyPlayerOnJoin(game, seat.user, joinedWaitlist);
+    }
+  }
 }
 
 function addToSeatList(game, userId, name){
