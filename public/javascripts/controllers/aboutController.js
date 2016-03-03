@@ -1,11 +1,13 @@
 homeGameApp.controller('AboutController', function($scope, $http, $location){
 
     $scope.features = [
-      {title: 'None -- Suggest a new feature in the Feedback section', description: ''}
+      {title: 'Email notifications when game is almost full, for players who haven\'t joined the game', description: ''},
+      {title: 'Feel free to suggest a new feature in the Feedback section', description: ''}
     ];
 
     $scope.issues = [
-      {title: 'None -- Feel free to report any in the Feedback section', description: ''}
+      {title: 'Occasional game page issues when changing the # of seats in a game', description: ''},
+      {title: 'Please report issues in the Feedback section', description: ''}
     ];
 
     $scope.feedback = "";
