@@ -14,7 +14,7 @@ block content
             div.col-md-8 Past Games
             div.col-md-4.show-hide-link
               a(href="#", ng-click="hidePastGames()") Show Upcoming Games
-          div.game-grid(ng-repeat="game in playerGames | filter:gameShouldBeShown")
+          div.game-grid(ng-repeat="game in playerGames | filter:gameShouldBeShown | orderBy: orderByForMyGames()")
             div.game-grid-subhead {{game.owner.displayName}}'s {{game.stakes}}, {{game.gameType}} {{game.gameFormat}}
             div {{game.dateString}}
               span.strong-text &nbsp;|&nbsp;
@@ -37,7 +37,7 @@ block content
         div.game-list
           h2.content-head 
             span(ng-hide="noWaitlistedGames()") Waitlisted Games
-          div.game-grid.waitlist-grid(ng-repeat="game in waitlistedGames | filter:gameShouldBeShown")
+          div.game-grid.waitlist-grid(ng-repeat="game in waitlistedGames | filter:gameShouldBeShown | orderBy: orderByForMyGames()")
             div.game-grid-subhead {{game.owner.displayName}}'s {{game.stakes}}, {{game.gameType}} {{game.gameFormat}}
             div {{game.dateString}}
               span.strong-text &nbsp;|&nbsp;
@@ -57,7 +57,7 @@ block content
                 a(href="#", ng-click="showPastOwnedGames()") Show Past Games
             span(ng-show="pastOwnedGamesVisible")
                 a(href="#", ng-click="hidePastOwnedGames()") Hide Past Games
-        div.game-grid(ng-repeat="game in ownedGames | filter:ownedGameShouldBeShown")
+        div.game-grid(ng-repeat="game in ownedGames | filter:ownedGameShouldBeShown | orderBy: orderByForOwnedGames()")
           div.game-grid-subhead {{game.dateString}}&nbsp;|&nbsp;{{game.timeString}}
           div {{game.stakes}} {{game.gameType}} {{game.gameFormat}}
           div.info-body.multi-line {{game.filledSeats}} of {{game.seats}} Seats Filled

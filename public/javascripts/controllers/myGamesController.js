@@ -41,6 +41,10 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     return game.pastGame == $scope.pastGamesVisible;
   }
 
+  $scope.orderByForMyGames = function(){
+    return $scope.pastGamesVisible ? '-date' : 'date';
+  }
+
   $scope.noOwnedGamesShowing = function(){
     for(var i = 0; i < $scope.ownedGames.length; i++){
       if($scope.ownedGameShouldBeShown($scope.ownedGames[i])){
@@ -85,6 +89,9 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     return game.pastGame == $scope.pastOwnedGamesVisible;
   }
 
+  $scope.orderByForOwnedGame = function(){
+    return $scope.pastOwnedGamesVisible ? '-date' : 'date';
+  }
 
   $scope.viewGame = function(game){
     window.location = game.joinGameUrl;
