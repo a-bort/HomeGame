@@ -43,8 +43,9 @@ exports.notifyOwnerOnJoin = function(game, playerId, joinedWaitlist){
     },
     function(name){
       var str = name + "&nbsp;joined your poker game! (" + game.dateString + ")";
-      str = str + "<br><br>Currently <b>" + game.filledSeats + "/" + game.seats + "</b>&nbsp;seats are filled.";
-      str = str + "<br><br><b><a href='" + config.baseUrl + game.joinGameUrl + "'>View Game Page</a></b>";
+      str += "<br><br>Currently <b>" + game.filledSeats + "/" + game.seats + "</b>&nbsp;seats are filled.";
+      str += "<br><br><b><a href='" + config.baseUrl + game.joinGameUrl + "'>View Game Page</a></b>";
+      str += game.waitListCollection.length ? (game.waitListCollection.length + " players on the waitlist") : "";
       return str;
     },
     function(name){
@@ -56,18 +57,19 @@ exports.notifyOwnerOnJoin = function(game, playerId, joinedWaitlist){
 exports.notifyPlayerOnJoin = function(game, recipientId, joinedWaitlist){
   if(!game || !recipientId){ return; }
   game = game.toJSON();
-  sendNotificationEmail(recipientId, game.owner,
-    function(name){
-      return "Another player has joined " + (joinedWaitlist ? "the waitlist for " : "")  + name + "'s game";
+  sendPlayerNotificationEmail(recipientId, game.owner,
+    function(playerName, ownerName){
+      return "Another player has joined " + (joinedWaitlist ? "the waitlist for " : "")  + ownerName + "'s game";
     },
-    function(name){
-      var str = "Someone else joined " + name + "'s poker game! (" + game.dateString + ")";
-      str = str + "<br><br>Currently <b>" + game.filledSeats + "/" + game.seats + "</b>&nbsp;seats are filled.";
-      str = str + "<br><br><b><a href='" + config.baseUrl + game.joinGameUrl + "'>View Game Page</a></b>";
+    function(playerName, ownerName){
+      var str = playerName + " joined " + ownerName + "'s poker game! (" + game.dateString + ")";
+      str += "<br><br>Currently <b>" + game.filledSeats + "/" + game.seats + "</b>&nbsp;seats are filled.";
+      str += "<br><br><b><a href='" + config.baseUrl + game.joinGameUrl + "'>View Game Page</a></b>";
+      str += game.waitListCollection.length ? (game.waitListCollection.length + " players on the waitlist") : "";
       return str;
     },
-    function(name){
-      return "Someone else just joined " + name +"'s game (" + game.date + "). Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
+    function(playerName, ownerName){
+      return playerName + " just joined " + ownerName +"'s game (" + game.date + "). Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
     },
     function(){});
 }
@@ -142,7 +144,7 @@ var sendNotificationEmail = function(recipientId, playerId, subject, html, text,
     }
     userRepo.getUserWithPlayerPool(playerId, function(err2, player){
       if(err2){
-        callback(err);
+        callback(err2);
         return;
       }
 
@@ -154,8 +156,36 @@ var sendNotificationEmail = function(recipientId, playerId, subject, html, text,
   });
 }
 
-var extractText = function(input, playerName){
-  return typeof input == "function" ? input(playerName) : input;
+var sendPlayerNotificationEmail = function(recipientId, playerId, ownerId, subject, html, text, callback){
+  if(!recipientId || !playerId) return;
+  userRepo.getUserWithPlayerPool(recipientId, function(err1, recipient){
+    if(err1){
+      callback(err);
+      return;
+    }
+    userRepo.getUserWithPlayerPool(playerId, function(err2, player){
+      if(err2){
+        callback(err2);
+        return;
+      }
+
+      userRepo.getUserWithPlayerPool(playerId, function(err3, owner){
+        if(err3){
+          callback(err3);
+          return;
+        }
+
+        var theSubject = extractText(subject, player.name, owner.name);
+        var theHtml = extractText(html, player.name, owner.name);
+        var theText = extractText(text, player.name, owner.name);
+        exports.sendSingleEmail(recipient.email, theSubject, theHtml, theText, function(){});
+      });
+    });
+  });
+}
+
+var extractText = function(input, playerName, ownerName){
+  return typeof input == "function" ? input(playerName, ownerName) : input;
 }
 
 exports.sendSingleEmail = function(address, subject, html, text, callback){

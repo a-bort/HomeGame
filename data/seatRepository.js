@@ -138,7 +138,7 @@ exports.seatUserInGame = function(gameId, userId, name, ownerAdded, callback){
 }
 
 function notifyPlayers(game, joinedWaitlist){
-  var gameAlmostFull = ((game.filledSeats / game.seats) >= .8 || game.emptySeats == 1);
+  var gameAlmostFull = ((game.filledSeats == Math.ceil(game.seats * .8)) || (game.seats <= 4 && game.emptySeats == 1));
   for(var i = 0; i < game.seatCollection.length; i++){
     var seat = game.seatCollection[i];
     if(gameAlmostFull && seat.notifyOnThreshold){
