@@ -54,10 +54,10 @@ exports.notifyOwnerOnJoin = function(game, playerId, joinedWaitlist){
     function(){});
 }
 
-exports.notifyPlayerOnJoin = function(game, recipientId, joinedWaitlist){
+exports.notifyPlayerOnJoin = function(game, recipientId, playerId, joinedWaitlist){
   if(!game || !recipientId){ return; }
   game = game.toJSON();
-  sendPlayerNotificationEmail(recipientId, game.owner,
+  sendPlayerNotificationEmail(recipientId, playerId, game.owner,
     function(playerName, ownerName){
       return "Another player has joined " + (joinedWaitlist ? "the waitlist for " : "")  + ownerName + "'s game";
     },
@@ -69,7 +69,7 @@ exports.notifyPlayerOnJoin = function(game, recipientId, joinedWaitlist){
       return str;
     },
     function(playerName, ownerName){
-      return playerName + " just joined " + ownerName +"'s game (" + game.date + "). Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
+      return playerName + " just joined " + ownerName +"'s game (" + game.dateString + "). Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
     },
     function(){});
 }
@@ -88,7 +88,7 @@ exports.notifyPlayerOnThreshold = function(game, recipientId){
       return str;
     },
     function(name){
-      return name +"'s game on " + game.date + " is almost full. Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
+      return name +"'s game on " + game.dateString + " is almost full. Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
     },
     function(){});
 }
@@ -106,7 +106,7 @@ exports.notifyOnCancel = function(game, playerId){
       return str;
     },
     function(name){
-      return name + " just left your game on " + game.date + ". Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
+      return name + " just left your game on " + game.dateString + ". Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
     },
     function(){});
 }
@@ -169,7 +169,7 @@ var sendPlayerNotificationEmail = function(recipientId, playerId, ownerId, subje
         return;
       }
 
-      userRepo.getUserWithPlayerPool(playerId, function(err3, owner){
+      userRepo.getUserWithPlayerPool(ownerId, function(err3, owner){
         if(err3){
           callback(err3);
           return;
