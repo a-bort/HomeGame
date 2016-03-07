@@ -151,7 +151,7 @@ exports.leaveGame = function(gameId, seatId, callback){
         console.log(err);
         callback(err);
       } else{
-        if(game.emailNotifications){
+        if(game.emailNotifications && !game.owner.equals(userId)){
           emailSender.notifyOnCancel(game, userId);
         }
         callback();
