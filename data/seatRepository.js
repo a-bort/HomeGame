@@ -112,13 +112,10 @@ exports.seatUserInGame = function(gameId, userId, name, ownerAdded, callback){
             return;
         }
 
-        var isWaitList = false;
-
         if(game.emptySeats > 0){
           addToSeatList(game, userId, name);
         } else{
           addToWaitList(game, userId, name);
-          isWaitList = true;
         }
 
         game.save(function(err){
@@ -128,23 +125,23 @@ exports.seatUserInGame = function(gameId, userId, name, ownerAdded, callback){
             callback(err);
           } else{
             if(game.emailNotifications && !ownerAdded && !game.owner.equals(userId)){
-              emailSender.notifyOwnerOnJoin(game, userId, isWaitList);
+              emailSender.notifyOwnerOnJoin(game, userId);
             }
-            notifyPlayers(game, userId, isWaitList);
+            notifyPlayers(game, userId);
             playerPoolRepo.addUserToGameOwnerPlayerPool(game, userId, callback);
           }
         });
     });
 }
 
-function notifyPlayers(game, playerId, joinedWaitlist){
+function notifyPlayers(game, playerId){
   var gameAlmostFull = ((game.filledSeats == Math.ceil(game.seats * .8)) || (game.seats <= 4 && game.emptySeats == 1));
   for(var i = 0; i < game.seatCollection.length; i++){
     var seat = game.seatCollection[i];
     if(gameAlmostFull && seat.notifyOnThreshold){
       emailSender.notifyPlayerOnThreshold(game, seat.user);
     } else if(seat.notifyOnJoin){
-      emailSender.notifyPlayerOnJoin(game, seat.user, playerId, joinedWaitlist);
+      emailSender.notifyPlayerOnJoin(game, seat.user, playerId);
     }
   }
 }

@@ -18,7 +18,7 @@ exports.emailPlayerPool = function(user, gameId, subject, html, text, callback){
       return;
     }
 
-    for(var i = 0; i < user.playerPool.length; i++){
+    for(var i = 0;i < user.playerPool.length; i++){
       var player = user.playerPool[i];
 
       //if(!player.confirmed || player.blocked) continue;
@@ -34,18 +34,18 @@ exports.emailPlayerPool = function(user, gameId, subject, html, text, callback){
   });
 }
 
-exports.notifyOwnerOnJoin = function(game, playerId, joinedWaitlist){
+exports.notifyOwnerOnJoin = function(game, playerId){
   if(!game || !playerId){ return; }
   game = game.toJSON();
   sendNotificationEmail(game.owner, playerId,
     function(name){
-      return name + " has joined " + (joinedWaitlist ? "the waitlist for " : "")  + "your game";
+      return name + " has joined your game";
     },
     function(name){
       var str = name + "&nbsp;joined your poker game! (" + game.dateString + ")";
       str += "<br><br>Currently <b>" + game.filledSeats + "/" + game.seats + "</b>&nbsp;seats are filled.";
+      str += game.waitListCollection.length ? ("<br><br>" + game.waitListCollection.length + " players on the waitlist") : "";
       str += "<br><br><b><a href='" + config.baseUrl + game.joinGameUrl + "'>View Game Page</a></b>";
-      str += game.waitListCollection.length ? (game.waitListCollection.length + " players on the waitlist") : "";
       return str;
     },
     function(name){
@@ -54,18 +54,18 @@ exports.notifyOwnerOnJoin = function(game, playerId, joinedWaitlist){
     function(){});
 }
 
-exports.notifyPlayerOnJoin = function(game, recipientId, playerId, joinedWaitlist){
+exports.notifyPlayerOnJoin = function(game, recipientId, playerId){
   if(!game || !recipientId){ return; }
   game = game.toJSON();
   sendPlayerNotificationEmail(recipientId, playerId, game.owner,
     function(playerName, ownerName){
-      return "Another player has joined " + (joinedWaitlist ? "the waitlist for " : "")  + ownerName + "'s game";
+      return "Another player has joined "  + ownerName + "'s game";
     },
     function(playerName, ownerName){
       var str = playerName + " joined " + ownerName + "'s poker game! (" + game.dateString + ")";
       str += "<br><br>Currently <b>" + game.filledSeats + "/" + game.seats + "</b>&nbsp;seats are filled.";
+      str += game.waitListCollection.length ? ("<br><br>" + game.waitListCollection.length + " players on the waitlist") : "";
       str += "<br><br><b><a href='" + config.baseUrl + game.joinGameUrl + "'>View Game Page</a></b>";
-      str += game.waitListCollection.length ? (game.waitListCollection.length + " players on the waitlist") : "";
       return str;
     },
     function(playerName, ownerName){
