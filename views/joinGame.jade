@@ -41,7 +41,9 @@ block content
                     span
                       textarea(style="vertical-align: top; width: 75%; height: 50px; resize: vertical;", ng-model="$parent.commentText").push-md
                   div.col-md-3.push-md
-                    button.pure-button.button-info(ng-click="comment()") Post
+                    button.pure-button.button-info(ng-click="comment()", ng-disabled="commentPosting")
+                      span(ng-show="!commentPosting") Post
+                      span(ng-show="commentPosting") Posting
                 hr(ng-show="activeGame.comments.length > 0")
                 table.user-table
                   tr(ng-repeat="comment in activeGame.comments")

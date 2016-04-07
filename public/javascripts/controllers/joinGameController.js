@@ -194,13 +194,16 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       });
     }
 
+    $scope.commentPosting = false;
+
     $scope.comment = function(){
       if(!$scope.commentText){
         alert("Comment cannot be empty!");
         return;
       }
-
+      $scope.commentPosting = true;
       $http.post('/join/comment', {gameId: $scope.activeGame._id, comment: $scope.commentText}).success(function(data){
+        $scope.commentPosting = false;
         if(data.error){
           util.log(data.error);
           util.alert('Error adding comment');
@@ -213,6 +216,7 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
           util.alert("Error reloading comments");
         }
       }).error(function(err){
+        $scope.commentPosting = false;
         util.log(err);
         util.alert('Error adding comment');
       });
