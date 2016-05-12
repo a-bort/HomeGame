@@ -50,7 +50,7 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
           }
         }
 
-        if(autoJoin && !userAttending){
+        if(autoJoin && !userAttending && !game.pastGame){
           $scope.userAttending = true;
           $scope.join();
         }
