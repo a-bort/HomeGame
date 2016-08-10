@@ -16,7 +16,8 @@ var seatSchema = new mongoose.Schema({
     created: { type: Date, default: new Date()},
     name: { type: String },
     notifyOnJoin: { type: Boolean },
-    notifyOnThreshold: { type: Boolean }
+    notifyOnThreshold: { type: Boolean },
+    guestSeatsAdded: [{ type: mongoose.Schema.Types.ObjectId }]
 });
 
 var commentSchema = new mongoose.Schema({
