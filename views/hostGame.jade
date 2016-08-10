@@ -46,11 +46,19 @@ block content
                   | &nbsp;Seat Me Automatically
         div.col-md-6
           fieldset
-            legend Email Options
+            legend Other Options
             div
               label.pure-checkbox(for="emailNotifications")
                 input#emailNotifications(type="checkbox", ng-model="dataModel.emailNotifications")
                 | &nbsp;Notify Me when Players Join/Leave the Game
+            div
+              label.pure-checkbox(for="allowedGuests")
+                input#allowedGuests(type="checkbox", ng-model="guestsAllowed")
+                | &nbsp;Allow players to add guests
+            div.indented(ng-show="guestsAllowed")
+              div.padded-input
+                label(for="guests") Allowed Guests (blank for no limit)
+                input#guests(type="number", ng-model="guestInput")
             div
               label.pure-checkbox(for="sendEmail", ng-show="gameIsNew()")
                   input#sendEmail(type="checkbox", ng-model="emailEnabled")

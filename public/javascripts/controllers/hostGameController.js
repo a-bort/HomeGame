@@ -10,11 +10,14 @@ homeGameApp.controller('HostGameController', function($scope, $http, $location){
     date: '',
     time: '',
     notes: '',
-    emailNotifications: ''
+    emailNotifications: '',
+    allowedGuests: ''
   };
 
   $scope.seatHost = true;
   $scope.emailEnabled = false;
+  $scope.guestsAllowed = false;
+  $scope.guestInput = null;
   $scope.subject = "";
   $scope.html = "";
 
@@ -62,8 +65,34 @@ homeGameApp.controller('HostGameController', function($scope, $http, $location){
       game.date = game.date ? new Date(game.date) : '';
       game.time = game.time ? new Date(game.time) : '';
 
+      if(game.allowedGuests !== 0){
+        $scope.guestsAllowed = true;
+        if(game.allowedGuests > 0){
+          $scope.guestInput = game.allowedGuests;
+        }
+      }
+
       util.mapSourceToTarget(game, $scope.dataModel);
     }
+    $scope.afterInit();
+  }
+
+  $scope.afterInit = function(){
+
+    $scope.$watch('guestsAllowed', function(newVal){
+      if(!newVal){
+        $scope.guestInput = 0;
+      }
+    });
+
+    $scope.$watch('guestInput', function(newVal){
+      if(newVal !== 0 && !newVal){
+        $scope.dataModel.allowedGuests = -1;
+      } else{
+        $scope.dataModel.allowedGuests = newVal;
+      }
+    });
+
   }
 
   $scope.save = function(valid){

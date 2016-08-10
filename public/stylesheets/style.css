@@ -235,6 +235,10 @@ input[type=date]::-webkit-inner-spin-button {
   word-wrap: break-word;
 }
 
+.indented {
+  padding-left: 25px;
+}
+
 /*
  * -- MENU STYLES --
  * I want to customize how my .pure-menu looks at the top of the page
@@ -495,6 +499,14 @@ input[type=date]::-webkit-inner-spin-button {
 
  .content {
     padding-top: 25px;
+}
+
+/*
+*  Host Game Styles
+*/
+
+#guests {
+  width: 75px;
 }
 
 /*

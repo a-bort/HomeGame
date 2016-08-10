@@ -44,7 +44,7 @@ var gameSchema = new mongoose.Schema({
     notes: String,
     emailNotifications: { type: Boolean, default: true },
     dayOfNotification: { type: Boolean, default: false },
-    dayOfNotificationTime: Date,
+    allowedGuests: { type: Number, default: 0 },
     targetFilledSeats: Number,
     cancelled: { type: Boolean, default: false },
     active: { type: Boolean, default: true },
