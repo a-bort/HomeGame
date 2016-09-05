@@ -104,6 +104,20 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     }
   }
 
+  $scope.joinGame = function(game){
+    $http.post('/join', {gameId: game._id}).success(function(data){
+      if(data.error){
+        util.log(err);
+        util.alert('Error joining the game');
+        return;
+      }
+      location.reload();
+    }).error(function(err){
+      util.log(err);
+      util.alert('Error joining the game');
+    });
+  }
+
   $scope.editGame = function(game){
     window.location = game.editGameUrl;
   }

@@ -22,10 +22,12 @@ block content
             div
               div.info-body.multi-line(ng-bind-html="computedGameDescriptionHtml(game)")
             div
-              span.game-grid-button.button-small
-                button.pure-button(href="#" ng-click="$parent.viewGame(game)") View 
-              span.game-grid-button.button-small
-                button.pure-button(href="#" ng-click="$parent.leaveGame(game)") Cancel                
+              span.game-grid-button
+                button.pure-button.button-small(href="#" ng-click="$parent.viewGame(game)") View 
+              span.game-grid-button
+                button.pure-button.button-small.button-plain(href="#" ng-click="$parent.leaveGame(game)" ng-show="game.viewerCollection.indexOf(#{JSON.stringify(user._id)}) == -1") Cancel    
+              span.game-grid-button
+                button.pure-button.button-small.button-success(href="#" ng-click="$parent.joinGame(game)" ng-show="game.viewerCollection.indexOf(#{JSON.stringify(user._id)}) >= 0") Join                
           div.game-grid.empty-game-grid(ng-show="noPlayerGamesShowing()")
             div.game-grid-subhead You have no&nbsp;
               span(ng-show="!pastGamesVisible") upcoming
@@ -45,10 +47,10 @@ block content
             div
               div.info-body.multi-line(ng-bind-html="computedGameDescriptionHtml(game)")
             div
-              span.game-grid-button.button-small
+              span.game-grid-button
                 button.pure-button.button-small(href="#" ng-click="$parent.viewGame(game)") View 
-              span.game-grid-button.button-small
-                button.pure-button.button-small(href="#" ng-click="$parent.leaveGame(game)") Cancel                         
+              span.game-grid-button
+                button.pure-button.button-small.button-plain(href="#" ng-click="$parent.leaveGame(game)") Cancel                  
       div.col-md-6
         h2.row.content-head
           div.col-md-8 Hosted Games
