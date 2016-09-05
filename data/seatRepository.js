@@ -3,86 +3,28 @@ var seatModel = require('../models/game').seat;
 var playerPoolRepo = require('./playerPoolRepository');
 var emailSender = require('../services/emailSender');
 
-exports.createSeatsForGame = function(game, userId, seatHost){
-    for(var i = 0; i < game.seats; i++){
-        exports.addSeatToGame(game, userId, seatHost);
-        seatHost = false; //Ensures host is only seated once
-    }
-}
-
-exports.addSeatToGame = function(game, userId, seatHost){
-  var seat = seatHost ? new seatModel({user: userId}) : new seatModel({});
-
+exports.addSeatToGame = function(game, userId, name){
+  var seat = new seatModel({user: userId, name: name});
   game.seatCollection.push(seat);
-}
-
-exports.addSeatsToGame = function(game, count){
-  for(var i = 0; i < count; i++){
-    exports.addSeatToGame(game, null, false);
-  }
-}
-
-exports.removeEmptySeatsFromGame = function(game, toRemove){
-  var removed = 0;
-  for(var i = 0; i < game.seatCollection.length; i++){
-    var seat = game.seatCollection[i];
-    if(!seat.user && seat.active){
-      seat.active = false;
-      removed++;
-      if(removed >= toRemove){
-        return;
-      }
-    }
-  }
 }
 
 exports.configureSeatsAfterCancellation = function(game){
   var seats = game.seats;
-  var count = getActiveSeatCount(game);
+  var count = getSeatCount(game);
 
   if(count < seats){
     for(var i = 0; i < seats-count; i++){
       if(game.waitListCollection.length > 0){
         exports.seatPlayerFromWaitlist(game);
       }
-      else{
-        exports.addSeatToGame(game);
-      }
     }
   }
 }
 
-exports.ensureSeatCountIsAccurate = function(gameId, callback){
-  gameModel.findOne({_id: gameId}, function(err, game){
-    if(err){
-        console.log(err);
-        callback(err);
-        return;
-    }
-
-    if(!game){
-        callback("No game found");
-        return;
-    }
-
-    var count = getActiveSeatCount(game);
-
-    if(count > game.seats){
-      exports.removeEmptySeatsFromGame(game, count - game.seats);
-    } else if(count < game.seats){
-      exports.addSeatsToGame(game, game.seats - count);
-    }
-
-    game.save(function(err){
-      callback(err, gameId);
-    });
-  });
-}
-
-function getActiveSeatCount(game){
+function getSeatCount(game){
   var count = 0;
   for(var i = 0; i < game.seatCollection.length; i++){
-    if(game.seatCollection[i].active){
+    if(game.seatCollection[i].active && game.seatCollection[i].user){
       count++;
     }
   }
@@ -113,9 +55,9 @@ exports.seatUserInGame = function(gameId, userId, name, ownerAdded, callback){
         }
 
         if(game.emptySeats > 0){
-          addToSeatList(game, userId, name);
+          exports.addSeatToGame(game, userId, name);
         } else{
-          addToWaitList(game, userId, name);
+          addSeatToWaitlist(game, userId, name);
         }
 
         game.save(function(err){
@@ -146,22 +88,7 @@ function notifyPlayers(game, playerId){
   }
 }
 
-function addToSeatList(game, userId, name){
-  for(var i = 0; i < game.seatCollection.length; i++){
-      var seat = game.seatCollection[i];
-      if(!seat.user && !seat.name){
-          if(userId){
-            seat.user = userId;
-          }
-          if(name){
-            seat.name = name;
-          }
-          break;
-      }
-  }
-}
-
-function addToWaitList(game, userId, name){
+function addSeatToWaitList(game, userId, name){
   var model = {};
   if(userId){
     model.user = userId;
@@ -195,4 +122,49 @@ exports.setNotificationStatus = function(game, seatId, userId, notifyPropertyNam
       return;
     }
   }
+}
+
+exports.removePlayerFromGame = function(game, seatId, callback){
+  if(!tryLeaveSeatCollection(game, seatId, callback)){
+    if(!tryLeaveWaitListCollection(game, seatId, callback)){
+      callback("Couldn't find this player's seat");
+    }
+  }
+}
+
+function tryLeaveSeatCollection(game, seatId, callback){
+  for(var i = 0; i < game.seatCollection.length; i++){
+    var seat = game.seatCollection[i];
+    if(seat._id.equals(seatId)){
+      game.seatCollection.splice(i, 1);
+      exports.configureSeatsAfterCancellation(game);
+      game.save(function(err){
+        if(err){
+          console.log(err);
+        }
+
+        callback(err, seat.user);
+      });
+      return true;
+    }
+  }
+  return false;
+}
+
+function tryLeaveWaitListCollection(game, seatId, callback){
+  for(var i = 0; i < game.waitListCollection.length; i++){
+    var seat = game.waitListCollection[i];
+    if(seat._id.equals(seatId)){
+      game.waitListCollection.splice(i, 1);
+      game.save(function(err){
+        if(err){
+          console.log(err);
+        }
+
+        callback(err, seat.user);
+      });
+      return true;
+    }
+  }
+  return false;
 }

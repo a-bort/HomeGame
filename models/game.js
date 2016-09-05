@@ -12,7 +12,7 @@ var schemaOptions = {
 
 var seatSchema = new mongoose.Schema({
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-    active: { type: Boolean, default: true },
+    active: { type: Boolean, default: true }, //deprecated
     created: { type: Date, default: new Date()},
     name: { type: String },
     notifyOnJoin: { type: Boolean },
@@ -39,12 +39,12 @@ var gameSchema = new mongoose.Schema({
     seats: Number,
     seatCollection: [seatSchema],
     waitListCollection: [seatSchema],
+    viewerCollection: [seatSchema],
     gameFormat: String,
     date: Date,
     time: Date,
     notes: String,
     emailNotifications: { type: Boolean, default: true },
-    dayOfNotification: { type: Boolean, default: false },
     allowedGuests: { type: Number, default: 0 },
     targetFilledSeats: Number,
     cancelled: { type: Boolean, default: false },
@@ -73,7 +73,7 @@ gameSchema.virtual('filledSeats').get(function(){
   var count = 0;
   for(var i = 0; i < this.seatCollection.length; i++){
     var seat = this.seatCollection[i];
-    if((seat.user || seat.name) && seat.active){
+    if(seat.user || seat.name){
       count++;
     }
   }
@@ -81,14 +81,7 @@ gameSchema.virtual('filledSeats').get(function(){
 });
 
 gameSchema.virtual('emptySeats').get(function(){
-  var count = 0;
-  for(var i = 0; i < this.seatCollection.length; i++){
-    var seat = this.seatCollection[i];
-    if(!seat.user && !seat.name && seat.active){
-      count++;
-    }
-  }
-  return count;
+  return this.seats - this.filledSeats;
 });
 
 gameSchema.virtual('multiSeats').get(function(){

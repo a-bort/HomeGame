@@ -9,7 +9,9 @@ exports.saveGame = function(gameObject, seatHost, userId, callback){
   delete gameObject._id;
   if(!id){
     var game = new gameModel(gameObject);
-    seatRepo.createSeatsForGame(game, userId, seatHost);
+    if(seatHost){
+      seatRepo.addSeatToGame(game, userId);
+    }
     game.save(function(err, obj){
       if(err){
         console.log(err);
@@ -23,11 +25,8 @@ exports.saveGame = function(gameObject, seatHost, userId, callback){
       {_id: id}, gameObject, {upsert: true}, function(err){
         if(err){
           console.log(err);
-          callback(err, id);
-          return;
         }
-
-        seatRepo.ensureSeatCountIsAccurate(id, callback);
+        callback(err, id);
       }
     );
   }
@@ -158,7 +157,7 @@ exports.leaveGame = function(gameId, seatId, callback){
       }
     };
 
-    removePlayerFromGame(game, seatId, afterLeaveCallback)
+    seatRepo.removePlayerFromGame(game, seatId, afterLeaveCallback)
   });
 }
 
@@ -174,51 +173,6 @@ exports.kickPlayer = function(gameId, seatIdToKick, userId, callback){
       return;
     }
 
-    removePlayerFromGame(game, seatIdToKick, callback);
+    seatRepo.removePlayerFromGame(game, seatIdToKick, callback);
   })
-}
-
-function removePlayerFromGame(game, seatId, callback){
-  if(!tryLeaveSeatCollection(game, seatId, callback)){
-    if(!tryLeaveWaitListCollection(game, seatId, callback)){
-      callback("Couldn't find this player's seat");
-    }
-  }
-}
-
-function tryLeaveSeatCollection(game, seatId, callback){
-  for(var i = 0; i < game.seatCollection.length; i++){
-    var seat = game.seatCollection[i];
-    if(seat._id.equals(seatId)){
-      game.seatCollection.splice(i, 1);
-      seatRepo.configureSeatsAfterCancellation(game);
-      game.save(function(err){
-        if(err){
-          console.log(err);
-        }
-
-        callback(err, seat.user);
-      });
-      return true;
-    }
-  }
-  return false;
-}
-
-function tryLeaveWaitListCollection(game, seatId, callback){
-  for(var i = 0; i < game.waitListCollection.length; i++){
-    var seat = game.waitListCollection[i];
-    if(seat._id.equals(seatId)){
-      game.waitListCollection.splice(i, 1);
-      game.save(function(err){
-        if(err){
-          console.log(err);
-        }
-
-        callback(err, seat.user);
-      });
-      return true;
-    }
-  }
-  return false;
 }
