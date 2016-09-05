@@ -59,6 +59,7 @@ exports.seatUserInGame = function(gameId, userId, name, ownerAdded, callback){
         } else{
           addSeatToWaitlist(game, userId, name);
         }
+        exports.removePlayerFromViewers(game, userId);
 
         game.save(function(err){
           if(err){
@@ -124,20 +125,23 @@ exports.setNotificationStatus = function(game, seatId, userId, notifyPropertyNam
   }
 }
 
-exports.removePlayerFromGame = function(game, seatId, callback){
-  if(!tryLeaveSeatCollection(game, seatId, callback)){
-    if(!tryLeaveWaitListCollection(game, seatId, callback)){
+exports.removePlayerFromGame = function(game, userId, addToViewers, callback){
+  if(!tryLeaveSeatCollection(game, userId, addToViewers, callback)){
+    if(!tryLeaveWaitListCollection(game, userId, addToViewers, callback)){
       callback("Couldn't find this player's seat");
     }
   }
 }
 
-function tryLeaveSeatCollection(game, seatId, callback){
+function tryLeaveSeatCollection(game, userId, addToViewers, callback){
   for(var i = 0; i < game.seatCollection.length; i++){
     var seat = game.seatCollection[i];
-    if(seat._id.equals(seatId)){
+    if(seat.user && seat.user.equals(userId)){
       game.seatCollection.splice(i, 1);
       exports.configureSeatsAfterCancellation(game);
+      if(addToViewers){
+        addViewer(game, seat.user);
+      }
       game.save(function(err){
         if(err){
           console.log(err);
@@ -151,11 +155,14 @@ function tryLeaveSeatCollection(game, seatId, callback){
   return false;
 }
 
-function tryLeaveWaitListCollection(game, seatId, callback){
+function tryLeaveWaitListCollection(game, userId, addToViewers, callback){
   for(var i = 0; i < game.waitListCollection.length; i++){
     var seat = game.waitListCollection[i];
-    if(seat._id.equals(seatId)){
+    if(seat.user && seat.user.equals(userId)){
       game.waitListCollection.splice(i, 1);
+      if(addToViewers){
+        addViewer(game, seat.user);
+      }
       game.save(function(err){
         if(err){
           console.log(err);
@@ -167,4 +174,57 @@ function tryLeaveWaitListCollection(game, seatId, callback){
     }
   }
   return false;
+}
+
+exports.addUserToViewerList = function(gameId, userId, callback){
+    gameModel.findOne({_id: gameId, active: true}, function(err, game){
+        if(err){
+            console.log(err);
+            callback(err);
+            return;
+        }
+
+        if(!game){
+            callback("No game found");
+            return;
+        }
+
+        var success = addViewer(game, userId)
+
+        if(success){
+          game.save(function(err){
+            if(err){
+              console.log("Error saving game");
+              console.log(err);
+            }
+            callback(err);
+          });
+        } else{
+          callback("User already a viewer");
+        }
+
+    });
+}
+
+function addViewer(game, userId){
+  var viewerList = game.viewerCollection;
+
+  for(var i = 0; i < viewerList.length; i++){
+    var viewer = viewerList[i];
+    if(viewer.equals(userId)){
+      return false;
+    }
+  }
+
+  viewerList.push(userId);
+  return true;
+}
+
+exports.removePlayerFromViewers = function(game, userId){
+  for(var i = 0; i < game.viewerCollection.length; i++){
+    if(game.viewerCollection[i].equals(userId)){
+      game.viewerCollection.splice(i, 1);
+      return;
+    }
+  }
 }

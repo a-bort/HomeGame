@@ -2,7 +2,7 @@ extends layout
 
 block content
     script(type="text/javascript" src="/javascripts/controllers/joinGameController.js")
-    div(ng-controller="JoinGameController" ng-init="initWithGame(#{JSON.stringify(game)}, #{JSON.stringify(userAttending)}, #{JSON.stringify(autoJoin)}, #{JSON.stringify(user)})")
+    div(ng-controller="JoinGameController" ng-init="initWithGame(#{JSON.stringify(game)}, #{JSON.stringify(userAttending)}, #{JSON.stringify(userViewing)}, #{JSON.stringify(autoJoin)}, #{JSON.stringify(user)})")
         div(ng-if="activeGame")
           div.row
             div.col-md-12
@@ -63,7 +63,7 @@ block content
                       img(ng-src="{{seat.user.imageUrl || '/images/anon-user.png'}}")
                     td {{seat.user.displayName || seat.name}}
                     td
-                      button.pure-button.button-error.button-xsmall(ng-hide="!currentUserIsOwner || activeGame.pastGame", ng-click="kick(seat._id)") X
+                      button.pure-button.button-error.button-xsmall(ng-hide="!currentUserIsOwner || activeGame.pastGame", ng-click="kick(seat.user._id)") X
               div.game-grid(ng-hide="emptySeats()")
                 div.game-grid-subhead.push-md Waitlist
                 div(ng-show="activeGame.waitListCollection.length == 0") The waitlist is empty
@@ -73,7 +73,7 @@ block content
                       img(ng-src="{{seat.user.imageUrl || '/images/anon-user.png'}}")
                     td {{seat.user.displayName || seat.name}}
                     td
-                      button.pure-button.button-error.button-xsmall(ng-hide="!currentUserIsOwner || activeGame.pastGame", ng-click="kick(seat._id)") X
+                      button.pure-button.button-error.button-xsmall(ng-hide="!currentUserIsOwner || activeGame.pastGame", ng-click="kick(seat.user._id)") X
               div.game-grid(ng-show="currentUserIsOwner")
                 div.game-grid-subhead.push-md Add Players
                 table.user-table

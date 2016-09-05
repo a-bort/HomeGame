@@ -39,7 +39,7 @@ var gameSchema = new mongoose.Schema({
     seats: Number,
     seatCollection: [seatSchema],
     waitListCollection: [seatSchema],
-    viewerCollection: [seatSchema],
+    viewerCollection: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
     gameFormat: String,
     date: Date,
     time: Date,

@@ -138,7 +138,17 @@ exports.isUserRegisteredForGame = function(userId, game){
   return false;
 }
 
-exports.leaveGame = function(gameId, seatId, callback){
+exports.isUserGameViewer = function(userId, game){
+  for(var i = 0; i < game.viewerCollection.length; i++){
+    var viewer = game.viewerCollection[i];
+    if(viewer.equals(userId)){
+      return true;
+    }
+  }
+  return false;
+}
+
+exports.leaveGame = function(gameId, userId, callback){
   gameModel.findOne({_id: gameId}, function(err, game){
     if(err || !game){
       callback(err);
@@ -157,11 +167,11 @@ exports.leaveGame = function(gameId, seatId, callback){
       }
     };
 
-    seatRepo.removePlayerFromGame(game, seatId, afterLeaveCallback)
+    seatRepo.removePlayerFromGame(game, userId, true, afterLeaveCallback)
   });
 }
 
-exports.kickPlayer = function(gameId, seatIdToKick, userId, callback){
+exports.kickPlayer = function(gameId, userIdToKick, userId, callback){
   gameModel.findOne({_id: gameId}, function(err, game){
     if(err || !game){
       callback(err);
@@ -173,6 +183,6 @@ exports.kickPlayer = function(gameId, seatIdToKick, userId, callback){
       return;
     }
 
-    seatRepo.removePlayerFromGame(game, seatIdToKick, callback);
+    seatRepo.removePlayerFromGame(game, userIdToKick, false, callback);
   })
 }

@@ -120,22 +120,22 @@ module.exports = function(app, passport) {
     });
 
     app.post('/mygames/leave', isLoggedIn, function(req, res) {
-      if(!req.body.gameId || !req.body.seatId){
+      if(!req.body.gameId){
         defaultJson(res, "Missing parameters");
         return;
       }
 
-      gameRepo.leaveGame(req.body.gameId, req.body.seatId, function(err){
+      gameRepo.leaveGame(req.body.gameId, req.user._id, function(err){
         defaultJson(res, err);
       });
     });
 
     app.post('/mygames/kick', isLoggedIn, function(req, res) {
-      if(!req.body.gameId || !req.body.seatId){
+      if(!req.body.gameId || !req.body.userId){
         defaultJson(res, "Missing parameters");
         return;
       }
-      gameRepo.kickPlayer(req.body.gameId, req.body.seatId, req.user._id, function(err){
+      gameRepo.kickPlayer(req.body.gameId, req.body.userId, req.user._id, function(err){
         defaultJson(res, err);
       });
     });
@@ -163,7 +163,8 @@ module.exports = function(app, passport) {
               user : fullUser,
               game : game,
               autoJoin: autoJoin,
-              userAttending : gameRepo.isUserRegisteredForGame(req.user._id, game)
+              userAttending : gameRepo.isUserRegisteredForGame(req.user._id, game),
+              userViewing: gameRepo.isUserGameViewer(req.user._id, game)
           });
         })
       });
@@ -176,6 +177,13 @@ module.exports = function(app, passport) {
     app.post('/join', isLoggedIn, authorization.userAuthorizedForGame, function(req, res){
       var gameId = req.body.gameId;
       seatRepo.seatUserInGame(gameId, req.user._id, null, false, function(err){
+        defaultJson(res, err);
+      });
+    });
+
+    app.post('/join/view', isLoggedIn, authorization.userAuthorizedForGame, function(req, res){
+      var gameId = req.body.gameId;
+      seatRepo.addUserToViewerList(gameId, req.user._id, function(err){
         defaultJson(res, err);
       });
     });

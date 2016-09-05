@@ -23,7 +23,7 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       return ;
     }
 
-    $scope.initWithGame = function(game, userAttending, autoJoin, currentUser){
+    $scope.initWithGame = function(game, userAttending, userViewing, autoJoin, currentUser){
         $scope.activeGame = game;
         $scope.userAttending = !!userAttending;
         $scope.currentUser = currentUser;
@@ -53,6 +53,8 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
         if(autoJoin && !userAttending && !game.pastGame){
           $scope.userAttending = true;
           $scope.join();
+        } else if(!userAttending && !userViewing){
+          $scope.view();
         }
     };
 
@@ -100,6 +102,23 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       });
     };
 
+    $scope.view = function(){
+      if(!$scope.activeGame){
+        return;
+      }
+
+      $http.post('/join/view', {gameId: $scope.activeGame._id}).success(function(data){
+        if(data.error){
+          util.log(data.error);
+          util.alert('Error tracking game');
+          return;
+        }
+      }).error(function(err){
+        util.log(err);
+        util.alert('Error tracking game');
+      });
+    }
+
     $scope.cancel = function(){
       var c = confirm("Do you want to cancel your reservation?");
       if(c){
@@ -118,7 +137,7 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
         return;
       }
 
-      $http.post('/mygames/leave/', { gameId: $scope.activeGame._id, seatId: seat._id }).success(function(data){
+      $http.post('/mygames/leave/', { gameId: $scope.activeGame._id }).success(function(data){
         if(data.error){
           util.log(data.error);
           util.alert('Error cancelling reservation');
@@ -157,12 +176,12 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       }
     };
 
-    $scope.sendKickRequest = function(seatId){
+    $scope.sendKickRequest = function(userId){
       if(!$scope.activeGame){
         return;
       }
 
-      $http.post('/mygames/kick', {gameId: $scope.activeGame._id, seatId: seatId}).success(function(data){
+      $http.post('/mygames/kick', {gameId: $scope.activeGame._id, userId: userId}).success(function(data){
         if(data.error){
           util.log(data.error);
           util.alert('Error kicking player');
