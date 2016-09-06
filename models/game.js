@@ -17,6 +17,7 @@ var seatSchema = new mongoose.Schema({
     name: { type: String },
     notifyOnJoin: { type: Boolean },
     notifyOnThreshold: { type: Boolean },
+    notifyOnComment: { type: Boolean },
     guestSeatsAdded: [{ type: mongoose.Schema.Types.ObjectId }]
 });
 
@@ -39,7 +40,7 @@ var gameSchema = new mongoose.Schema({
     seats: Number,
     seatCollection: [seatSchema],
     waitListCollection: [seatSchema],
-    viewerCollection: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+    viewerCollection: [seatSchema],
     gameFormat: String,
     date: Date,
     time: Date,

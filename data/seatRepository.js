@@ -109,20 +109,37 @@ function sortWaitList(game){
   });
 }
 
-exports.setNotificationStatus = function(game, seatId, userId, notifyPropertyName, notify, callback){
+exports.setNotificationStatus = function(game, userId, notifyPropertyName, notify, callback){
+  var seat = exports.findSeatByUser(game, userId);
+  if(seat == null){
+    callback("No seat found for user");
+    return;
+  }
+
+  seat[notifyPropertyName] = notify;
+  game.save(callback);
+}
+
+exports.findSeatByUser = function(game, userId){
   for(var i = 0; i < game.seatCollection.length; i++){
     var seat = game.seatCollection[i];
-    if(seat._id == seatId){
-      if(!seat.user == userId){
-        callback("Seat ID doesn't match logged in user");
-        return;
-      }
-
-      seat[notifyPropertyName] = notify;
-      game.save(callback);
-      return;
+    if(seat.user && seat.user._id.equals(userId)){
+      return seat;
     }
   }
+  for(var i = 0; i < game.waitListCollection.length; i++){
+    var seat = game.waitListCollection[i];
+    if(seat.user && seat.user._id.equals(userId)){
+      return seat;
+    }
+  }
+  for(var i = 0; i < game.viewerCollection.length; i++){
+    var seat = game.viewerCollection[i];
+    if(seat.user && seat.user._id.equals(userId)){
+      return seat;
+    }
+  }
+  return null;
 }
 
 exports.removePlayerFromGame = function(game, userId, addToViewers, callback){
@@ -136,18 +153,18 @@ exports.removePlayerFromGame = function(game, userId, addToViewers, callback){
 function tryLeaveSeatCollection(game, userId, addToViewers, callback){
   for(var i = 0; i < game.seatCollection.length; i++){
     var seat = game.seatCollection[i];
-    if(seat.user && seat.user.equals(userId)){
+    if(seat.user && seat.user._id.equals(userId)){
       game.seatCollection.splice(i, 1);
       exports.configureSeatsAfterCancellation(game);
       if(addToViewers){
-        addViewer(game, seat.user);
+        addViewer(game, seat.user._id);
       }
       game.save(function(err){
         if(err){
           console.log(err);
         }
 
-        callback(err, seat.user);
+        callback(err);
       });
       return true;
     }
@@ -158,17 +175,17 @@ function tryLeaveSeatCollection(game, userId, addToViewers, callback){
 function tryLeaveWaitListCollection(game, userId, addToViewers, callback){
   for(var i = 0; i < game.waitListCollection.length; i++){
     var seat = game.waitListCollection[i];
-    if(seat.user && seat.user.equals(userId)){
+    if(seat.user && seat.user._id.equals(userId)){
       game.waitListCollection.splice(i, 1);
       if(addToViewers){
-        addViewer(game, seat.user);
+        addViewer(game, seat.user._id);
       }
       game.save(function(err){
         if(err){
           console.log(err);
         }
 
-        callback(err, seat.user);
+        callback(err);
       });
       return true;
     }
@@ -189,21 +206,24 @@ exports.addUserToViewerList = function(gameId, userId, callback){
             return;
         }
 
-        var success = addViewer(game, userId)
-
-        if(success){
-          game.save(function(err){
-            if(err){
-              console.log("Error saving game");
-              console.log(err);
-            }
-            callback(err);
-          });
-        } else{
-          callback("User already a viewer");
-        }
-
+        exports.addUserToViewerListByGame(game, userId, callback);
     });
+}
+
+exports.addUserToViewerListByGame = function(game, userId, callback){
+    var success = addViewer(game, userId)
+
+    if(success){
+      game.save(function(err){
+        if(err){
+          console.log("Error saving game");
+          console.log(err);
+        }
+        callback(err);
+      });
+    } else{
+      callback("User already a viewer");
+    }
 }
 
 function addViewer(game, userId){
@@ -211,19 +231,24 @@ function addViewer(game, userId){
 
   for(var i = 0; i < viewerList.length; i++){
     var viewer = viewerList[i];
-    if(viewer.equals(userId)){
+    if(viewer && viewer.user && viewer.user._id.equals(userId)){
       return false;
     }
   }
 
-  viewerList.push(userId);
+  viewerList.push(new seatModel({
+    user: userId
+  }));
+
   return true;
 }
 
 exports.removePlayerFromViewers = function(game, userId){
-  for(var i = 0; i < game.viewerCollection.length; i++){
-    if(game.viewerCollection[i].equals(userId)){
-      game.viewerCollection.splice(i, 1);
+  var viewerList = game.viewerCollection;
+
+  for(var i = 0; i < viewerList.length; i++){
+    if(viewerList[i] && viewerList[i].user.equals(userId)){
+      viewerList.splice(i, 1);
       return;
     }
   }

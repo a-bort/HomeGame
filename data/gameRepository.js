@@ -37,6 +37,7 @@ exports.getGameById = function(gameId, callback){
               .populate('owner')
               .populate('seatCollection.user')
               .populate('waitListCollection.user')
+              .populate('viewerCollection.user')
               .populate('comments.user')
     .exec(function(err, game){
         callback(err, game);
@@ -59,7 +60,7 @@ exports.getGamesByOwner = function(ownerId, callback){
 }
 
 exports.getGamesByPlayer = function(playerId, callback){
-  gameModel.find({$or: [{'seatCollection.user': playerId}, {'viewerCollection': playerId}]}, null, {sort: {date: -1}}).populate('owner').exec(function(err, games){
+  gameModel.find({$or: [{'seatCollection.user': playerId}, {'viewerCollection.user': playerId}]}, null, {sort: {date: -1}}).populate('owner').exec(function(err, games){
     if(err){
       console.log(err);
     }
@@ -141,7 +142,7 @@ exports.isUserRegisteredForGame = function(userId, game){
 exports.isUserGameViewer = function(userId, game){
   for(var i = 0; i < game.viewerCollection.length; i++){
     var viewer = game.viewerCollection[i];
-    if(viewer.equals(userId)){
+    if(viewer && viewer.user && viewer.user._id.equals(userId)){
       return true;
     }
   }
@@ -149,18 +150,19 @@ exports.isUserGameViewer = function(userId, game){
 }
 
 exports.leaveGame = function(gameId, userId, callback){
-  gameModel.findOne({_id: gameId}, function(err, game){
-    if(err || !game){
+  exports.getGameById(gameId, function(err, game){
+    if(err){
+      console.log(err);
       callback(err);
       return;
     }
 
-    var afterLeaveCallback = function(err, userId){
+    var afterLeaveCallback = function(err){
       if(err){
         console.log(err);
         callback(err);
       } else{
-        if(game.emailNotifications && !game.owner.equals(userId)){
+        if(game.emailNotifications && !game.owner._id.equals(userId)){
           emailSender.notifyOnCancel(game, userId);
         }
         callback();
@@ -172,17 +174,17 @@ exports.leaveGame = function(gameId, userId, callback){
 }
 
 exports.kickPlayer = function(gameId, userIdToKick, userId, callback){
-  gameModel.findOne({_id: gameId}, function(err, game){
+  exports.getGameById(gameId, function(err, game){
     if(err || !game){
       callback(err);
       return;
     }
 
-    if(!game.owner.equals(userId)){
+    if(!game.owner._id.equals(userId)){
       callback("Not Authorized");
       return;
     }
 
     seatRepo.removePlayerFromGame(game, userIdToKick, false, callback);
-  })
+  });
 }

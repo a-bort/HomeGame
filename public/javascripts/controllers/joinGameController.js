@@ -28,33 +28,29 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
         $scope.userAttending = !!userAttending;
         $scope.currentUser = currentUser;
         $scope.currentUserIsOwner = (currentUser._id == game.owner._id);
+        $scope.currentUserSeat = findCurrentUserSeat();
 
-        if(userAttending){
-          for(var i = 0; i < game.seatCollection.length; i++){
-            var seat = game.seatCollection[i];
-            if(seat.user && seat.user._id == currentUser._id){
-              $scope.currentUserSeat = seat;
-
-              $scope.$watch('currentUserSeat.notifyOnJoin', function(value){
-                if(value === true || value === false){ //undefined initially
-                  notify(true, value);
-                }
-              });
-
-              $scope.$watch('currentUserSeat.notifyOnThreshold', function(value){
-                if(value === true || value === false){ //undefined initially
-                  notify(false, value);
-                }
-              });
-            }
+        $scope.$watch('currentUserSeat.notifyOnJoin', function(newValue, oldValue){
+          if((newValue === true || newValue === false) && newValue != oldValue){ //undefined initially
+            notify('notifyOnJoin', newValue);
           }
-        }
+        });
+
+        $scope.$watch('currentUserSeat.notifyOnThreshold', function(newValue, oldValue){
+          if((newValue === true || newValue === false) && newValue != oldValue){ //undefined initially
+            notify('notifyOnThreshold', newValue);
+          }
+        });
+
+        $scope.$watch('currentUserSeat.notifyOnComment', function(newValue, oldValue){
+          if((newValue === true || newValue === newValue) && newValue != oldValue){ //undefined initially
+            notify('notifyOnComment', newValue);
+          }
+        });
 
         if(autoJoin && !userAttending && !game.pastGame){
           $scope.userAttending = true;
           $scope.join();
-        } else if(!userAttending && !userViewing){
-          $scope.view();
         }
     };
 
@@ -131,12 +127,6 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
         return;
       }
 
-      var seat = $scope.findCurrentUserSeat();
-      if(!seat){
-        alert("Unable to cancel your reservation.");
-        return;
-      }
-
       $http.post('/mygames/leave/', { gameId: $scope.activeGame._id }).success(function(data){
         if(data.error){
           util.log(data.error);
@@ -151,7 +141,7 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
     };
 
     //Bit of a lame hack for the frontend...
-    $scope.findCurrentUserSeat = function(){
+    function findCurrentUserSeat(){
       if(!$scope.currentUser || !$scope.activeGame) return;
 
       for(var i = 0; i < $scope.activeGame.seatCollection.length; i++){
@@ -167,6 +157,14 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
           return seat;
         }
       }
+
+      for(var i = 0; i < $scope.activeGame.viewerCollection.length; i++){
+        var seat = $scope.activeGame.viewerCollection[i];
+        if(seat && seat.user && seat.user._id == $scope.currentUser._id){
+          return seat;
+        }
+      }
+      return {};
     }
 
     $scope.kick = function(seatId){
@@ -264,8 +262,8 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       });
     }
 
-    function notify(onJoin, notify){
-      $http.post('/join/notifyOn' + (onJoin ? 'Join' : 'Threshold'), {gameId: $scope.activeGame._id, seatId: $scope.currentUserSeat._id, notify: notify}).success(function(data){
+    function notify(url, value){
+      $http.post('/join/' + url, {gameId: $scope.activeGame._id, notify: value}).success(function(data){
         if(data.error){
           util.log(data.error);
           util.alert('Error setting notification status');

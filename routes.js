@@ -158,17 +158,27 @@ module.exports = function(app, passport) {
             redirector.defaultRedirect(res);
             return;
           }
-          res.render('joinGame', {
-              title: "Join a Game",
-              user : fullUser,
-              game : game,
-              autoJoin: autoJoin,
-              userAttending : gameRepo.isUserRegisteredForGame(req.user._id, game),
-              userViewing: gameRepo.isUserGameViewer(req.user._id, game)
-          });
+          if(!gameRepo.isUserRegisteredForGame(req.user._id, game) && !gameRepo.isUserGameViewer(req.user._id, game)){
+            seatRepo.addUserToViewerListByGame(game, req.user._id, function(err){
+              renderJoinGame(req, res, game, fullUser, autoJoin);
+            });
+          } else{
+            renderJoinGame(req, res, game, fullUser, autoJoin);
+          }
         })
       });
     });
+
+    function renderJoinGame(req, res, game, fullUser, autoJoin){
+      res.render('joinGame', {
+          title: "Join a Game",
+          user : fullUser,
+          game : game,
+          autoJoin: autoJoin,
+          userAttending : gameRepo.isUserRegisteredForGame(req.user._id, game),
+          userViewing: gameRepo.isUserGameViewer(req.user._id, game)
+      });
+    }
 
     app.get('/join', isLoggedIn, function(req, res) {
       redirector.defaultRedirect(res);
@@ -198,41 +208,32 @@ module.exports = function(app, passport) {
       })
     });
 
-    app.post('/join/notifyOnJoin', isLoggedIn, function(req, res){
-      var notify = req.body.notify;
-      var seatId = req.body.seatId;
-      var gameId = req.body.gameId;
-      var userId = req.user._id;
+    function notification(propertyName){
+      var thePropertyName = propertyName;
+      var fn = function(req, res){
+        var notify = req.body.notify;
+        var gameId = req.body.gameId;
+        var userId = req.user._id;
 
-      gameRepo.getGameById(gameId, function(err, game){
-        if(err){
-          defaultJson(res, err);
-          return;
-        }
+        gameRepo.getGameById(gameId, function(err, game){
+          if(err){
+            defaultJson(res, err);
+            return;
+          }
 
-        seatRepo.setNotificationStatus(game, seatId, userId, "notifyOnJoin", notify, function(){
-          defaultJson(res, err);
+          seatRepo.setNotificationStatus(game, userId, thePropertyName, notify, function(err){
+            defaultJson(res, err);
+          });
         });
-      });
-    });
+      }
+      return fn;
+    }
 
-    app.post('/join/notifyOnThreshold', isLoggedIn, function(req, res){
-      var notify = req.body.notify;
-      var seatId = req.body.seatId;
-      var gameId = req.body.gameId;
-      var userId = req.user._id;
+    app.post('/join/notifyOnJoin', isLoggedIn, notification("notifyOnJoin"));
 
-      gameRepo.getGameById(gameId, function(err, game){
-        if(err){
-          defaultJson(res, err);
-          return;
-        }
+    app.post('/join/notifyOnThreshold', isLoggedIn, notification("notifyOnThreshold"));
 
-        seatRepo.setNotificationStatus(game, seatId, userId, "notifyOnThreshold", notify, function(err){
-          defaultJson(res, err);
-        });
-      });
-    });
+    app.post('/join/notifyOnComment', isLoggedIn, notification("notifyOnComment"));
 
     app.post('/join/comment', isLoggedIn, function(req, res){
       var gameId = req.body.gameId;

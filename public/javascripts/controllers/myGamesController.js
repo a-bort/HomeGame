@@ -93,6 +93,14 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     return $scope.pastOwnedGamesVisible ? '-date' : 'date';
   }
 
+  $scope.userIsViewer = function(game, userId){
+    for(var i = 0; i < game.viewerCollection.length; i++){
+      var viewer = game.viewerCollection[i];
+      return viewer._id == userId;
+    }
+    return false;
+  }
+
   $scope.viewGame = function(game){
     window.location = game.joinGameUrl;
   }

@@ -93,6 +93,27 @@ exports.notifyPlayerOnThreshold = function(game, recipientId){
     function(){});
 }
 
+exports.notifyPlayerOnComment = function(game, recipientId, playerId){
+  if(!game || !recipientId || !game.comments.length){ return; }
+  game = game.toJSON();
+  sendPlayerNotificationEmail(recipientId, playerId, game.owner,
+    function(playerName, ownerName){
+      return playerName + " commented on "  + ownerName + "'s game";
+    },
+    function(playerName, ownerName){
+      var comment = game.comments[game.comments.length];
+      var str = "On " + comment.dateString + ", " + playerName + " wrote:<br/><br/>"
+      str += "\"" + comment.text + "\"" + "<br/><br/>";
+      str += "See the rest of the conversation below<br/>";
+      str += "<br><br><b><a href='" + config.baseUrl + game.joinGameUrl + "'>View Game Page</a></b>";
+      return str;
+    },
+    function(playerName, ownerName){
+      return playerName + " just joined " + ownerName +"'s game (" + game.dateString + "). Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
+    },
+    function(){});
+}
+
 exports.notifyOnCancel = function(game, playerId){
   game = game.toJSON();
   sendNotificationEmail(game.owner, playerId,
