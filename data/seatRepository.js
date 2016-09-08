@@ -3,8 +3,8 @@ var seatModel = require('../models/game').seat;
 var playerPoolRepo = require('./playerPoolRepository');
 var emailSender = require('../services/emailSender');
 
-exports.addSeatToGame = function(game, userId, name){
-  var seat = new seatModel({user: userId, name: name});
+exports.addSeatToGame = function(game, userId, name, viewerSeat){
+  var seat = viewerSeat ? viewerSeat : new seatModel({user: userId, name: name});
   game.seatCollection.push(seat);
 }
 
@@ -54,12 +54,12 @@ exports.seatUserInGame = function(gameId, userId, name, ownerAdded, callback){
             return;
         }
 
+        var viewerSeat = exports.removePlayerFromViewers(game, userId);
         if(game.emptySeats > 0){
-          exports.addSeatToGame(game, userId, name);
+          exports.addSeatToGame(game, userId, name, viewerSeat);
         } else{
-          addSeatToWaitlist(game, userId, name);
+          addSeatToWaitlist(game, userId, name, viewerSeat);
         }
-        exports.removePlayerFromViewers(game, userId);
 
         game.save(function(err){
           if(err){
@@ -89,7 +89,7 @@ function notifyPlayers(game, playerId){
   }
 }
 
-function addSeatToWaitList(game, userId, name){
+function addSeatToWaitList(game, userId, name, viewerSeat){
   var model = {};
   if(userId){
     model.user = userId;
@@ -98,7 +98,7 @@ function addSeatToWaitList(game, userId, name){
     model.name = name;
   }
 
-  var seat = new seatModel(model);
+  var seat = viewerSeat ? viewerSeat : new seatModel(model);
 
   game.waitListCollection.push(seat);
 }
@@ -157,7 +157,7 @@ function tryLeaveSeatCollection(game, userId, addToViewers, callback){
       game.seatCollection.splice(i, 1);
       exports.configureSeatsAfterCancellation(game);
       if(addToViewers){
-        addViewer(game, seat.user._id);
+        addViewer(game, seat.user._id, seat);
       }
       game.save(function(err){
         if(err){
@@ -178,7 +178,7 @@ function tryLeaveWaitListCollection(game, userId, addToViewers, callback){
     if(seat.user && seat.user._id.equals(userId)){
       game.waitListCollection.splice(i, 1);
       if(addToViewers){
-        addViewer(game, seat.user._id);
+        addViewer(game, seat.user._id, seat);
       }
       game.save(function(err){
         if(err){
@@ -226,7 +226,7 @@ exports.addUserToViewerListByGame = function(game, userId, callback){
     }
 }
 
-function addViewer(game, userId){
+function addViewer(game, userId, seat){
   var viewerList = game.viewerCollection;
 
   for(var i = 0; i < viewerList.length; i++){
@@ -236,7 +236,7 @@ function addViewer(game, userId){
     }
   }
 
-  viewerList.push(new seatModel({
+  viewerList.push(seat ? seat : new seatModel({
     user: userId
   }));
 
@@ -248,8 +248,8 @@ exports.removePlayerFromViewers = function(game, userId){
 
   for(var i = 0; i < viewerList.length; i++){
     if(viewerList[i] && viewerList[i].user.equals(userId)){
-      viewerList.splice(i, 1);
-      return;
+      return viewerList.splice(i, 1)[0];
     }
   }
+  return null;
 }

@@ -126,13 +126,13 @@ exports.removeCommentFromGame = function(gameId, commentId, userId, callback){
 exports.isUserRegisteredForGame = function(userId, game){
   for(var i = 0; i < game.seatCollection.length; i++){
     var seat = game.seatCollection[i];
-    if(seat.active && seat.user && seat.user._id && seat.user._id.equals(userId)){
+    if(seat.active && (seat.user._id || seat.user).equals(userId)){
       return true;
     }
   }
   for(var i = 0; i < game.waitListCollection.length; i++){
     var seat = game.waitListCollection[i];
-    if(seat.active && seat.user && seat.user._id && seat.user._id.equals(userId)){
+    if(seat.active && (seat.user._id || seat.user).equals(userId)){
       return true;
     }
   }
@@ -142,7 +142,7 @@ exports.isUserRegisteredForGame = function(userId, game){
 exports.isUserGameViewer = function(userId, game){
   for(var i = 0; i < game.viewerCollection.length; i++){
     var viewer = game.viewerCollection[i];
-    if(viewer && viewer.user && viewer.user._id.equals(userId)){
+    if((viewer.user._id || viewer.user).equals(userId)){
       return true;
     }
   }

@@ -25,9 +25,9 @@ block content
               span.game-grid-button
                 button.pure-button.button-small(href="#" ng-click="$parent.viewGame(game)") View 
               span.game-grid-button
-                button.pure-button.button-small.button-plain(href="#" ng-click="$parent.leaveGame(game)" ng-show="$parent.userIsViewer(game, #{JSON.stringify(user._id)})") Cancel    
+                button.pure-button.button-small.button-plain(href="#" ng-click="$parent.leaveGame(game)" ng-show="!$parent.userIsViewer(game, #{JSON.stringify(user._id)})") Cancel    
               span.game-grid-button
-                button.pure-button.button-small.button-success(href="#" ng-click="$parent.joinGame(game)" ng-show="!$parent.userIsViewer(game, #{JSON.stringify(user._id)})") Join                
+                button.pure-button.button-small.button-success(href="#" ng-click="$parent.joinGame(game)" ng-show="$parent.userIsViewer(game, #{JSON.stringify(user._id)})") Join                
           div.game-grid.empty-game-grid(ng-show="noPlayerGamesShowing()")
             div.game-grid-subhead You have no&nbsp;
               span(ng-show="!pastGamesVisible") upcoming
@@ -59,7 +59,7 @@ block content
                 a(href="#", ng-click="showPastOwnedGames()") Show Past Games
             span(ng-show="pastOwnedGamesVisible")
                 a(href="#", ng-click="hidePastOwnedGames()") Hide Past Games
-        div.game-grid(ng-repeat="game in ownedGames | filter:ownedGameShouldBeShown | orderBy: orderByForOwnedGames()")
+        div.game-grid(ng-repeat="game in ownedGames | filter:ownedGameShouldBeShown")
           div.game-grid-subhead {{game.dateString}}&nbsp;|&nbsp;{{game.timeString}}
           div {{game.stakes}} {{game.gameType}} {{game.gameFormat}}
           div.info-body.multi-line {{game.filledSeats}} of {{game.seats}} Seats Filled

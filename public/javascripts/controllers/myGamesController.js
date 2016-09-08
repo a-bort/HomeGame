@@ -89,14 +89,10 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     return game.pastGame == $scope.pastOwnedGamesVisible;
   }
 
-  $scope.orderByForOwnedGame = function(){
-    return $scope.pastOwnedGamesVisible ? '-date' : 'date';
-  }
-
   $scope.userIsViewer = function(game, userId){
     for(var i = 0; i < game.viewerCollection.length; i++){
       var viewer = game.viewerCollection[i];
-      return viewer._id == userId;
+      return viewer.user == userId;
     }
     return false;
   }
