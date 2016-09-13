@@ -39,27 +39,30 @@ block content
             div
               label(for="notes") Notes
               textarea#notes(ng-model="dataModel.notes", style="width: 100%")
-            div
-              div
-                label.pure-checkbox(for="seatHost", ng-show="gameIsNew()")
-                  input#seatHost(type="checkbox", ng-model="seatHost")
-                  | &nbsp;Seat Me Automatically
         div.col-md-6
-          fieldset
+          fieldset(ng-show="gameIsNew()")
             legend Other Options
+            div
+              label.pure-checkbox(for="seatHost", ng-show="gameIsNew()")
+                input#seatHost(type="checkbox", ng-model="dataModel.seatHost")
+                | &nbsp;Seat Me Automatically
             div
               label.pure-checkbox(for="emailNotifications")
                 input#emailNotifications(type="checkbox", ng-model="dataModel.emailNotifications")
                 | &nbsp;Notify Me when Players Join/Leave the Game
             div
+              label.pure-checkbox(for="commentNotifications")
+                input#commentNotifications(type="checkbox", ng-model="dataModel.commentNotifications")
+                | &nbsp;Notify Me when Players comment
+            //div
               label.pure-checkbox(for="allowedGuests")
                 input#allowedGuests(type="checkbox", ng-model="guestsAllowed")
                 | &nbsp;Allow players to add guests
-            div.indented(ng-show="guestsAllowed")
+            //div.indented(ng-show="guestsAllowed")
               div.padded-input
                 label(for="guests") Allowed Guests (blank for no limit)
                 input#guests(type="number", ng-model="guestInput")
-            div
+            //div
               label.pure-checkbox(for="sendEmail", ng-show="gameIsNew()")
                   input#sendEmail(type="checkbox", ng-model="emailEnabled")
                   | &nbsp;Email Player Pool

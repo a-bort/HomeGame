@@ -5,7 +5,7 @@ var sendgrid = require('sendgrid')(config.emailUser, config.emailPass);
 
 var userRepo = require('../data/userRepository');
 
-exports.emailPlayerPool = function(user, gameId, subject, html, text, callback){
+/*exports.emailPlayerPool = function(user, gameId, subject, html, text, callback){
   html = setGameUrls(html, gameId);
   userRepo.getUserWithPlayerPool(user._id, function(err, user){
     if(err){
@@ -52,29 +52,33 @@ exports.notifyOwnerOnJoin = function(game, playerId){
       return name + " just joined your game (" + game.date + "). Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
     },
     function(){});
-}
+}*/
 
-exports.notifyPlayerOnJoin = function(game, recipientId, playerId){
+exports.notifyOnJoin = function(game, recipientId, playerId){
   if(!game || !recipientId){ return; }
   game = game.toJSON();
+  var recipientIsOwner = recipientId.equals(game.owner._id);
   sendPlayerNotificationEmail(recipientId, playerId, game.owner,
     function(playerName, ownerName){
-      return "Another player has joined "  + ownerName + "'s game";
+      var yourText = recipientIsOwner ? "your" : (ownerName + "'s");
+      return "Another player has joined "  + yourText + " game";
     },
     function(playerName, ownerName){
-      var str = playerName + " joined " + ownerName + "'s poker game! (" + game.dateString + ")";
+      var yourText = recipientIsOwner ? "your" : (ownerName + "'s");
+      var str = playerName + " joined " + yourText + " poker game! (" + game.dateString + ")";
       str += "<br><br>Currently <b>" + game.filledSeats + "/" + game.seats + "</b>&nbsp;seats are filled.";
       str += game.waitListCollection.length ? ("<br><br>" + game.waitListCollection.length + " players on the waitlist") : "";
       str += "<br><br><b><a href='" + config.baseUrl + game.joinGameUrl + "'>View Game Page</a></b>";
       return str;
     },
     function(playerName, ownerName){
-      return playerName + " just joined " + ownerName +"'s game (" + game.dateString + "). Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
+      var yourText = recipientIsOwner ? "your" : (ownerName + "'s");
+      return playerName + " just joined " + yourText + " game (" + game.dateString + "). Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
     },
     function(){});
 }
 
-exports.notifyPlayerOnThreshold = function(game, recipientId){
+/*exports.notifyPlayerOnThreshold = function(game, recipientId){
   if(!game || !recipientId){ return; }
   game = game.toJSON();
   sendNotificationEmail(recipientId, game.owner,
@@ -91,17 +95,19 @@ exports.notifyPlayerOnThreshold = function(game, recipientId){
       return name +"'s game on " + game.dateString + " is almost full. Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
     },
     function(){});
-}
+}*/
 
-exports.notifyPlayerOnComment = function(game, recipientId, playerId){
+exports.notifyOnComment = function(game, recipientId, playerId){
   if(!game || !recipientId || !game.comments.length){ return; }
   game = game.toJSON();
+  var recipientIsOwner = recipientId.equals(game.owner._id);
   sendPlayerNotificationEmail(recipientId, playerId, game.owner,
     function(playerName, ownerName){
-      return playerName + " commented on "  + ownerName + "'s game";
+      var yourText = recipientIsOwner ? "your" : (ownerName + "'s");
+      return playerName + " commented on "  + yourText + " game";
     },
     function(playerName, ownerName){
-      var comment = game.comments[game.comments.length];
+      var comment = game.comments[game.comments.length - 1];
       var str = "On " + comment.dateString + ", " + playerName + " wrote:<br/><br/>"
       str += "\"" + comment.text + "\"" + "<br/><br/>";
       str += "See the rest of the conversation below<br/>";
@@ -109,25 +115,34 @@ exports.notifyPlayerOnComment = function(game, recipientId, playerId){
       return str;
     },
     function(playerName, ownerName){
-      return playerName + " just joined " + ownerName +"'s game (" + game.dateString + "). Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
+      var comment = game.comments[game.comments.length - 1];
+      var str = "On " + comment.dateString + ", " + playerName + " wrote: \"" + comment.text + "\"" + " See the rest of the conversation on the game page";
+      return str;
     },
     function(){});
 }
 
-exports.notifyOnCancel = function(game, playerId){
+exports.notifyOnCancel = function(game, recipientId, playerId, waitlistedId){
   game = game.toJSON();
-  sendNotificationEmail(game.owner, playerId,
-    function(name){
-      return name + " has left your game";
+  var recipientIsOwner = recipientId.equals(game.owner._id);
+  sendCancelNotificationEmail(recipientId, playerId, game.owner._id, waitlistedId,
+    function(playerName, ownerName, newlySeatedName){
+      var yourText = recipientIsOwner ? "your" : (ownerName + "'s");
+      return playerName + " has left " + yourText + " game";
     },
-    function(name){
-      var str = name + "&nbsp;cancelled their reservation for your poker game. (" + game.dateString + ")";
-      str = str + "<br><br>Currently <b>" + game.filledSeats + "/" + game.seats + "</b>&nbsp;seats are filled.";
-      str = str + "<br><br><b><a href='" + config.baseUrl + game.joinGameUrl + "'>View Game Page</a></b>";
+    function(playerName, ownerName, newlySeatedName){
+      var yourText = recipientIsOwner ? "your" : (ownerName + "'s");
+      var str = playerName + "&nbsp;cancelled their reservation for " + yourText + " poker game. (" + game.dateString + ")";
+      if(!!newlySeatedName){
+        str += "<br>" + newlySeatedName + " has been moved off the waitlist to take their place.";
+      }
+      str += "<br><br>Currently <b>" + game.filledSeats + "/" + game.seats + "</b>&nbsp;seats are filled.";
+      str += "<br><br><b><a href='" + config.baseUrl + game.joinGameUrl + "'>View Game Page</a></b>";
       return str;
     },
-    function(name){
-      return name + " just left your game on " + game.dateString + ". Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
+    function(playerName, ownerName, newlySeatedName){
+      var yourText = recipientIsOwner ? "your" : (ownerName + "'s");
+      return playerName + " just left " + yourText + " game on " + game.dateString + ". Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
     },
     function(){});
 }
@@ -205,8 +220,45 @@ var sendPlayerNotificationEmail = function(recipientId, playerId, ownerId, subje
   });
 }
 
-var extractText = function(input, playerName, ownerName){
-  return typeof input == "function" ? input(playerName, ownerName) : input;
+var sendCancelNotificationEmail = function(recipientId, playerId, ownerId, newlySeatedId, subject, html, text, callback){
+  if(!recipientId || !playerId) return;
+  userRepo.getUserWithPlayerPool(recipientId, function(err1, recipient){
+    if(err1){
+      callback(err);
+      return;
+    }
+    userRepo.getUserWithPlayerPool(playerId, function(err2, player){
+      if(err2){
+        callback(err2);
+        return;
+      }
+
+      userRepo.getUserWithPlayerPool(ownerId, function(err3, owner){
+        if(err3){
+          callback(err3);
+          return;
+        }
+
+        userRepo.getUserWithPlayerPool(newlySeatedId, function(err4, newlySeatedPlayer){
+          if(err4){
+            callback(err4);
+            return;
+          }
+
+          newlySeatedPlayer = newlySeatedPlayer || {};
+
+          var theSubject = extractText(subject, player.name, owner.name, newlySeatedPlayer.name);
+          var theHtml = extractText(html, player.name, owner.name, newlySeatedPlayer.name);
+          var theText = extractText(text, player.name, owner.name, newlySeatedPlayer.name);
+          exports.sendSingleEmail(recipient.email, theSubject, theHtml, theText, function(){});
+        });
+      });
+    });
+  });
+}
+
+var extractText = function(input, playerName, ownerName, newlySeatedPlayer){
+  return typeof input == "function" ? input(playerName, ownerName, newlySeatedPlayer) : input;
 }
 
 exports.sendSingleEmail = function(address, subject, html, text, callback){

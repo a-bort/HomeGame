@@ -10,7 +10,7 @@ exports.addUserToGameOwnerPlayerPool = function(game, userId, callback){
     return;
   }
 
-  var ownerId = game.owner;
+  var ownerId = game.owner._id;
 
   if(ownerId.equals(userId)){
     callback();

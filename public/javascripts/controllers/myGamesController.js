@@ -92,7 +92,9 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
   $scope.userIsViewer = function(game, userId){
     for(var i = 0; i < game.viewerCollection.length; i++){
       var viewer = game.viewerCollection[i];
-      return viewer.user == userId;
+      if(viewer.user == userId){
+        return true;
+      }
     }
     return false;
   }

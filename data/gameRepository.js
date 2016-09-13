@@ -3,14 +3,16 @@ var commentModel = require('../models/game').comment;
 var seatRepo = require('./seatRepository');
 var emailSender = require('../services/emailSender');
 
-exports.saveGame = function(gameObject, seatHost, userId, callback){
+exports.saveGame = function(gameObject, options, userId, callback){
   gameObject.owner = userId;
   var id = gameObject._id;
   delete gameObject._id;
   if(!id){
     var game = new gameModel(gameObject);
-    if(seatHost){
-      seatRepo.addSeatToGame(game, userId);
+    if(game.seatHost){
+      seatRepo.addSeatToGame(game, userId, "", null, game.emailNotifications, game.commentNotifications);
+    } else{
+      seatRepo.addViewer(game, userId, null, game.emailNotifications, game.commentNotifications);
     }
     game.save(function(err, obj){
       if(err){
@@ -94,7 +96,20 @@ exports.addCommentToGame = function(gameId, userId, comment, callback){
       text: comment
     }));
 
-    game.save(callback);
+    game.save(function(err){
+      if(err){
+        console.log("Error saving game after comment: " + err);
+        callback(err);
+        return;
+      }
+
+      seatRepo.iterateOverAllSeats(game, function(seat){
+        if(seat.notifyOnComment && !seat.user._id.equals(userId)){
+          emailSender.notifyOnComment(game, seat.user._id, userId);
+        }
+      });
+      callback();
+    });
   });
 }
 
@@ -149,6 +164,22 @@ exports.isUserGameViewer = function(userId, game){
   return false;
 }
 
+exports.addUserToGame = function(gameId, userId, name, ownerAdded, callback){
+  exports.getGameById(gameId, function(err, game){
+    if(err){
+      console.log(err);
+      callback(err);
+      return;
+    }
+    else if(!game){
+        callback("No game found");
+        return;
+    }
+
+    seatRepo.seatUserInGame(game, userId, name, ownerAdded, callback);
+  });
+}
+
 exports.leaveGame = function(gameId, userId, callback){
   exports.getGameById(gameId, function(err, game){
     if(err){
@@ -156,20 +187,7 @@ exports.leaveGame = function(gameId, userId, callback){
       callback(err);
       return;
     }
-
-    var afterLeaveCallback = function(err){
-      if(err){
-        console.log(err);
-        callback(err);
-      } else{
-        if(game.emailNotifications && !game.owner._id.equals(userId)){
-          emailSender.notifyOnCancel(game, userId);
-        }
-        callback();
-      }
-    };
-
-    seatRepo.removePlayerFromGame(game, userId, true, afterLeaveCallback)
+    seatRepo.removePlayerFromGame(game, userId, true, callback)
   });
 }
 

@@ -186,7 +186,7 @@ module.exports = function(app, passport) {
 
     app.post('/join', isLoggedIn, authorization.userAuthorizedForGame, function(req, res){
       var gameId = req.body.gameId;
-      seatRepo.seatUserInGame(gameId, req.user._id, null, false, function(err){
+      gameRepo.addUserToGame(gameId, req.user._id, null, false, function(err){
         defaultJson(res, err);
       });
     });
@@ -320,14 +320,8 @@ module.exports = function(app, passport) {
     app.post('/host/saveGame', isLoggedIn, function(req, res){
       var dataModel = req.body.dataModel;
       var extraOptions = req.body.extraOptions || {};
-      gameRepo.saveGame(dataModel, extraOptions.seatHost, req.user._id, function(err, gameId){
-        if(extraOptions.emailEnabled){
-          emailSender.emailPlayerPool(req.user, gameId, extraOptions.subject, extraOptions.html, "", function(err){
-            defaultJson(res, err);
-          });
-        } else{
-          defaultJson(res, err);
-        }
+      gameRepo.saveGame(dataModel, extraOptions, req.user._id, function(err, gameId){
+        defaultJson(res, err);
       });
     });
 

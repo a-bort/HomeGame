@@ -10,11 +10,12 @@ homeGameApp.controller('HostGameController', function($scope, $http, $location){
     date: '',
     time: '',
     notes: '',
-    emailNotifications: '',
+    seatHost: true,
+    emailNotifications: true,
+    commentNotifications: false,
     allowedGuests: ''
   };
 
-  $scope.seatHost = true;
   $scope.emailEnabled = false;
   $scope.guestsAllowed = false;
   $scope.guestInput = null;
@@ -102,8 +103,6 @@ homeGameApp.controller('HostGameController', function($scope, $http, $location){
     }
 
     var extraOptions = {
-      seatHost: $scope.seatHost,
-      emailEnabled: $scope.emailEnabled,
       subject: $scope.subject,
       html: $scope.html
     };
