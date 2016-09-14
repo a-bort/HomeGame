@@ -141,13 +141,13 @@ exports.removeCommentFromGame = function(gameId, commentId, userId, callback){
 exports.isUserRegisteredForGame = function(userId, game){
   for(var i = 0; i < game.seatCollection.length; i++){
     var seat = game.seatCollection[i];
-    if(seat.active && (seat.user._id || seat.user).equals(userId)){
+    if(seat.active && seat.user && (seat.user._id || seat.user).equals(userId)){
       return true;
     }
   }
   for(var i = 0; i < game.waitListCollection.length; i++){
     var seat = game.waitListCollection[i];
-    if(seat.active && (seat.user._id || seat.user).equals(userId)){
+    if(seat.active && seat.user && (seat.user._id || seat.user).equals(userId)){
       return true;
     }
   }

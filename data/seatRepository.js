@@ -25,7 +25,8 @@ exports.configureSeatsAfterCancellation = function(game){
 function getSeatCount(game){
   var count = 0;
   for(var i = 0; i < game.seatCollection.length; i++){
-    if(game.seatCollection[i].active && game.seatCollection[i].user){
+    var seat = game.seatCollection[i];
+    if(seat.active && (seat.user || seat.name)){
       count++;
     }
   }
@@ -72,7 +73,7 @@ exports.removePlayerFromGame = function(game, userId, addToViewers, callback){
 function notifyPlayers(joined, game, playerId, waitlistPlayerId){
   exports.iterateOverAllSeats(game, function(seat){
     //Only notify players who have the join/leave notifications enabled
-    if(seat.notifyOnJoin){
+    if(seat.notifyOnJoin && seat.user){
       var recipientId = seat.user._id;
       //If someone just joined, and this seat isn't them, tell them about it
       if(joined && !recipientId.equals(playerId)){
@@ -228,6 +229,8 @@ exports.addUserToViewerListByGame = function(game, userId, callback){
 exports.addViewer = function(game, userId, seat, notifyOnJoin, notifyOnComment){
   var viewerList = game.viewerCollection;
 
+  if(!userId) return false;
+
   for(var i = 0; i < viewerList.length; i++){
     var viewer = viewerList[i];
     if(viewer && viewer.user && viewer.user._id.equals(userId)){
@@ -248,7 +251,8 @@ exports.removePlayerFromViewers = function(game, userId){
   var viewerList = game.viewerCollection;
 
   for(var i = 0; i < viewerList.length; i++){
-    if(viewerList[i] && viewerList[i].user._id.equals(userId)){
+    var viewer = viewerList[i];
+    if(viewer && viewer.user && viewer.user._id.equals(userId)){
       return viewerList.splice(i, 1)[0];
     }
   }

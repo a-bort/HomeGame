@@ -1,14 +1,15 @@
 homeGameApp.controller('AboutController', function($scope, $http, $location){
 
-    $scope.features = [
-      {title: 'Email notifications when game is almost full, for players who haven\'t joined the game', description: ''},
-      {title: 'Feel free to suggest a new feature in the Feedback section', description: ''}
+    $scope.releases = [
+      {title: 'Seating update', date: "September 14, 2016",
+        features: ["Viewing a game adds it to your list of games",
+                   "Users no longer have to join a game to view/add comments",
+                   "Notifications for comments"]}
     ];
 
-    $scope.issues = [
-      {title: 'Occasional game page issues when changing the # of seats in a game', description: ''},
-      {title: 'Please report issues in the Feedback section', description: ''}
-    ];
+    $scope.plannedFeatures = ["Configure games to allow guests to add a +1 (or a +2, +3, etc)", "Automatic day-of notifications"];
+
+    $scope.issues = ["Please report issues in the Feedback section"];
 
     $scope.feedback = "";
 

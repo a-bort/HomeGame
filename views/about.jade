@@ -13,15 +13,24 @@ block content
         br
         br
         | Want to invite a friend to a game you're attending? No problem! Anybody can share a game link with anybody else. However, the game owner is able to remove/block users from their game, if they so choose.
+      h2.content-head Updates
+      div.features-content
+        ul
+          li(ng-repeat="release in releases") 
+            h4 {{release.date}} - {{release.title}}
+            ul
+              li(ng-repeat="feature in release.features") {{feature}}
+          li
+            h4 Feel free to suggest a new feature in the Feedback section
+    div.col-md-6
       h2.content-head Planned Features
       div.features-content
         ul
-          li(ng-repeat="feature in features") {{feature.title}}
-    div.col-md-6
+          li(ng-repeat="feature in plannedFeatures") {{feature}}
       h2.content-head Known Issues
       div.features-content
         ul
-          li(ng-repeat="issue in issues") {{issue.title}}
+          li(ng-repeat="issue in issues") {{issue}}
       h2.content-head Feedback?
       div.features-content
         textarea.feedback-area(ng-model="feedback")
