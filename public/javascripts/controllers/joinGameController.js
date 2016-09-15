@@ -269,6 +269,7 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
           util.alert('Error setting notification status');
           return;
         }
+        util.alert("Notification setting saved");
       }).error(function(err){
         util.log(err);
         util.alert('Error setting notification status');
