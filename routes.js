@@ -203,7 +203,7 @@ module.exports = function(app, passport) {
       var userId = req.body.userId;
       var name = req.body.name;
 
-      seatRepo.seatUserInGame(gameId, userId, name, true, function(err){
+      gameRepo.addUserToGame(gameId, userId, name, true, function(err){
         defaultJson(res, err);
       })
     });
