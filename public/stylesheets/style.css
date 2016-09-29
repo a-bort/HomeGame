@@ -132,6 +132,13 @@ a.pure-button-primary {
     font-size: 125%;
 }
 
+.button-showcomment {
+  background: #f5f5f5;
+  border: none;
+  width: 100%;
+  height: 50px;
+}
+
 /* TA Text Editor Styles */
 
 .ta-toolbar {
@@ -184,6 +191,14 @@ input[type=date]::-webkit-inner-spin-button {
 
 .push-md {
   margin-bottom: 10px;
+}
+
+.pad-sm {
+  padding-bottom: 5px;
+}
+
+.pad-md {
+  padding-bottom: 10px;
 }
 
 .drop-sm {

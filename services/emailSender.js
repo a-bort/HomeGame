@@ -104,7 +104,7 @@ exports.notifyOnComment = function(game, recipientId, playerId){
   sendPlayerNotificationEmail(recipientId, playerId, game.owner,
     function(playerName, ownerName){
       var yourText = recipientIsOwner ? "your" : (ownerName + "'s");
-      return playerName + " commented on "  + yourText + " game";
+      return "Someone commented on "  + yourText + " game [" + game.dateString + "]";
     },
     function(playerName, ownerName){
       var comment = game.comments[game.comments.length - 1];

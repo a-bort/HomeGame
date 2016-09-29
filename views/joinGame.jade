@@ -45,7 +45,10 @@ block content
                       span(ng-show="commentPosting") Posting
                 hr(ng-show="activeGame.comments.length > 0")
                 table.user-table
-                  tr(ng-repeat="comment in activeGame.comments")
+                  tr.is-center(ng-show="moreCommentsToShow()")
+                    td.pad-md(colspan="3")
+                      button.button-showcomment(ng-click="showAllComments()") View All Comments
+                  tr(ng-repeat="comment in visibleComments()")
                     td.roster-image.push-md
                       img(ng-src="{{comment.user.imageUrl}}")
                     td

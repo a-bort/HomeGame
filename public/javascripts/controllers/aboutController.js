@@ -1,6 +1,9 @@
 homeGameApp.controller('AboutController', function($scope, $http, $location){
 
     $scope.releases = [
+      {title: 'Comment tweaks', date: "September 29, 2016",
+        features: ["On a game page, the default number of comments shown limited to 8, with an option of showing all"
+        , "Comment notification emails have the same subject per game, so they stack in your inbox"]},
       {title: 'Seating update', date: "September 14, 2016",
         features: ["Viewing a game adds it to your list of games",
                    "Users no longer have to join a game to view/add comments",

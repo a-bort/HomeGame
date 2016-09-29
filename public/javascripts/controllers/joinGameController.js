@@ -79,6 +79,32 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       return false;
     };
 
+    var commentLimit = 8;
+
+    $scope.allCommentsVisible = false;
+    $scope.showAllComments = function(){
+      $scope.allCommentsVisible = true;
+    }
+
+    $scope.moreCommentsToShow = function(){
+      if(!$scope.activeGame){
+        return false;
+      }
+
+      return !$scope.allCommentsVisible && $scope.activeGame.comments.length > commentLimit;
+    }
+
+    $scope.visibleComments = function(){
+      if(!$scope.activeGame){
+        return [];
+      }
+      if($scope.allCommentsVisible || !$scope.moreCommentsToShow()){
+        return $scope.activeGame.comments;
+      }
+      var len = $scope.activeGame.comments.length;
+      return $scope.activeGame.comments.slice(len - commentLimit, len);
+    };
+
     $scope.join = function(){
       if(!$scope.activeGame){
         return;
