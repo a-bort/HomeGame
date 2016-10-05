@@ -51,7 +51,7 @@ block content
                   tr(ng-repeat="comment in visibleComments()")
                     td.roster-image.push-md
                       img(ng-src="{{comment.user.imageUrl}}")
-                    td
+                    td.comment-box
                       div.small-text.grey-text(style="line-height: 14px;") {{comment.user.displayName}} - {{comment.dateString}}
                       div {{comment.text}}
                     td

@@ -636,6 +636,10 @@ input[type=date]::-webkit-inner-spin-button {
   padding-right: 10px;
 }
 
+.comment-box{
+  word-break: break-all;
+}
+
 .header-button {
   -webkit-margin-before: 1em;
   -webkit-margin-after: 1em;
