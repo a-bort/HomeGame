@@ -636,8 +636,18 @@ input[type=date]::-webkit-inner-spin-button {
   padding-right: 10px;
 }
 
+.comment-row{
+  padding-bottom: 5px;
+}
+
 .comment-box{
   word-break: break-word;
+  vertical-align: top;
+  padding-bottom: 10px;
+}
+
+.comment-text{
+  white-space: pre-line;
 }
 
 .header-button {
@@ -717,7 +727,7 @@ input[type=date]::-webkit-inner-spin-button {
 }
 
 .user-table tr td:nth-child(2) {
-  width: 80%;
+
 }
 
 .user-table tr td:nth-child(3) {

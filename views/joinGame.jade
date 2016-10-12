@@ -48,12 +48,12 @@ block content
                   tr.is-center(ng-show="moreCommentsToShow()")
                     td.pad-md(colspan="3")
                       button.button-showcomment(ng-click="showAllComments()") View All Comments
-                  tr(ng-repeat="comment in visibleComments()")
+                  tr.comment-row(ng-repeat="comment in visibleComments()")
                     td.roster-image.push-md
                       img(ng-src="{{comment.user.imageUrl}}")
                     td.comment-box
                       div.small-text.grey-text(style="line-height: 14px;") {{comment.user.displayName}} - {{comment.dateString}}
-                      div {{comment.text}}
+                      div.comment-text {{comment.text}}
                     td
                       button.pure-button.button-plain.button-xsmall(ng-show="comment.user._id == currentUser._id", ng-click="deleteComment(comment._id)") X
             div.col-md-6
