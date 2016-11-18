@@ -67,9 +67,11 @@ block content
             span.game-grid-button
               button.pure-button.button-small(ng-click="$parent.editGame(game)") Edit Game Info
             span.game-grid-button
-              button.pure-button.button-small(ng-click="$parent.copyUrl(game)") Copy Game URL
+              button.pure-button.button-small(ng-click="$parent.copyViewGameUrl(game)") Copy "View Game" URL
             span.game-grid-button
-              button.pure-button.button-small(ng-click="$parent.viewGame(game)") View Game Page
+              button.pure-button.button-small(ng-click="$parent.copyJoinGameUrl(game)") Copy "Join Game" URL
+            span.game-grid-button
+              button.pure-button.button-small(ng-click="$parent.viewGame(game)") View
         div.game-grid.empty-game-grid(ng-show="noOwnedGamesShowing()")
             div.game-grid-subhead You&nbsp;
               span(ng-show="!pastOwnedGamesVisible") are not hosting

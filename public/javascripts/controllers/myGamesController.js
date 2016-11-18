@@ -67,11 +67,14 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     var delim = "&nbsp;<b>&sect</b>&nbsp";
     var text = game.filledSeats + " of " + game.seats + " Seats Filled" + delim;
     if(game.emptySeats == 0 && !game.pastGame){
-      text += "Waitlist Available!" + delim;
+      text += "Waitlist Available! (" + (game.waitListCollection ? game.waitListCollection.length : "0") + " waiting)";
     } else{
-      text += game.emptySeats + " Seats Left" + delim;
+      text += game.emptySeats + " Seats Left";
     }
-    text += game.notes;
+    if(game.notes){
+      text += delim;
+      text += game.notes;
+    }
     return text;
   }
 
@@ -132,7 +135,11 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     window.location = game.joinGameUrl;
   }
 
-  $scope.copyUrl = function(game){
+  $scope.copyViewGameUrl = function(game){
+    window.prompt("Copy to clipboard: Ctrl+C, Enter", util.urlBase() + game.joinGameUrl);
+  }
+
+  $scope.copyJoinGameUrl = function(game){
     window.prompt("Copy to clipboard: Ctrl+C, Enter", util.urlBase() + game.joinGameUrl + '?autoJoin=true');
   }
 
