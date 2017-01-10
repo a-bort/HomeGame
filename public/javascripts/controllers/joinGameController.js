@@ -8,6 +8,8 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
     $scope.commentText = "";
     $scope.tempPlayerText = "";
 
+    $scope.editing = false;
+
     $scope.emptySeats = function(){
       return $scope.activeGame && $scope.activeGame.emptySeats > 0;
     };

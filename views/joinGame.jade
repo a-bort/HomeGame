@@ -19,7 +19,7 @@ block content
                   | {{activeGame.location}}
                 div.info-body.multi-line {{activeGame.notes}}
                 div(ng-show="!activeGame.pastGame")
-                  button.pure-button.pure-button-primary.push-sm#join-button(ng-click="join()" ng-disabled="userAttending") {{joinButtonText()}}
+                  button.pure-button.push-sm#join-button(ng-click="join()" ng-disabled="userAttending" ng-class="{ 'button-success' : userAttending, 'pure-button-primary' : !userAttending }") {{joinButtonText()}}
                   button.pure-button.pure-button-primary#cancel-button(ng-click="cancel()" ng-show="userAttending") Cancel Reservation
                 div(ng-show="activeGame.pastGame")
                   button.pure-button.button-error(disabled="true") Registration Closed
@@ -58,13 +58,17 @@ block content
                       button.pure-button.button-plain.button-xsmall.left-sm(ng-show="comment.user._id == currentUser._id", ng-click="deleteComment(comment._id)") X
             div.col-md-6
               div.game-grid
-                div.game-grid-subhead.push-md Current Roster ({{activeGame.emptySeats}}&nbsp;/&nbsp;{{activeGame.seats}} Seats Remaining)
+                div.game-grid-subhead.push-md.row
+                  div.col-xs-9 Current Roster ({{activeGame.emptySeats}}&nbsp;/&nbsp;{{activeGame.seats}} Seats Remaining)
+                  div.col-xs-3 
+                    button.pure-button.button-info.button-small.icon-button.pull-right(ng-show="currentUserIsOwner && !activeGame.pastGame" ng-click="editRoster()" style="display: none") //ITS HERE
+                      span.glyphicon.glyphicon-pencil
                 table.user-table
                   tr(ng-repeat="seat in activeGame.seatCollection | filter:filledSeatFilter")
                     td.roster-image.push-md
                       img(ng-src="{{seat.user.imageUrl || '/images/anon-user.png'}}")
                     td {{seat.user.displayName || seat.name}}
-                    td
+                    td.pad-left-md
                       button.pure-button.button-error.button-xsmall(ng-hide="!currentUserIsOwner || activeGame.pastGame", ng-click="kick(seat.user._id)") X
               div.game-grid(ng-hide="emptySeats()")
                 div.game-grid-subhead.push-md Waitlist
@@ -74,24 +78,24 @@ block content
                     td.roster-image.push-md
                       img(ng-src="{{seat.user.imageUrl || '/images/anon-user.png'}}")
                     td {{seat.user.displayName || seat.name}}
-                    td
-                      button.pure-button.button-error.button-xsmall(ng-hide="!currentUserIsOwner || activeGame.pastGame", ng-click="kick(seat.user._id)") X
-              div.game-grid(ng-show="currentUserIsOwner")
+                    td.pad-left-md
+                      button.pure-button.button-error.button-small.icon-button(ng-hide="!currentUserIsOwner || activeGame.pastGame", ng-click="kick(seat.user._id)") X
+              div.game-grid(ng-show="currentUserIsOwner && !activeGame.pastGame")
                 div.game-grid-subhead.push-md Add Players
                 table.user-table
                   tr(ng-repeat="player in currentUser.playerPool | filter:addablePlayer")
                     td.roster-image.push-md
                       img(ng-src="{{player.user.imageUrl}}")
                     td {{player.user.displayName}}
-                    td
-                      button.pure-button.button-success.button-xsmall(ng-click="add(player.user._id)", style="padding-bottom: 8px;")
+                    td.pad-left-md
+                      button.pure-button.button-success.button-small.icon-button(ng-click="add(player.user._id)", style="padding-bottom: 8px;")
                         span.glyphicon.glyphicon-plus
                   tr
                     td.roster-image.push-md
                       img(src="/images/anon-user.png")
                     td
                       input(type="text", placeholder="Player Name", ng-model="tempPlayerText")
-                    td
-                      button.pure-button.button-success.button-xsmall(ng-click="add(null, tempPlayerText)", style="padding-bottom: 8px;")
+                    td.pad-left-md
+                      button.pure-button.button-success.button-small.icon-button(ng-click="add(null, tempPlayerText)", style="padding-bottom: 8px;")
                         span.glyphicon.glyphicon-plus
                   
