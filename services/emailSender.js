@@ -122,7 +122,7 @@ exports.notifyOnComment = function(game, recipientId, playerId){
     function(){});
 }
 
-exports.notifyOnCancel = function(game, recipientId, playerId, waitlistedId){
+exports.notifyOnCancel = function(game, recipientId, playerId, waitlistSeat){
   game = game.toJSON();
   var recipientIsOwner = recipientId.equals(game.owner._id);
   sendCancelNotificationEmail(recipientId, playerId, game.owner._id, waitlistedId,

@@ -34,6 +34,30 @@ exports.saveGame = function(gameObject, options, userId, callback){
   }
 }
 
+exports.cleanSave = function(gameObject, callback){
+  var id = gameObject._id;
+  delete gameObject._id;
+  if(!id){
+    var game = new gameModel(gameObject);
+    game.save(function(err, obj){
+      if(err){
+        console.log(err);
+      }
+
+      callback(err, obj._id);
+    });
+  } else {
+    gameModel.update(
+      {_id: id}, gameObject, {upsert: true}, function(err){
+        if(err){
+          console.log(err);
+        }
+        callback(err, id);
+      }
+    );
+  }
+}
+
 exports.getGameById = function(gameId, callback){
     gameModel.findOne({_id: gameId})
               .populate('owner')
@@ -191,7 +215,7 @@ exports.leaveGame = function(gameId, userId, callback){
   });
 }
 
-exports.kickPlayer = function(gameId, userIdToKick, userId, callback){
+exports.kickPlayer = function(gameId, seatId, userId, callback){
   exports.getGameById(gameId, function(err, game){
     if(err || !game){
       callback(err);

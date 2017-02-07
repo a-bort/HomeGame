@@ -70,7 +70,15 @@ exports.removePlayerFromGame = function(game, userId, addToViewers, callback){
   }
 }
 
-function notifyPlayers(joined, game, playerId, waitlistPlayerId){
+function notifyPlayersOnJoin(game, joinedSeat){
+
+}
+
+function notifyPlayersOnCancel(game, cancelledSeat, waitlistSeat){
+
+}
+
+function notifyPlayers(joined, game, playerId, waitlistSeat){
   exports.iterateOverAllSeats(game, function(seat){
     //Only notify players who have the join/leave notifications enabled
     if(seat.notifyOnJoin && seat.user){
@@ -150,20 +158,20 @@ exports.findSeatByUser = function(game, userId){
   return null;
 }
 
-function tryLeaveSeatCollection(game, userId, addToViewers, callback){
+function tryLeaveSeatCollection(game, seatId, addToViewers, callback){
   for(var i = 0; i < game.seatCollection.length; i++){
     var seat = game.seatCollection[i];
-    if(seat.user && seat.user._id.equals(userId)){
+    if(seat._id.equals(seatId)){
       game.seatCollection.splice(i, 1);
       var newlyMovedSeat = exports.configureSeatsAfterCancellation(game);
-      if(addToViewers){
+      if(addToViewers && seat.user){
         exports.addViewer(game, seat.user._id, seat);
       }
       game.save(function(err){
         if(err){
           console.log(err);
         }
-        notifyPlayers(false, game, userId, newlyMovedSeat ? newlyMovedSeat.user._id : null);
+        notifyPlayers(false, game, seat.user._id, newlyMovedSeat);
         callback(err);
       });
       return true;
@@ -172,10 +180,10 @@ function tryLeaveSeatCollection(game, userId, addToViewers, callback){
   return false;
 }
 
-function tryLeaveWaitListCollection(game, userId, addToViewers, callback){
+function tryLeaveWaitListCollection(game, seatId, addToViewers, callback){
   for(var i = 0; i < game.waitListCollection.length; i++){
     var seat = game.waitListCollection[i];
-    if(seat.user && seat.user._id.equals(userId)){
+    if(seat._id.equals(seatId)){
       game.waitListCollection.splice(i, 1);
       if(addToViewers){
         exports.addViewer(game, seat.user._id, seat);
@@ -237,12 +245,13 @@ exports.addViewer = function(game, userId, seat, notifyOnJoin, notifyOnComment){
       return false;
     }
   }
-
-  viewerList.push(seat ? seat : new seatModel({
+  seat = seat ? seat : new seatModel({
     user: userId,
     notifyOnJoin: !!notifyOnJoin,
     notifyOnComment: !!notifyOnComment
-  }));
+  });
+  seat.type = 'viewer';
+  viewerList.push();
 
   return true;
 }

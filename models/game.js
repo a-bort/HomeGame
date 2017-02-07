@@ -10,11 +10,14 @@ var schemaOptions = {
   }
 };
 
+exports.seatTypes = ['player', 'waitlist', 'viewer'];
+
 var seatSchema = new mongoose.Schema({
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     active: { type: Boolean, default: true }, //deprecated
     created: { type: Date, default: new Date()},
     name: { type: String },
+    type: { type: String, enum: exports.seatTypes},
     notifyOnJoin: { type: Boolean },
     notifyOnThreshold: { type: Boolean },
     notifyOnComment: { type: Boolean },
