@@ -131,11 +131,11 @@ module.exports = function(app, passport) {
     });
 
     app.post('/mygames/kick', isLoggedIn, function(req, res) {
-      if(!req.body.gameId || !req.body.userId){
+      if(!req.body.gameId || !req.body.seatId){
         defaultJson(res, "Missing parameters");
         return;
       }
-      gameRepo.kickPlayer(req.body.gameId, req.body.userId, req.user._id, function(err){
+      gameRepo.kickPlayer(req.body.gameId, req.body.seatId, req.user._id, function(err){
         defaultJson(res, err);
       });
     });
@@ -198,7 +198,7 @@ module.exports = function(app, passport) {
       });
     });
 
-    app.post('/join/add', isLoggedIn, function(req, res){
+    app.post('/join/add', isLoggedIn, authorization.userOwnsGame, function(req, res){
       var gameId = req.body.gameId;
       var userId = req.body.userId;
       var name = req.body.name;
