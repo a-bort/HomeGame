@@ -102,6 +102,22 @@ gameSchema.virtual('editGameUrl').get(function(){
   return "/host/" + this._id;
 });
 
+gameSchema.methods.userIsSeated = function(userId){
+  for(var i = 0; i < this.seatCollection.length; i++){
+    var seat = this.seatCollection[i];
+    if(seat.active && seat.user && (seat.user._id || seat.user).equals(userId)){
+      return true;
+    }
+  }
+  for(var i = 0; i < this.waitListCollection.length; i++){
+    var seat = this.waitListCollection[i];
+    if(seat.active && seat.user && (seat.user._id || seat.user).equals(userId)){
+      return true;
+    }
+  }
+  return false;
+};
+
 var game = mongoose.model('Game', gameSchema);
 var seat = mongoose.model('Seat', seatSchema);
 var comment = mongoose.model('Comment', commentSchema);

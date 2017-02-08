@@ -35,8 +35,8 @@ exports.saveGame = function(gameObject, options, userId, callback){
 }
 
 exports.cleanSave = function(gameObject, callback){
+  gameObject = gameObject.toObject();
   var id = gameObject._id;
-  delete gameObject._id;
   if(!id){
     var game = new gameModel(gameObject);
     game.save(function(err, obj){
@@ -47,6 +47,7 @@ exports.cleanSave = function(gameObject, callback){
       callback(err, obj._id);
     });
   } else {
+    delete gameObject._id;
     gameModel.update(
       {_id: id}, gameObject, {upsert: true}, function(err){
         if(err){

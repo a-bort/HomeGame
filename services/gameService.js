@@ -1,10 +1,48 @@
-var gameRepo = require('./data/gameRepository');
-var emailSender = require('../services/emailSender');
+var gameRepo = require('../data/gameRepository');
+var emailSender = require('./emailSender');
+
+//!SHOULD BE PLAYER POOL SERVICE!
+var playerPoolRepo = require('../data/playerPoolRepository');
+
+var seatModel = require('../models/game').seat;
 
 exports.userJoined = function(gameId, userId, callback){
   gameRepo.getGameById(gameId, function(err, game){
     if(err){
       callback(err); return;
+    }
+
+    if(!game.userIsSeated) console.log("userIsSeated not defined!");
+    if(game.userIsSeated(userId)){
+      callback("User already seated"); return;
+    }
+
+    var seat = extractViewerByUserId(game, userId);
+    if(seat == null){
+      seat = new seatModel({user: userId});
+    }
+
+    seat = addSeatToGame(game, seat);
+    gameRepo.cleanSave(game, function(err, gameId){
+      if(err){
+        callback(err); return;
+      }
+      //!!!!emailSender.notifyOnJoin
+      //send notification
+      playerPoolRepo.addUserToGameOwnerPlayerPool(game, userId, callback);
+    });
+  });
+}
+
+exports.ownerAdded = function(gameId, userId, name, callback){
+  gameRepo.getGameById(gameId, function(err, game){
+    if(err){
+      callback(err); return;
+    }
+
+    if(!game.userIsSeated) console.log("userIsSeated not defined!");
+    if(game.userIsSeated(userId)){
+      callback("User already seated"); return;
     }
 
     var seat = extractViewerByUserId(game, userId);
@@ -13,21 +51,28 @@ exports.userJoined = function(gameId, userId, callback){
     }
 
     seat = addSeatToGame(game, seat);
-    gameRepo.cleanSave(game, function(err, game){
+    gameRepo.cleanSave(game, function(err, gameId){
       if(err){
         callback(err); return;
       }
-      emailSender.notifyOnJoin
+      //!!!!emailSender.notifyOnJoin
       //send notification
+      callback();
     });
   });
 }
 
-exports.ownerAdded = function(gameId, userId, name){
+exports.userCancelled = function(seatId){
+
+}
+
+exports.ownerKicked = function(seatId){
 
 }
 
 function extractViewerByUserId(game, userId){
+  if(userId == null) return null;
+
   var idx = -1;
   for(var i = 0; i < game.viewerCollection.length; i++){
     var viewer = game.viewerCollection[i];
@@ -51,12 +96,4 @@ function addSeatToGame(game, seat){
     game.waitListCollection.push(seat);
   }
   return seat;
-}
-
-exports.userCancelled = function(seatId){
-
-}
-
-exports.ownerKicked = function(seatId){
-
 }

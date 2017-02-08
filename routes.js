@@ -9,6 +9,7 @@ module.exports = function(app, passport) {
   var redirector = require('./data/redirector');
   var authorization = require('./data/authorization');
 
+  var gameService = require('./services/gameService');
   var emailSender = require('./services/emailSender');
 
 
@@ -186,9 +187,18 @@ module.exports = function(app, passport) {
 
     app.post('/join', isLoggedIn, authorization.userAuthorizedForGame, function(req, res){
       var gameId = req.body.gameId;
-      gameRepo.addUserToGame(gameId, req.user._id, null, false, function(err){
+
+      if(!gameId){
+        defaultJson(res, "Missing input parameter");
+        return;
+      }
+
+      gameService.userJoined(gameId, req.user._id, function(err){
         defaultJson(res, err);
       });
+      // gameRepo.addUserToGame(gameId, req.user._id, null, false, function(err){
+      //   defaultJson(res, err);
+      // });
     });
 
     app.post('/join/view', isLoggedIn, authorization.userAuthorizedForGame, function(req, res){
@@ -203,9 +213,17 @@ module.exports = function(app, passport) {
       var userId = req.body.userId;
       var name = req.body.name;
 
-      gameRepo.addUserToGame(gameId, userId, name, true, function(err){
+      if(!gameId || (!userId && !name)){
+        defaultJson(res, "Missing input parameter");
+        return;
+      }
+
+      gameService.ownerAdded(gameId, userId, name, function(err){
         defaultJson(res, err);
-      })
+      });
+      // gameRepo.addUserToGame(gameId, userId, name, true, function(err){
+      //   defaultJson(res, err);
+      // })
     });
 
     function notification(propertyName){
