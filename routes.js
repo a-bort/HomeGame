@@ -121,12 +121,12 @@ module.exports = function(app, passport) {
     });
 
     app.post('/mygames/leave', isLoggedIn, function(req, res) {
-      if(!req.body.gameId){
+      if(!req.body.gameId || !req.body.seatId){
         defaultJson(res, "Missing parameters");
         return;
       }
 
-      gameRepo.leaveGame(req.body.gameId, req.user._id, function(err){
+      gameService.userCancelled(req.body.gameId, req.body.seatId, req.user._id, function(err){
         defaultJson(res, err);
       });
     });
@@ -147,39 +147,22 @@ module.exports = function(app, passport) {
 
     app.get('/join/:gameId', isLoggedIn, authorization.userAuthorizedForGame, function(req, res) {
       var autoJoin = !!req.query.autoJoin;
-      gameRepo.getGameById(req.params.gameId, function(err, game){
-        if(err || !game){
-          req.flash("error", "Error retrieving game");
+      gameService.viewingGame(req.params.gameId, req.user._id, function(err, game, fullUser){
+        if(err){
+          req.flash("error", err);
           redirector.defaultRedirect(res);
           return;
         }
-        userRepo.getUserWithPlayerPool(req.user._id, function(err2, fullUser){
-          if(err2 || !fullUser){
-            req.flash("error", "Error retrieving user details");
-            redirector.defaultRedirect(res);
-            return;
-          }
-          if(!gameRepo.isUserRegisteredForGame(req.user._id, game) && !gameRepo.isUserGameViewer(req.user._id, game)){
-            seatRepo.addUserToViewerListByGame(game, req.user._id, function(err){
-              renderJoinGame(req, res, game, fullUser, autoJoin);
-            });
-          } else{
-            renderJoinGame(req, res, game, fullUser, autoJoin);
-          }
-        })
+        res.render('joinGame', {
+            title: "Join a Game",
+            user : fullUser,
+            game : game,
+            autoJoin: autoJoin,
+            userAttending : game.userIsSeated(req.user._id),
+            userViewing: game.userIsViewer(req.user._id)
+        });
       });
     });
-
-    function renderJoinGame(req, res, game, fullUser, autoJoin){
-      res.render('joinGame', {
-          title: "Join a Game",
-          user : fullUser,
-          game : game,
-          autoJoin: autoJoin,
-          userAttending : gameRepo.isUserRegisteredForGame(req.user._id, game),
-          userViewing: gameRepo.isUserGameViewer(req.user._id, game)
-      });
-    }
 
     app.get('/join', isLoggedIn, function(req, res) {
       redirector.defaultRedirect(res);

@@ -247,11 +247,12 @@ exports.addViewer = function(game, userId, seat, notifyOnJoin, notifyOnComment){
   }
   seat = seat ? seat : new seatModel({
     user: userId,
+    type: 'viewer',
     notifyOnJoin: !!notifyOnJoin,
     notifyOnComment: !!notifyOnComment
   });
   seat.type = 'viewer';
-  viewerList.push();
+  viewerList.push(seat);
 
   return true;
 }

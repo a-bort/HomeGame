@@ -3,11 +3,13 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
   $scope.ownedGames = [];
   $scope.playerGames = [];
   $scope.waitlistedGames = [];
+  $scope.user = "";
 
-  $scope.initWithGames = function(ownedGames, playerGames, waitlistedGames){
+  $scope.initWithGames = function(ownedGames, playerGames, waitlistedGames, user){
     $scope.ownedGames = ownedGames;
     $scope.playerGames = playerGames;
     $scope.waitlistedGames = waitlistedGames;
+    $scope.user = user;
   }
 
   $scope.noOwnedGames = function(){
@@ -92,14 +94,31 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     return game.pastGame == $scope.pastOwnedGamesVisible;
   }
 
-  $scope.userIsViewer = function(game, userId){
+  $scope.userIsViewer = function(game){
     for(var i = 0; i < game.viewerCollection.length; i++){
       var viewer = game.viewerCollection[i];
-      if(viewer.user == userId){
+      if(viewer.user == $scope.user._id){
         return true;
       }
     }
     return false;
+  }
+
+  $scope.findSeatIdInGame = function(game){
+    var seatId;
+    for(var i = 0; i < game.seatCollection.length; i++){
+      var seat = game.seatCollection[i];
+      if(seat.user && seat.user == $scope.user._id){
+        return seat._id;
+      }
+    }
+    for(var i = 0; i < game.waitListCollection.length; i++){
+      var seat = game.waitListCollection[i];
+      if(seat.user && seat.user == $scope.user._id){
+        return seat._id;
+      }
+    }
+    return null;
   }
 
   $scope.viewGame = function(game){
@@ -109,14 +128,19 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
   $scope.leaveGame = function(game){
     var c = confirm("Do you want to cancel your reservation?");
     if(c){
-      $scope.sendLeaveRequest(game);
+      var seatId = $scope.findSeatIdInGame(game);
+      if(!seatId){
+        util.alert("Error leaving the game - looks like you aren't seated?");
+        return;
+      }
+      $scope.sendLeaveRequest(game, seatId);
     }
   }
 
   $scope.joinGame = function(game){
     $http.post('/join', {gameId: game._id}).success(function(data){
       if(data.error){
-        util.log(err);
+        util.log(data.error);
         util.alert('Error joining the game');
         return;
       }
@@ -154,10 +178,10 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     $scope.hostInfoVisible = true;
   }
 
-  $scope.sendLeaveRequest = function(game){
-    $http.post('/mygames/leave', {gameId: game._id}).success(function(data){
+  $scope.sendLeaveRequest = function(game, seatId){
+    $http.post('/mygames/leave', {gameId: game._id, seatId: seatId}).success(function(data){
       if(data.error){
-        util.log(err);
+        util.log(data.error);
         util.alert('Error leaving the game');
         return;
       }

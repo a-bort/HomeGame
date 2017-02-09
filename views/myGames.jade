@@ -2,7 +2,7 @@ extends layout
 
 block content
   script(type="text/javascript" src="/javascripts/controllers/myGamesController.js")
-  div(ng-controller="MyGamesController", ng-init="initWithGames(#{JSON.stringify(ownedGames)}, #{JSON.stringify(playerGames)}, #{JSON.stringify(waitlistedGames)})")
+  div(ng-controller="MyGamesController", ng-init="initWithGames(#{JSON.stringify(ownedGames)}, #{JSON.stringify(playerGames)}, #{JSON.stringify(waitlistedGames)}, #{JSON.stringify(user)})")
     div.row
       div.col-md-6
         div.game-list
@@ -25,9 +25,9 @@ block content
               span.game-grid-button
                 button.pure-button.button-small(href="#" ng-click="$parent.viewGame(game)") View 
               span.game-grid-button
-                button.pure-button.button-small.button-plain(href="#" ng-click="$parent.leaveGame(game)" ng-show="!$parent.userIsViewer(game, #{JSON.stringify(user._id)})") Cancel    
+                button.pure-button.button-small.button-plain(href="#" ng-click="$parent.leaveGame(game)" ng-show="!$parent.userIsViewer(game)") Cancel    
               span.game-grid-button
-                button.pure-button.button-small.button-success(href="#" ng-click="$parent.joinGame(game)" ng-show="$parent.userIsViewer(game, #{JSON.stringify(user._id)})") Join                
+                button.pure-button.button-small.button-success(href="#" ng-click="$parent.joinGame(game)" ng-show="$parent.userIsViewer(game)") Join                
           div.game-grid.empty-game-grid(ng-show="noPlayerGamesShowing()")
             div.game-grid-subhead You have no&nbsp;
               span(ng-show="!pastGamesVisible") upcoming

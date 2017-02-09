@@ -155,7 +155,7 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
         return;
       }
 
-      $http.post('/mygames/leave/', { gameId: $scope.activeGame._id }).success(function(data){
+      $http.post('/mygames/leave/', { gameId: $scope.activeGame._id, seatId: $scope.currentUserSeat._id }).success(function(data){
         if(data.error){
           util.log(data.error);
           util.alert('Error cancelling reservation');

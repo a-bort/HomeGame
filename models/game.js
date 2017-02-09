@@ -118,6 +118,83 @@ gameSchema.methods.userIsSeated = function(userId){
   return false;
 };
 
+gameSchema.methods.userIsViewer = function(userId){
+  for(var i = 0; i < this.viewerCollection.length; i++){
+    var viewer = this.viewerCollection[i];
+    if(viewer.user._id.equals(userId)){
+      return true;
+    }
+  }
+  return false;
+}
+
+gameSchema.methods.addViewer = function(userId, seat){
+  seat = seat ? seat : new exports.seat({
+    user: userId,
+    notifyOnJoin: false,
+    notifyOnComment: false
+  });
+  seat.type = 'viewer';
+  this.viewerCollection.push(seat);
+}
+
+gameSchema.methods.extractViewerByUserId = function(userId){
+  if(userId == null) return null;
+
+  var idx = -1;
+  for(var i = 0; i < this.viewerCollection.length; i++){
+    var viewer = this.viewerCollection[i];
+    if(viewer.user._id.equals(userId)){
+      idx = i;
+      break;
+    }
+  }
+  if(idx >= 0){
+    return this.viewerCollection.splice(idx, 1)[0];
+  }
+  return null;
+}
+
+gameSchema.methods.extractSeatById = function(seatId){
+  if(seatId == null) return null;
+
+  var idx = -1;
+  for(var i = 0; i < this.seatCollection.length; i++){
+    var seat = this.seatCollection[i];
+    if(seat._id.equals(seatId)){
+      idx = i;
+      break;
+    }
+  }
+  if(idx >= 0){
+    return this.seatCollection.splice(idx, 1)[0];
+  }
+
+  for(var i = 0; i < this.waitListCollection.length; i++){
+    var seat = this.waitListCollection[i];
+    if(seat._id.equals(seatId)){
+      idx = i;
+      break;
+    }
+  }
+  if(idx >= 0){
+    return this.waitListCollection.splice(idx, 1)[0];
+  }
+
+  return null;
+};
+
+gameSchema.methods.configureSeatsAfterCancellation = function(){
+  if(this.emptySeats && this.waitListCollection.length > 0){
+    for(var i = 0; i < this.emptySeats; i++){
+      var seat = this.waitListCollection.splice(0, 1)[0];
+      this.seatCollection.push(seat);
+      return seat;
+    }
+  }
+  return null;
+}
+
 var game = mongoose.model('Game', gameSchema);
 var seat = mongoose.model('Seat', seatSchema);
 var comment = mongoose.model('Comment', commentSchema);
