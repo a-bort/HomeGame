@@ -108,8 +108,28 @@ exports.userCancelled = function(gameId, seatId, userId, callback){
   })
 }
 
-exports.ownerKicked = function(seatId){
+exports.ownerKicked = function(gameId, seatId, userId, callback){
+  gameRepo.getGameById(gameId, function(err, game){
+    if(err){
+      callback(err); return;
+    }
 
+    var seat = game.extractSeatById(seatId);
+    if(seat == null){
+      callback("No seat found for passed ID"); return;
+    } else if(!game.owner._id.equals(userId)){
+      callback("Not authorized"); return;
+    }
+
+    var newlyMovedSeat = game.configureSeatsAfterCancellation(seat);
+    gameRepo.cleanSave(game, function(err, gameId){
+      if(err){
+        callback(err); return;
+      }
+      //send email!!!!
+      callback();
+    });
+  })
 }
 
 //ADD TO GAME MODEL IN A SMART WAY

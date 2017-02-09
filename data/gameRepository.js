@@ -163,59 +163,6 @@ exports.removeCommentFromGame = function(gameId, commentId, userId, callback){
   });
 }
 
-exports.isUserRegisteredForGame = function(userId, game){
-  for(var i = 0; i < game.seatCollection.length; i++){
-    var seat = game.seatCollection[i];
-    if(seat.active && seat.user && (seat.user._id || seat.user).equals(userId)){
-      return true;
-    }
-  }
-  for(var i = 0; i < game.waitListCollection.length; i++){
-    var seat = game.waitListCollection[i];
-    if(seat.active && seat.user && (seat.user._id || seat.user).equals(userId)){
-      return true;
-    }
-  }
-  return false;
-}
-
-exports.isUserGameViewer = function(userId, game){
-  for(var i = 0; i < game.viewerCollection.length; i++){
-    var viewer = game.viewerCollection[i];
-    if((viewer.user._id || viewer.user).equals(userId)){
-      return true;
-    }
-  }
-  return false;
-}
-
-exports.addUserToGame = function(gameId, userId, name, ownerAdded, callback){
-  exports.getGameById(gameId, function(err, game){
-    if(err){
-      console.log(err);
-      callback(err);
-      return;
-    }
-    else if(!game){
-        callback("No game found");
-        return;
-    }
-
-    seatRepo.seatUserInGame(game, userId, name, ownerAdded, callback);
-  });
-}
-
-exports.leaveGame = function(gameId, userId, callback){
-  exports.getGameById(gameId, function(err, game){
-    if(err){
-      console.log(err);
-      callback(err);
-      return;
-    }
-    seatRepo.removePlayerFromGame(game, userId, true, callback)
-  });
-}
-
 exports.kickPlayer = function(gameId, seatId, userId, callback){
   exports.getGameById(gameId, function(err, game){
     if(err || !game){

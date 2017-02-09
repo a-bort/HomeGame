@@ -136,7 +136,7 @@ module.exports = function(app, passport) {
         defaultJson(res, "Missing parameters");
         return;
       }
-      gameRepo.kickPlayer(req.body.gameId, req.body.seatId, req.user._id, function(err){
+      gameService.ownerKicked(req.body.gameId, req.body.seatId, req.user._id, function(err){
         defaultJson(res, err);
       });
     });
@@ -179,9 +179,6 @@ module.exports = function(app, passport) {
       gameService.userJoined(gameId, req.user._id, function(err){
         defaultJson(res, err);
       });
-      // gameRepo.addUserToGame(gameId, req.user._id, null, false, function(err){
-      //   defaultJson(res, err);
-      // });
     });
 
     app.post('/join/view', isLoggedIn, authorization.userAuthorizedForGame, function(req, res){
@@ -204,9 +201,6 @@ module.exports = function(app, passport) {
       gameService.ownerAdded(gameId, userId, name, function(err){
         defaultJson(res, err);
       });
-      // gameRepo.addUserToGame(gameId, userId, name, true, function(err){
-      //   defaultJson(res, err);
-      // })
     });
 
     function notification(propertyName){

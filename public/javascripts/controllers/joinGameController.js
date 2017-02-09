@@ -67,6 +67,13 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
         }
       }
 
+      for(var i = 0; i < $scope.activeGame.waitListCollection.length; i++){
+        var seat = $scope.activeGame.waitListCollection[i];
+        if(seat.user && seat.user._id == player.user._id){
+          return false;
+        }
+      }
+
       return true;
     };
 
@@ -202,12 +209,12 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       }
     };
 
-    $scope.sendKickRequest = function(userId){
+    $scope.sendKickRequest = function(seatId){
       if(!$scope.activeGame){
         return;
       }
 
-      $http.post('/mygames/kick', {gameId: $scope.activeGame._id, userId: userId}).success(function(data){
+      $http.post('/mygames/kick', {gameId: $scope.activeGame._id, seatId: seatId}).success(function(data){
         if(data.error){
           util.log(data.error);
           util.alert('Error kicking player');

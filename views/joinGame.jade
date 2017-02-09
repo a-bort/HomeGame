@@ -69,7 +69,7 @@ block content
                       img(ng-src="{{seat.user.imageUrl || '/images/anon-user.png'}}")
                     td {{seat.user.displayName || seat.name}}
                     td.pad-left-md
-                      button.pure-button.button-error.button-xsmall(ng-hide="!currentUserIsOwner || activeGame.pastGame", ng-click="kick(seat.user._id)") X
+                      button.pure-button.button-error.button-xsmall(ng-hide="!currentUserIsOwner || activeGame.pastGame", ng-click="kick(seat._id)") X
               div.game-grid(ng-hide="emptySeats()")
                 div.game-grid-subhead.push-md Waitlist
                 div(ng-show="activeGame.waitListCollection.length == 0") The waitlist is empty
@@ -79,7 +79,7 @@ block content
                       img(ng-src="{{seat.user.imageUrl || '/images/anon-user.png'}}")
                     td {{seat.user.displayName || seat.name}}
                     td.pad-left-md
-                      button.pure-button.button-error.button-small.icon-button(ng-hide="!currentUserIsOwner || activeGame.pastGame", ng-click="kick(seat.user._id)") X
+                      button.pure-button.button-error.button-small.icon-button(ng-hide="!currentUserIsOwner || activeGame.pastGame", ng-click="kick(seat._id)") X
               div.game-grid(ng-show="currentUserIsOwner && !activeGame.pastGame")
                 div.game-grid-subhead.push-md Add Players
                 table.user-table
