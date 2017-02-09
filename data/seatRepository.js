@@ -43,41 +43,6 @@ exports.seatPlayerFromWaitlist = function(game){
   //});
 }
 
-exports.seatUserInGame = function(game, userId, name, ownerAdded, callback){
-    var viewerSeat = exports.removePlayerFromViewers(game, userId);
-    if(game.emptySeats > 0){
-      exports.addSeatToGame(game, userId, name, viewerSeat);
-    } else{
-      addSeatToWaitList(game, userId, name, viewerSeat);
-    }
-
-    game.save(function(err){
-      if(err){
-        console.log("Error saving game");
-        console.log(err);
-        callback(err);
-      } else{
-        notifyPlayers(true, game, userId);
-        playerPoolRepo.addUserToGameOwnerPlayerPool(game, userId, callback);
-    }});
-}
-
-exports.removePlayerFromGame = function(game, userId, addToViewers, callback){
-  if(!tryLeaveSeatCollection(game, userId, addToViewers, callback)){
-    if(!tryLeaveWaitListCollection(game, userId, addToViewers, callback)){
-      callback("Couldn't find this player's seat");
-    }
-  }
-}
-
-function notifyPlayersOnJoin(game, joinedSeat){
-
-}
-
-function notifyPlayersOnCancel(game, cancelledSeat, waitlistSeat){
-
-}
-
 function notifyPlayers(joined, game, playerId, waitlistSeat){
   exports.iterateOverAllSeats(game, function(seat){
     //Only notify players who have the join/leave notifications enabled
@@ -103,20 +68,6 @@ exports.iterateOverAllSeats = function(game, eachFn){
   game.seatCollection.forEach(eachFn);
   game.waitListCollection.forEach(eachFn);
   game.viewerCollection.forEach(eachFn);
-}
-
-function addSeatToWaitList(game, userId, name, viewerSeat){
-  var model = {};
-  if(userId){
-    model.user = userId;
-  }
-  if(name){
-    model.name = name;
-  }
-
-  var seat = viewerSeat ? viewerSeat : new seatModel(model);
-
-  game.waitListCollection.push(seat);
 }
 
 function sortWaitList(game){
@@ -156,49 +107,6 @@ exports.findSeatByUser = function(game, userId){
     }
   }
   return null;
-}
-
-function tryLeaveSeatCollection(game, seatId, addToViewers, callback){
-  for(var i = 0; i < game.seatCollection.length; i++){
-    var seat = game.seatCollection[i];
-    if(seat._id.equals(seatId)){
-      game.seatCollection.splice(i, 1);
-      var newlyMovedSeat = exports.configureSeatsAfterCancellation(game);
-      if(addToViewers && seat.user){
-        exports.addViewer(game, seat.user._id, seat);
-      }
-      game.save(function(err){
-        if(err){
-          console.log(err);
-        }
-        notifyPlayers(false, game, seat.user._id, newlyMovedSeat);
-        callback(err);
-      });
-      return true;
-    }
-  }
-  return false;
-}
-
-function tryLeaveWaitListCollection(game, seatId, addToViewers, callback){
-  for(var i = 0; i < game.waitListCollection.length; i++){
-    var seat = game.waitListCollection[i];
-    if(seat._id.equals(seatId)){
-      game.waitListCollection.splice(i, 1);
-      if(addToViewers){
-        exports.addViewer(game, seat.user._id, seat);
-      }
-      game.save(function(err){
-        if(err){
-          console.log(err);
-        }
-
-        callback(err);
-      });
-      return true;
-    }
-  }
-  return false;
 }
 
 exports.addUserToViewerList = function(gameId, userId, callback){
@@ -255,16 +163,4 @@ exports.addViewer = function(game, userId, seat, notifyOnJoin, notifyOnComment){
   viewerList.push(seat);
 
   return true;
-}
-
-exports.removePlayerFromViewers = function(game, userId){
-  var viewerList = game.viewerCollection;
-
-  for(var i = 0; i < viewerList.length; i++){
-    var viewer = viewerList[i];
-    if(viewer && viewer.user && viewer.user._id.equals(userId)){
-      return viewerList.splice(i, 1)[0];
-    }
-  }
-  return null;
 }

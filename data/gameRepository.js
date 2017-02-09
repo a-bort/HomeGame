@@ -162,19 +162,3 @@ exports.removeCommentFromGame = function(gameId, commentId, userId, callback){
     callback("Unable to locate comment");
   });
 }
-
-exports.kickPlayer = function(gameId, seatId, userId, callback){
-  exports.getGameById(gameId, function(err, game){
-    if(err || !game){
-      callback(err);
-      return;
-    }
-
-    if(!game.owner._id.equals(userId)){
-      callback("Not Authorized");
-      return;
-    }
-
-    seatRepo.removePlayerFromGame(game, userIdToKick, false, callback);
-  });
-}
