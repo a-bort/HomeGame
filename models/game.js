@@ -121,7 +121,7 @@ gameSchema.methods.userIsSeated = function(userId){
 gameSchema.methods.userIsViewer = function(userId){
   for(var i = 0; i < this.viewerCollection.length; i++){
     var viewer = this.viewerCollection[i];
-    if(viewer.user._id.equals(userId)){
+    if(viewer.user && (viewer.user._id || viewer.user).equals(userId)){
       return true;
     }
   }
