@@ -1,6 +1,8 @@
 homeGameApp.controller('AboutController', function($scope, $http, $location){
 
     $scope.releases = [
+      {title: 'Back-end restructure', date: "February 10, 2017",
+        features: ["General rewrite of services used for joining/leaving games", "Fixed the bug with removing placeholder players"]},
       {title: 'Comment tweaks', date: "September 29, 2016",
         features: ["On a game page, the default number of comments shown limited to 8, with an option of showing all"
         , "Comment notification emails have the same subject per game, so they stack in your inbox"]},
@@ -10,7 +12,8 @@ homeGameApp.controller('AboutController', function($scope, $http, $location){
                    "Notifications for comments"]}
     ];
 
-    $scope.plannedFeatures = ["Configure games to allow guests to add a +1 (or a +2, +3, etc)", "Automatic day-of notifications"];
+    $scope.plannedFeatures = ["Configure games to allow guests to add a +1 (or a +2, +3, etc)", "Automatic day-of notifications",
+  "Allow users to create/edit the entire lineup manually"];
 
     $scope.issues = ["Please report issues in the Feedback section"];
 
