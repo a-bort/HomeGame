@@ -1,6 +1,6 @@
 var gameRepo = require('../data/gameRepository');
 var userRepo = require('../data/userRepository');
-var emailSender = require('./emailSender');
+var emailService = require('./emailService');
 
 //!SHOULD BE PLAYER POOL SERVICE!
 var playerPoolRepo = require('../data/playerPoolRepository');
@@ -50,9 +50,8 @@ exports.userJoined = function(gameId, userId, callback){
       if(err){
         callback(err); return;
       }
-      //!!!!emailSender.notifyOnJoin
-      //send notification
       playerPoolRepo.addUserToGameOwnerPlayerPool(game, userId, callback);
+      emailService.emailAfterJoin(game, userId);
     });
   });
 }
@@ -98,11 +97,12 @@ exports.userCancelled = function(gameId, seatId, userId, callback){
     }
 
     var newlyMovedSeat = game.configureSeatsAfterCancellation(seat);
+    game.addViewer(null, seat);
     gameRepo.cleanSave(game, function(err, gameId){
       if(err){
         callback(err); return;
       }
-      //send email!!!!
+      emailService.emailAfterLeave(game, userId, newlyMovedSeat ? newlyMovedSeat.user._id || newlyMovedSeat.user : null);
       callback();
     });
   })
