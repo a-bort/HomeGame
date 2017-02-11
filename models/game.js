@@ -15,7 +15,7 @@ exports.seatTypes = ['player', 'waitlist', 'viewer'];
 var seatSchema = new mongoose.Schema({
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     active: { type: Boolean, default: true }, //deprecated
-    created: { type: Date, default: new Date()},
+    created: { type: Date, default: Date.now },
     name: { type: String },
     type: { type: String, enum: exports.seatTypes},
     notifyOnJoin: { type: Boolean },
@@ -26,7 +26,7 @@ var seatSchema = new mongoose.Schema({
 
 var commentSchema = new mongoose.Schema({
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-    date: { type: Date, default: new Date() },
+    date: { type: Date, default: Date.now },
     text: String
 }, schemaOptions);
 
@@ -55,7 +55,8 @@ var gameSchema = new mongoose.Schema({
     targetFilledSeats: Number,
     cancelled: { type: Boolean, default: false },
     active: { type: Boolean, default: true },
-    comments: [commentSchema]
+    comments: [commentSchema],
+    created: { type: Date, default: Date.now },
 }, schemaOptions);
 
 gameSchema.virtual('dateString').get(function(){

@@ -63,8 +63,8 @@ homeGameApp.controller('HostGameController', function($scope, $http, $location){
 
   $scope.initWithGame = function(game){
     if(game){
-      game.date = game.date ? new Date(game.date) : '';
-      game.time = game.time ? new Date(game.time) : '';
+      game.date = game.date ? new Date(game.date) : new Date();
+      game.time = game.time ? new Date(game.time) : new Date();
 
       if(game.allowedGuests !== 0){
         $scope.guestsAllowed = true;
