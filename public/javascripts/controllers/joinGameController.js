@@ -246,6 +246,50 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       });
     }
 
+    $scope.rosterModel = {
+      selected: null,
+      tempPlayerText: "",
+      seatCollection: [],
+      waitListCollection: [],
+      bench: [],
+      emptySeats: function(){
+        return $scope.activeGame.seats - this.seatCollection.length;
+      },
+      waitlistedPlayers: function(){
+        return this.waitListCollection.length > 0;
+      },
+      add: function(name){
+        var seatObj = {name: name, user: {}};
+        if(this.emptySeats()){
+          this.seatCollection.push(seatObj);
+        } else{
+          this.waitListCollection.push(seatObj);
+        }
+        this.tempPlayerText = "";
+      },
+      valid: function(){
+        return (this.emptySeats() && !this.waitlistedPlayers()) || !this.emptySeats();
+      }
+    };
+
+    $scope.editLineup = function(){
+      var as = $scope.activeGame.seatCollection;
+      var ws = $scope.activeGame.waitListCollection;
+      var pp = $scope.currentUser.playerPool;
+      for(var i = 0; i < as.length; i++){
+        $scope.rosterModel.seatCollection.push(util.deepCopy(as[i]));
+      }
+      for(var i = 0; i < ws.length; i++){
+        $scope.rosterModel.waitListCollection.push(util.deepCopy(ws[i]));
+      }
+      for(var i = 0; i < pp.length; i++){
+        if($scope.addablePlayer(pp[i])){
+          $scope.rosterModel.bench.push(util.deepCopy(pp[i]));
+        }
+      }
+      $("#editLineupModal").modal("show");
+    }
+
     $scope.commentPosting = false;
 
     $scope.comment = function(){
