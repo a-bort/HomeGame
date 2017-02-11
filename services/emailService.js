@@ -19,7 +19,7 @@ exports.emailAfterLeave = function(game, leftPlayerId, waitlistPlayerId){
       emailSender.notifyMovedOffWaitlist(game, seatUser);
     }
     else if(seat.notifyOnJoin && !seatUser.equals(leftPlayerId)){
-      emailSender.notifyOnJoin(game, seatUser, leftPlayerId, waitlistPlayerId);
+      emailSender.notifyOnCancel(game, seatUser, leftPlayerId, waitlistPlayerId);
     }
   });
 }
