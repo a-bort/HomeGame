@@ -74,7 +74,7 @@ block content
                 div.game-grid-subhead.push-md Waitlist
                 div(ng-show="activeGame.waitListCollection.length == 0") The waitlist is empty
                 table.user-table
-                  tr(ng-repeat="seat in activeGame.waitListCollection | orderBy: 'created'")
+                  tr(ng-repeat="seat in activeGame.waitListCollection")
                     td.roster-image.push-md
                       img(ng-src="{{seat.user.imageUrl || '/images/anon-user.png'}}")
                     td {{seat.user.displayName || seat.name}}
