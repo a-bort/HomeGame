@@ -124,7 +124,7 @@ block content
                 span.glyphicon.glyphicon-plus
           div.modal-footer
             span(style="float: left;")
-              input(type="checkbox", ng-checked="rosterModel.notify") 
+              input(type="checkbox", ng-model="rosterModel.notify") 
               | &nbsp;Notify Players
             button.btn.btn-default(type="button", data-dismiss="modal") Close
             button.btn.btn-primary(type="button", ng-disabled="!rosterModel.valid()", ng-click="saveNewLineup()") Save changes
