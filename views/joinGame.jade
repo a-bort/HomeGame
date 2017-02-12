@@ -4,31 +4,6 @@ block content
   link(rel='stylesheet', href='/stylesheets/dragList.css')
   script(type="text/javascript" src="/javascripts/controllers/joinGameController.js")
   div(ng-controller="JoinGameController" ng-init="initWithGame(#{JSON.stringify(game)}, #{JSON.stringify(userAttending)}, #{JSON.stringify(userViewing)}, #{JSON.stringify(autoJoin)}, #{JSON.stringify(user)})")
-    div#editLineupModal.modal.fade(ng-model="rosterModel")
-      div.modal-dialog
-        div.modal-content
-          div.modal-header
-            button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
-            h4.modal-title Edit Lineup
-          div.modal-body.dragList
-            div.game-grid
-              div.game-grid-subhead.push-md Current Roster ({{rosterModel.emptySeats()}}&nbsp;/&nbsp;{{activeGame.seats}} Seats Remaining)
-              ul(dnd-list="rosterModel.seatCollection" dnd-disable-if="!rosterModel.emptySeats()")
-                li(ng-repeat="seat in rosterModel.seatCollection" dnd-draggable="seat" dnd-effect-allowed="move" dnd-moved="rosterModel.seatCollection.splice($index, 1)") {{seat.user.displayName || seat.name}}
-            div.game-grid(ng-show="!rosterModel.emptySeats() || rosterModel.waitlistedPlayers()")
-              div.game-grid-subhead.push-md Waitlist
-              ul(dnd-list="rosterModel.waitListCollection")
-                li(ng-repeat="seat in rosterModel.waitListCollection" dnd-draggable="seat" dnd-effect-allowed="move" dnd-moved="rosterModel.waitListCollection.splice($index, 1)") {{seat.user.displayName || seat.name}}
-            div.game-grid
-              div.game-grid-subhead.push-md Bench
-              ul(dnd-list="rosterModel.bench")
-                li(ng-repeat="seat in rosterModel.bench" dnd-draggable="seat" dnd-effect-allowed="move" dnd-moved="rosterModel.bench.splice($index, 1)") {{seat.user.displayName || seat.name}}
-              input(type="text", placeholder="Player Name", ng-model="rosterModel.tempPlayerText")
-              button.pure-button.button-success.button-small.icon-button(ng-click="rosterModel.add(rosterModel.tempPlayerText)", style="padding-bottom: 8px; margin-left: 10px;")
-                span.glyphicon.glyphicon-plus
-          div.modal-footer
-            button.btn.btn-default(type="button", data-dismiss="modal") Close
-            button.btn.btn-primary(type="button", ng-disabled="!rosterModel.valid()") Save changes
     div(ng-if="activeGame")
       div.row
         div.col-md-12
@@ -125,4 +100,29 @@ block content
                 td.pad-left-md
                   button.pure-button.button-success.button-small.icon-button(ng-click="add(null, tempPlayerText)", style="padding-bottom: 8px;")
                     span.glyphicon.glyphicon-plus
+    div#editLineupModal.modal.fade(ng-model="rosterModel")
+      div.modal-dialog
+        div.modal-content
+          div.modal-header
+            button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+            h4.modal-title Edit Lineup
+          div.modal-body.dragList
+            div.game-grid
+              div.game-grid-subhead.push-md Current Roster ({{rosterModel.emptySeats()}}&nbsp;/&nbsp;{{activeGame.seats}} Seats Remaining)
+              ul(dnd-list="rosterModel.seatCollection" dnd-disable-if="!rosterModel.emptySeats()")
+                li(ng-repeat="seat in rosterModel.seatCollection" dnd-draggable="seat" dnd-effect-allowed="move" dnd-moved="rosterModel.seatCollection.splice($index, 1)") {{seat.user.displayName || seat.name}}
+            div.game-grid(ng-show="!rosterModel.emptySeats() || rosterModel.waitlistedPlayers()")
+              div.game-grid-subhead.push-md Waitlist
+              ul(dnd-list="rosterModel.waitListCollection")
+                li(ng-repeat="seat in rosterModel.waitListCollection" dnd-draggable="seat" dnd-effect-allowed="move" dnd-moved="rosterModel.waitListCollection.splice($index, 1)") {{seat.user.displayName || seat.name}}
+            div.game-grid
+              div.game-grid-subhead.push-md Bench
+              ul(dnd-list="rosterModel.bench")
+                li(ng-repeat="seat in rosterModel.bench" dnd-draggable="seat" dnd-effect-allowed="move" dnd-moved="rosterModel.bench.splice($index, 1)") {{seat.user.displayName || seat.name}}
+              input(type="text", placeholder="Player Name", ng-model="rosterModel.tempPlayerText")
+              button.pure-button.button-success.button-small.icon-button(ng-click="rosterModel.add(rosterModel.tempPlayerText)", style="padding-bottom: 8px; margin-left: 10px;")
+                span.glyphicon.glyphicon-plus
+          div.modal-footer
+            button.btn.btn-default(type="button", data-dismiss="modal") Close
+            button.btn.btn-primary(type="button", ng-disabled="!rosterModel.valid()", ng-click="saveNewLineup()") Save changes
               
