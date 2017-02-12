@@ -213,7 +213,9 @@ module.exports = function(app, passport) {
         return;
       }
 
-      gameService.updateLineup(gameId, seatCollection, waitListCollection, function(err){
+      var notify = req.body.notify;
+
+      gameService.updateLineup(gameId, seatCollection, waitListCollection, notify, function(err){
         defaultJson(res, err);
       })
     });

@@ -132,7 +132,7 @@ exports.ownerKicked = function(gameId, seatId, userId, callback){
   })
 }
 
-exports.updateLineup = function(gameId, seatCollection, waitListCollection, callback){
+exports.updateLineup = function(gameId, seatCollection, waitListCollection, notify, callback){
   gameRepo.getGameById(gameId, function(err, game){
     if(err){
       callback(err); return;
@@ -156,7 +156,9 @@ exports.updateLineup = function(gameId, seatCollection, waitListCollection, call
       if(err){
         callback(err); return;
       }
-      //conditionally send email?
+      if(notify){
+        emailService.emailAfterLineupChange(game);
+      }
       callback();
     });
   });

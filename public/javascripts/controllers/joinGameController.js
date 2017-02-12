@@ -252,6 +252,7 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       seatCollection: [],
       waitListCollection: [],
       bench: [],
+      notify: true,
       emptySeats: function(){
         return $scope.activeGame.seats - this.seatCollection.length;
       },
@@ -281,6 +282,8 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       $scope.rosterModel.waitListCollection = [];
       $scope.rosterModel.bench = [];
 
+      $scope.rosterModel.notify = true;
+
       var ownerSeated = false;
 
       for(var i = 0; i < as.length; i++){
@@ -307,7 +310,7 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
         util.alert("Current roster is not valid");
         return;
       }
-      $http.post('/join/updateLineup', {gameId: $scope.activeGame._id, seatCollection: $scope.rosterModel.seatCollection, waitListCollection: $scope.rosterModel.waitListCollection})
+      $http.post('/join/updateLineup', {gameId: $scope.activeGame._id, seatCollection: $scope.rosterModel.seatCollection, waitListCollection: $scope.rosterModel.waitListCollection, notify: $scope.rosterModel.notify})
       .success(function(data){
         if(data.error){
           util.log(data.error);

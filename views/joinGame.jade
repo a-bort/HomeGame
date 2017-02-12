@@ -123,6 +123,9 @@ block content
               button.pure-button.button-success.button-small.icon-button(ng-click="rosterModel.add(rosterModel.tempPlayerText)", style="padding-bottom: 8px; margin-left: 10px;")
                 span.glyphicon.glyphicon-plus
           div.modal-footer
+            span(style="float: left;")
+              input(type="checkbox", ng-checked="rosterModel.notify") 
+              | &nbsp;Notify Players
             button.btn.btn-default(type="button", data-dismiss="modal") Close
             button.btn.btn-primary(type="button", ng-disabled="!rosterModel.valid()", ng-click="saveNewLineup()") Save changes
               

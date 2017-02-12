@@ -103,6 +103,44 @@ exports.notifyMovedOffWaitlist = function(game, playerId){
   });
 }
 
+exports.notifyOnLineupChange = function(game, recipientId){
+  if(!game || !recipientId) return;
+
+  game = game.toJSON();
+  sendGameNotificationEmail(recipientId, game.owner._id,
+  function(ownerName){
+    return ownerName + "&nbsp;made a lineup change [" + game.dateString + "]";
+  }, function(ownerName){
+    var str = ownerName + "&nbsp;has made changes to the lineup of their poker game. (" + game.dateString + ")";
+    str += "<br><br>Currently <b>" + game.filledSeats + "/" + game.seats + "</b>&nbsp;seats are filled.";
+    str += "<br><br><b><a href='" + config.baseUrl + game.joinGameUrl + "'>View Game Page</a></b>";
+    return str;
+  }, function(ownerName){
+    return ownerName + " has made changes to the lineup of their poker game. (" + game.dateString + "). Currently " + game.filledSeats + "/" + game.seats + " seats are filled.";
+  }, function(){})
+}
+
+var sendGameNotificationEmail = function(recipientId, ownerId, subject, html, text, callback){
+  if(!recipientId) return;
+  userRepo.getUserWithPlayerPool(recipientId, function(err1, recipient){
+    if(err1){
+      callback(err);
+      return;
+    }
+    userRepo.getUserWithPlayerPool(ownerId, function(err3, owner){
+      if(err3){
+        callback(err3);
+        return;
+      }
+
+      var theSubject = extractText(subject, owner.name);
+      var theHtml = extractText(html, owner.name);
+      var theText = extractText(text, owner.name);
+      exports.sendSingleEmail(recipient.email, theSubject, theHtml, theText);
+    });
+  });
+}
+
 var sendPlayerNotificationEmail = function(recipientId, playerId, ownerId, subject, html, text, callback){
   if(!recipientId || !playerId) return;
   userRepo.getUserWithPlayerPool(recipientId, function(err1, recipient){
