@@ -246,6 +246,84 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       });
     }
 
+    $scope.rosterModel = {
+      selected: null,
+      tempPlayerText: "",
+      seatCollection: [],
+      waitListCollection: [],
+      bench: [],
+      notify: true,
+      emptySeats: function(){
+        return $scope.activeGame.seats - this.seatCollection.length;
+      },
+      waitlistedPlayers: function(){
+        return this.waitListCollection.length > 0;
+      },
+      add: function(name){
+        var seatObj = {name: name, user: {}};
+        if(this.emptySeats()){
+          this.seatCollection.push(seatObj);
+        } else{
+          this.waitListCollection.push(seatObj);
+        }
+        this.tempPlayerText = "";
+      },
+      valid: function(){
+        return (this.emptySeats() && !this.waitlistedPlayers()) || !this.emptySeats();
+      }
+    };
+
+    $scope.editLineup = function(){
+      var as = $scope.activeGame.seatCollection;
+      var ws = $scope.activeGame.waitListCollection;
+      var pp = $scope.currentUser.playerPool;
+
+      $scope.rosterModel.seatCollection = [];
+      $scope.rosterModel.waitListCollection = [];
+      $scope.rosterModel.bench = [];
+
+      $scope.rosterModel.notify = true;
+
+      var ownerSeated = false;
+
+      for(var i = 0; i < as.length; i++){
+        if(as[i].user && as[i].user._id == $scope.currentUser._id){ownerSeated = true;}
+        $scope.rosterModel.seatCollection.push(util.deepCopy(as[i]));
+      }
+      for(var i = 0; i < ws.length; i++){
+        if(ws[i].user && ws[i].user._id == $scope.currentUser._id){ownerSeated = true;}
+        $scope.rosterModel.waitListCollection.push(util.deepCopy(ws[i]));
+      }
+      if(!ownerSeated){
+        $scope.rosterModel.bench.push({user: util.deepCopy($scope.currentUser)});
+      }
+      for(var i = 0; i < pp.length; i++){
+        if($scope.addablePlayer(pp[i])){
+          $scope.rosterModel.bench.push(util.deepCopy(pp[i]));
+        }
+      }
+      $("#editLineupModal").modal({backdrop: 'static'});
+    }
+
+    $scope.saveNewLineup = function(){
+      if(!$scope.rosterModel.valid()){
+        util.alert("Current roster is not valid");
+        return;
+      }
+      $http.post('/join/updateLineup', {gameId: $scope.activeGame._id, seatCollection: $scope.rosterModel.seatCollection, waitListCollection: $scope.rosterModel.waitListCollection, notify: $scope.rosterModel.notify})
+      .success(function(data){
+        if(data.error){
+          util.log(data.error);
+          util.alert('Error saving lineup');
+          return;
+        }
+        location.reload();
+      }).error(function(err){
+        util.log(err);
+        util.alert('Error saving lineup');
+      });
+    }
+
     $scope.commentPosting = false;
 
     $scope.comment = function(){

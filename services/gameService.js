@@ -132,6 +132,68 @@ exports.ownerKicked = function(gameId, seatId, userId, callback){
   })
 }
 
+exports.updateLineup = function(gameId, seatCollection, waitListCollection, notify, callback){
+  gameRepo.getGameById(gameId, function(err, game){
+    if(err){
+      callback(err); return;
+    }
+
+    var newSeatList = buildSeatListFromGame(game, seatCollection);
+    var newWaitList = buildSeatListFromGame(game, waitListCollection);
+    var newViewerList = [];
+    for(var i = 0; i < game.seatCollection.length; i++){
+      newViewerList.push(game.seatCollection[i]);
+    }
+    for(var i = 0; i < game.waitListCollection.length; i++){
+      newViewerList.push(game.waitListCollection[i]);
+    }
+
+    game.seatCollection = newSeatList;
+    game.waitListCollection = newWaitList;
+    game.viewerCollection = newViewerList;
+
+    gameRepo.cleanSave(game, function(err, gameId){
+      if(err){
+        callback(err); return;
+      }
+      if(notify){
+        emailService.emailAfterLineupChange(game);
+      }
+      callback();
+    });
+  });
+}
+
+function buildSeatListFromGame(game, seatList){
+  var newSeatList = [];
+
+  for(var i = 0; i < seatList.length; i++){
+    var s = seatList[i];
+    if(s._id){
+      var existingSeat = game.extractSeatById(s._id);
+      if(existingSeat){
+        newSeatList.push(s);
+        continue;
+      }
+    }
+    if(s.user && s.user._id){
+      var existingViewer = game.extractViewerByUserId(s.user._id);
+      if(existingViewer){
+        newSeatList.push(s);
+        continue;
+      } else{
+        newSeatList.push(new seatModel({user: s.user._id}));
+        continue;
+      }
+    }
+    if(s.name){
+      newSeatList.push(new seatModel({name: s.name}));
+    }
+  }
+
+  return newSeatList;
+}
+
 //ADD TO GAME MODEL IN A SMART WAY
 function addSeatToGame(game, seat){
   if(game.emptySeats){

@@ -33,3 +33,13 @@ exports.emailAfterKick = function(game, kickerPlayerId, waitlistPlayerId){
     }
   });
 }
+
+exports.emailAfterLineupChange = function(game){
+  seatRepository.iterateOverAllSeats(game, function(seat){
+    if(!seat.user) return;
+    seatUser = (seat.user._id || seat.user);
+    if(!seatUser.equals(game.owner._id || game.owner)){
+      emailSender.notifyOnLineupChange(game, seatUser);
+    }
+  });
+}

@@ -203,6 +203,23 @@ module.exports = function(app, passport) {
       });
     });
 
+    app.post('/join/updateLineup', isLoggedIn, authorization.userOwnsGame, function(req, res){
+      var gameId = req.body.gameId;
+      var seatCollection = req.body.seatCollection;
+      var waitListCollection = req.body.waitListCollection;
+
+      if(!gameId || !seatCollection || !waitListCollection){
+        defaultJson(res, "Missing input parameter");
+        return;
+      }
+
+      var notify = req.body.notify;
+
+      gameService.updateLineup(gameId, seatCollection, waitListCollection, notify, function(err){
+        defaultJson(res, err);
+      })
+    });
+
     function notification(propertyName){
       var thePropertyName = propertyName;
       var fn = function(req, res){
