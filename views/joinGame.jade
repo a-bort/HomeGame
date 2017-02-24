@@ -11,7 +11,9 @@ block content
       div.row
         div.col-md-6
           div.game-grid
-            div.game-grid-subhead {{activeGame.owner.displayName}}'s {{activeGame.stakes}}, {{activeGame.gameType}} {{activeGame.gameFormat}}
+            div.game-grid-subhead {{gameName()}}
+              span.pull-right()
+                
             div
               span.strong-text When:
               |{{activeGame.dateString}} @ {{activeGame.timeString}}
@@ -20,8 +22,10 @@ block content
               | {{activeGame.location}}
             div.info-body.multi-line {{activeGame.notes}}
             div(ng-show="!activeGame.pastGame")
-              button.pure-button.push-sm#join-button(ng-click="join()" ng-disabled="userAttending" ng-class="{ 'button-success' : userAttending, 'pure-button-primary' : !userAttending }") {{joinButtonText()}}
+              button.pure-button.push-sm#join-button(ng-click="join()" ng-disabled="userAttending" ng-class="{ 'pure-button-primary' : !userAttending }") {{joinButtonText()}}
               button.pure-button.pure-button-primary#cancel-button(ng-click="cancel()" ng-show="userAttending") Cancel Reservation
+              a#cal-button.pure-button.button-plain(ng-show="!activeGame.pastGame && userAttending", href="{{googleCalUrl()}}", target="_blank", rel="nofollow", title="Add to Google Calendar")
+                span.glyphicon.glyphicon-calendar
             div(ng-show="activeGame.pastGame")
               button.pure-button.button-error(disabled="true") Registration Closed
             div(ng-show="!activeGame.pastGame")

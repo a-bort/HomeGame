@@ -1,3 +1,8 @@
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+};
+
 homeGameApp.controller('JoinGameController', function($scope, $http, $location){
 
     $scope.activeGame = undefined;
@@ -113,6 +118,51 @@ homeGameApp.controller('JoinGameController', function($scope, $http, $location){
       var len = $scope.activeGame.comments.length;
       return $scope.activeGame.comments.slice(len - commentLimit, len);
     };
+
+    $scope.gameName = function(){
+      var ag = $scope.activeGame;
+      return ag.owner.displayName + "'s " + ag.stakes + ", " + ag.gameType + " " + ag.gameFormat;
+    }
+
+    $scope.googleCalUrl = function(){
+      if(!$scope.activeGame){ return "";}
+
+      var base = "http://www.google.com/calendar/event?action=TEMPLATE";
+      base += ("&text=" + encodeURIComponent($scope.gameName()));
+      base += ("&dates=" + generateGoogleDateUrlString($scope.activeGame.date, $scope.activeGame.time, 4));
+      base += ("&details=" + encodeURIComponent($scope.activeGame.notes));
+      base += ("&location=" + encodeURIComponent($scope.activeGame.location));
+      return base;
+    };
+
+    var generateGoogleDateUrlString = function(startDate, startTime, lengthInHours){
+      var date = new Date(startDate);
+      var time = new Date(startTime);
+      var datetime = new Date(date.getFullYear(), date.getMonth(), date.getDate(),
+               time.getHours(), time.getMinutes(), time.getSeconds());
+
+      var str = googleDateFormat(datetime);
+      str += "/";
+
+      datetime.setTime(datetime.getTime() + (lengthInHours * 60 * 60 * 1000));
+      str += googleDateFormat(datetime);
+
+      return str;
+    };
+
+    var googleDateFormat = function(date){
+      return date.getFullYear()
+      + forceTwoDigits(date.getMonth() + 1)
+      + forceTwoDigits(date.getDate())
+      + "T"
+      + forceTwoDigits(date.getHours())
+      + forceTwoDigits(date.getMinutes())
+      + forceTwoDigits(date.getSeconds());
+    }
+
+    var forceTwoDigits = function(number){
+      return number < 10 ? ("0" + number) : ("" + number);
+    }
 
     $scope.join = function(){
       if(!$scope.activeGame){
