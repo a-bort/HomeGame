@@ -109,7 +109,7 @@ exports.notifyOnLineupChange = function(game, recipientId){
   game = game.toJSON();
   sendGameNotificationEmail(recipientId, game.owner._id,
   function(ownerName){
-    return ownerName + "&nbsp;made a lineup change [" + game.dateString + "]";
+    return ownerName + " made a lineup change [" + game.dateString + "]";
   }, function(ownerName){
     var str = ownerName + "&nbsp;has made changes to the lineup of their poker game. (" + game.dateString + ")";
     str += "<br><br>Currently <b>" + game.filledSeats + "/" + game.seats + "</b>&nbsp;seats are filled.";
