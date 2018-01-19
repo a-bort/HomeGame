@@ -63,7 +63,7 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
   $scope.loadPlayer = function(){
     $scope.playerLoadError = false;
     $scope.loadingPlayerGames = true;
-    $http.get('/mygames/player?page=' + $scope.ownedPage + '&pageSize=' + $scope.pageSize).success(function(data){
+    $http.get('/mygames/player?page=' + $scope.playerPage + '&pageSize=' + $scope.pageSize).success(function(data){
       if(data.error){
         util.log(data.error);
         $scope.playerLoadError = true;
