@@ -105,18 +105,29 @@ module.exports = function(app, passport) {
     // VIEW GAMES
     // =================
     app.get('/mygames', isLoggedIn, function(req, res) {
-      gameRepo.getGamesByOwner(req.user._id, function(ownedGames){
-        gameRepo.getGamesByPlayer(req.user._id, function(playerGames){
-          gameRepo.getWaitlistedGames(req.user._id, function(waitlistedGames){
-            res.render('myGames', {
-                  title: "My Games",
-                  user : req.user,
-                  ownedGames: ownedGames,
-                  playerGames: playerGames,
-                  waitlistedGames: waitlistedGames
-              });
-          });
-        });
+      res.render('myGames', {
+        title: "My Games",
+        user : req.user
+      });
+      //
+      // gameRepo.getGamesByOwner(req.user._id, function(ownedGames){
+      //   gameRepo.getGamesByPlayer(req.user._id, function(playerGames){
+      //     gameRepo.getWaitlistedGames(req.user._id, function(waitlistedGames){
+      //
+      //     });
+      //   });
+      // });
+    });
+
+    app.get('/mygames/owned', isLoggedIn, function(req, res){
+      gameRepo.getGamesByOwner(req.user._id, req.query.page, req.query.pageSize, function(games){
+        res.json({ownedGames: games});
+      });
+    });
+
+    app.get('/mygames/player', isLoggedIn, function(req, res){
+      gameRepo.getGamesByPlayer(req.user._id, req.query.page, req.query.pageSize, function(games){
+        res.json({playerGames: games});
       });
     });
 

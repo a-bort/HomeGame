@@ -72,13 +72,13 @@ exports.getGameById = function(gameId, callback){
 }
 
 exports.getLatestGameByOwner = function(ownerId, callback){
-  exports.getGamesByOwner(ownerId, function(games){
+  exports.getGamesByOwner(ownerId, 1, 1, function(games){
     callback(games && games.length > 0 ? games[0] : null);
   })
 }
 
-exports.getGamesByOwner = function(ownerId, callback){
-  gameModel.find({owner: ownerId}, null, {sort: {date: -1}}, function(err, games){
+exports.getGamesByOwner = function(ownerId, page, pageSize, callback){
+  gameModel.find({owner: ownerId}, null, {sort: {date: -1}, skip: (page - 1) * pageSize, limit: pageSize}, function(err, games){
     if(err){
       console.log(err);
     }
@@ -86,17 +86,9 @@ exports.getGamesByOwner = function(ownerId, callback){
   });
 }
 
-exports.getGamesByPlayer = function(playerId, callback){
-  gameModel.find({$or: [{'seatCollection.user': playerId}, {'viewerCollection.user': playerId}]}, null, {sort: {date: -1}}).populate('owner').exec(function(err, games){
-    if(err){
-      console.log(err);
-    }
-    callback(games);
-  });
-}
-
-exports.getWaitlistedGames = function(playerId, callback){
-  gameModel.find({'waitListCollection.user': playerId}, null, {sort: {date: -1}}).populate('owner').exec(function(err, games){
+exports.getGamesByPlayer = function(playerId, page, pageSize, callback){
+  gameModel.find({$or: [{'seatCollection.user': playerId}, {'viewerCollection.user': playerId}, {'waitListCollection.user': playerId}]}, null, {sort: {date: -1}, skip: (page - 1) * pageSize, limit: pageSize})
+  .populate('owner').exec(function(err, games){
     if(err){
       console.log(err);
     }

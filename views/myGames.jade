@@ -2,63 +2,43 @@ extends layout
 
 block content
   script(type="text/javascript" src="/javascripts/controllers/myGamesController.js")
-  div(ng-controller="MyGamesController", ng-init="initWithGames(#{JSON.stringify(ownedGames)}, #{JSON.stringify(playerGames)}, #{JSON.stringify(waitlistedGames)}, #{JSON.stringify(user)})")
+  div(ng-controller="MyGamesController", ng-init="init(#{JSON.stringify(user)})")
     div.row
       div.col-md-6
         div.game-list
-          h2.row.content-head(ng-hide="pastGamesVisible")
-            div.col-md-8 Upcoming Games
-            div.col-md-4.show-hide-link
-              a(href="#", ng-click="showPastGames()") Show Past Games
-          h2.row.content-head(ng-show="pastGamesVisible")
-            div.col-md-8 Past Games
-            div.col-md-4.show-hide-link
-              a(href="#", ng-click="hidePastGames()") Show Upcoming Games
-          div.game-grid(ng-repeat="game in playerGames | filter:gameShouldBeShown | orderBy: orderByForMyGames()")
-            div.game-grid-subhead {{game.owner.displayName}}'s {{game.stakes}}, {{game.gameType}} {{game.gameFormat}}
-            div {{game.dateString}}
-              span.strong-text &nbsp;|&nbsp;
-              | {{game.timeString}}
-            div
-              div.info-body.multi-line(ng-bind-html="computedGameDescriptionHtml(game)")
-            div
-              span.game-grid-button
-                button.pure-button.button-small(href="#" ng-click="$parent.viewGame(game)") View 
-              span.game-grid-button
-                button.pure-button.button-small.button-plain(href="#" ng-click="$parent.leaveGame(game)" ng-show="!$parent.userIsViewer(game)") Cancel    
-              span.game-grid-button
-                button.pure-button.button-small.button-success(href="#" ng-click="$parent.joinGame(game)" ng-show="$parent.userIsViewer(game)") Join                
+          h2.content-head
+            div Player Games
+          div(ng-repeat="game in playerGames | filter:playerGameShouldBeShown")
+            div.game-grid(ng-class="{'empty-game-grid': game.pastGame}")
+              div.game-grid-subhead {{game.owner.displayName}}'s {{game.stakes}}, {{game.gameType}} {{game.gameFormat}}
+              div {{game.dateString}}
+                span.strong-text &nbsp;|&nbsp;
+                | {{game.timeString}}
+              div
+                div.info-body.multi-line(ng-bind-html="computedGameDescriptionHtml(game)")
+              div
+                span.game-grid-button
+                  button.pure-button.button-small(href="#" ng-click="$parent.viewGame(game)") View 
+                span.game-grid-button
+                  button.pure-button.button-small.button-plain(href="#" ng-click="$parent.leaveGame(game)" ng-show="!$parent.userIsViewer(game) && !game.pastGame") Cancel    
+                span.game-grid-button
+                  button.pure-button.button-small.button-success(href="#" ng-click="$parent.joinGame(game)" ng-show="$parent.userIsViewer(game) && !game.pastGame") Join                
+                span.badge.badge-warning.pull-right.drop-md(ng-show="$parent.userIsWaitlist(game)")
+                  | WAITLIST
           div.game-grid.empty-game-grid(ng-show="noPlayerGamesShowing()")
             div.game-grid-subhead You have no&nbsp;
-              span(ng-show="!pastGamesVisible") upcoming
-              span(ng-show="pastGamesVisible") past
+              span(ng-show="!pastPlayerGamesVisible") upcoming
               | &nbsp;games.
             div.game-grid-info-link
               a(href="#", ng-hide="joinInfoVisible", ng-click="showJoinInfo()") How do I join a game?
             div.game-grid-info(ng-show="joinInfoVisible") A game host has to share a link with you, which will take you to the game page. You can join from there.
-        div.game-list
-          h2.content-head 
-            span(ng-hide="noWaitlistedGames()") Waitlisted Games
-          div.game-grid.waitlist-grid(ng-repeat="game in waitlistedGames | filter:gameShouldBeShown | orderBy: orderByForMyGames()")
-            div.game-grid-subhead {{game.owner.displayName}}'s {{game.stakes}}, {{game.gameType}} {{game.gameFormat}}
-            div {{game.dateString}}
-              span.strong-text &nbsp;|&nbsp;
-              | {{game.timeString}}
-            div
-              div.info-body.multi-line(ng-bind-html="computedGameDescriptionHtml(game)")
-            div
-              span.game-grid-button
-                button.pure-button.button-small(href="#" ng-click="$parent.viewGame(game)") View 
-              span.game-grid-button
-                button.pure-button.button-small.button-plain(href="#" ng-click="$parent.leaveGame(game)") Cancel                  
+          div.show-hide-link(ng-hide="pastPlayerGamesVisible")
+            a(href="#", ng-click="showPastPlayerGames()") Show Past Games
+          div.show-hide-link(ng-show="pastPlayerGamesVisible && !allPlayerLoaded")
+              a(href="#", ng-click="loadPlayer()") Load More                
       div.col-md-6
         h2.row.content-head
-          div.col-md-8 Hosted Games
-          div.col-md-4.show-hide-link
-            span(ng-hide="pastOwnedGamesVisible")
-                a(href="#", ng-click="showPastOwnedGames()") Show Past Games
-            span(ng-show="pastOwnedGamesVisible")
-                a(href="#", ng-click="hidePastOwnedGames()") Hide Past Games
+          div Hosted Games
         div.game-grid(ng-repeat="game in ownedGames | filter:ownedGameShouldBeShown")
           div.game-grid-subhead {{game.dateString}}&nbsp;|&nbsp;{{game.timeString}}
           div {{game.stakes}} {{game.gameType}} {{game.gameFormat}}
@@ -71,8 +51,13 @@ block content
         div.game-grid.empty-game-grid(ng-show="noOwnedGamesShowing()")
             div.game-grid-subhead You&nbsp;
               span(ng-show="!pastOwnedGamesVisible") are not hosting
-              span(ng-show="pastOwnedGamesVisible") have not hosted
-              | &nbsp;any games.
+              | &nbsp;any upcoming games.
             div.game-grid-info-link
               a(href="#", ng-hide="hostInfoVisible", ng-click="showHostInfo()") How do I host a game?
             div.game-grid-info(ng-show="hostInfoVisible") Click the "Host" menu item above, and fill out the form.
+        div.show-hide-link(ng-hide="pastOwnedGamesVisible")
+            a(href="#", ng-click="showPastOwnedGames()") Show Past Games
+        div.show-hide-link(ng-show="pastOwnedGamesVisible && !allOwnedLoaded")
+            a(href="#", ng-click="loadOwned()") Load More
+            
+        

@@ -2,14 +2,87 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
 
   $scope.ownedGames = [];
   $scope.playerGames = [];
-  $scope.waitlistedGames = [];
+
+  $scope.loadingOwnedGames = false;
+  $scope.loadingPlayerGames = false;
+
+  $scope.ownedLoadError = false;
+  $scope.playerLoadError = false;
+
+  $scope.ownedPage = 1;
+  $scope.playerPage = 1;
+
+  $scope.allOwnedLoaded = false;
+  $scope.allPlayerLoaded = false;
+
+  $scope.pageSize = 4;
+
   $scope.user = "";
 
-  $scope.initWithGames = function(ownedGames, playerGames, waitlistedGames, user){
+  $scope.init = function(user){
+    $scope.user = user;
+    $scope.loadGames();
+  }
+
+  $scope.initWithGames = function(ownedGames, playerGames, user){
     $scope.ownedGames = ownedGames;
     $scope.playerGames = playerGames;
-    $scope.waitlistedGames = waitlistedGames;
     $scope.user = user;
+  }
+
+  $scope.loadGames = function(){
+    $scope.loadOwned();
+    $scope.loadPlayer();
+  }
+
+  $scope.loadOwned = function(){
+    $scope.ownedLoadError = false;
+    $scope.loadingOwnedGames = true;
+    $http.get('/mygames/owned?page=' + $scope.ownedPage + '&pageSize=' + $scope.pageSize).success(function(data){
+      if(data.error){
+        util.log(data.error);
+        $scope.ownedLoadError = true;
+        return;
+      }
+      for(var i = 0; i < data.ownedGames.length; i++){
+        $scope.ownedGames.push(data.ownedGames[i]);
+      }
+      if(data.ownedGames.length < $scope.pageSize){
+        $scope.allOwnedLoaded = true;
+      } else{
+        $scope.ownedPage++;
+      }
+    }).error(function(err){
+      util.log(err);
+      $scope.ownedLoadError = true;
+    }).finally(function(){
+      $scope.loadingOwnedGames = false;
+    });
+  }
+
+  $scope.loadPlayer = function(){
+    $scope.playerLoadError = false;
+    $scope.loadingPlayerGames = true;
+    $http.get('/mygames/player?page=' + $scope.ownedPage + '&pageSize=' + $scope.pageSize).success(function(data){
+      if(data.error){
+        util.log(data.error);
+        $scope.playerLoadError = true;
+        return;
+      }
+      for(var i = 0; i < data.playerGames.length; i++){
+        $scope.playerGames.push(data.playerGames[i]);
+      }
+      if(data.playerGames.length < $scope.pageSize){
+        $scope.allPlayerLoaded = true;
+      } else{
+        $scope.playerPage++;
+      }
+    }).error(function(err){
+      util.log(err);
+      $scope.playerLoadError = true;
+    }).finally(function(){
+      $scope.loadingPlayerGames = false;
+    });
   }
 
   $scope.noOwnedGames = function(){
@@ -20,31 +93,14 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     return $scope.playerGames.length == 0;
   }
 
-  $scope.noWaitlistedGames = function(){
-    for(var i = 0; i < $scope.waitlistedGames.length; i++){
-      if($scope.waitlistedGames[i].pastGame == $scope.pastGamesVisible){
-        return false;
-      }
-    }
-    return true;
+  $scope.pastPlayerGamesVisible = false;
+
+  $scope.showPastPlayerGames = function(){
+    $scope.pastPlayerGamesVisible = true;
   }
 
-  $scope.pastGamesVisible = false;
-
-  $scope.showPastGames = function(){
-    $scope.pastGamesVisible = true;
-  }
-
-  $scope.hidePastGames = function(){
-    $scope.pastGamesVisible = false;
-  }
-
-  $scope.gameShouldBeShown = function(game){
-    return game.pastGame == $scope.pastGamesVisible;
-  }
-
-  $scope.orderByForMyGames = function(){
-    return $scope.pastGamesVisible ? '-date' : 'date';
+  $scope.playerGameShouldBeShown = function(game){
+    return !game.pastGame || $scope.pastPlayerGamesVisible;
   }
 
   $scope.noOwnedGamesShowing = function(){
@@ -58,7 +114,7 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
 
   $scope.noPlayerGamesShowing = function(){
     for(var i = 0; i < $scope.playerGames.length; i++){
-      if($scope.gameShouldBeShown($scope.playerGames[i])){
+      if($scope.playerGameShouldBeShown($scope.playerGames[i])){
         return false;
       }
     }
@@ -86,17 +142,33 @@ homeGameApp.controller('MyGamesController', function($scope, $http, $location){
     $scope.pastOwnedGamesVisible = true;
   }
 
-  $scope.hidePastOwnedGames = function(){
-    $scope.pastOwnedGamesVisible = false;
-  }
-
   $scope.ownedGameShouldBeShown = function(game){
-    return game.pastGame == $scope.pastOwnedGamesVisible;
+    return !game.pastGame || $scope.pastOwnedGamesVisible;
   }
 
   $scope.userIsViewer = function(game){
     for(var i = 0; i < game.viewerCollection.length; i++){
       var viewer = game.viewerCollection[i];
+      if(viewer.user == $scope.user._id){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // $scope.userIsSeated = function(game){
+  //   for(var i = 0; i < game.seatCollection.length; i++){
+  //     var viewer = game.seatCollection[i];
+  //     if(viewer.user == $scope.user._id){
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
+
+  $scope.userIsWaitlist = function(game){
+    for(var i = 0; i < game.waitListCollection.length; i++){
+      var viewer = game.waitListCollection[i];
       if(viewer.user == $scope.user._id){
         return true;
       }
