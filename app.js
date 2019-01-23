@@ -49,15 +49,9 @@ app.use(passport.session());
 app.use(flash());
 
 //force https
-app.use (function (req, res, next) {
-  if (config.dev || (req.connection && req.connection.encrypted)) {
-    // request was via https, so do no special handling
-    next();
-  } else {
-    // request was via http, so redirect to https
-    res.redirect('https://' + req.headers.host + req.url);
-  }
-});
+if(!config.dev){
+  app.use(require('express-sslify').HTTPS());
+}
 
 //routes
 require('./routes.js')(app, passport);
