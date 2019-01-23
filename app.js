@@ -50,7 +50,7 @@ app.use(flash());
 
 //force https
 if(!config.dev){
-  app.use(require('express-sslify').HTTPS());
+  app.use(require('express-sslify').HTTPS({ trustProtoHeader: true }));
 }
 
 //routes
