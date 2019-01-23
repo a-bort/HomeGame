@@ -50,7 +50,7 @@ app.use(flash());
 
 //force https
 app.use (function (req, res, next) {
-  if (config.dev || req.secure) {
+  if (config.dev || (req.connection && req.connection.encrypted)) {
     // request was via https, so do no special handling
     next();
   } else {
